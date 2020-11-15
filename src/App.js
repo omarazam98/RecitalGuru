@@ -10,6 +10,7 @@ import verovioCss from "./css/slidesSimple.css";
 import {MidiSync, revealInitialize, resetSlides} from "./components/Player/MidiPlayer/MidiFunctions";
 
 function App() {
+    const [playing, setPlaying] = useState(false);
     const [slides, setSlides] = useState(<section>Loading...</section>);
     const [toolkit, setToolkit] = useState(null);
     const [path, setPath] = useState("https://omarazam98.github.io/MusicXmlData/xmlFiles/Test3.xml");
@@ -51,14 +52,14 @@ function App() {
               <div className={'reveal-toolbar'}>
                   <span className={'reveal-toolbar-button'}>
                       Song:
-                      <select className={'reveal-toolbar-button'} value={path} onChange={(event) => setPath(event.target.value)}>
+                      <select disabled={playing} className={'reveal-toolbar-button'} value={path} onChange={(event) => setPath(event.target.value)}>
                       <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml"}>Senorita</option>
                       <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test3.xml"}>Little lamb</option>
                   </select>
                   </span>
                   <span className={'reveal-toolbar-button'}>
                       Instrument:
-                      <select className={'reveal-toolbar-button'} value={instrument} onChange={(event) => setInstrument(event.target.value)}>
+                      <select disabled={playing} className={'reveal-toolbar-button'} value={instrument} onChange={(event) => setInstrument(event.target.value)}>
                           <option value={"acoustic_grand_piano"}>Grand Piano</option>
                           <option value={"acoustic_guitar_nylon"}>Acoustic Guitar</option>
                           <option value={"electric_guitar_clean"}>Electric Guitar</option>
@@ -70,8 +71,8 @@ function App() {
                           <option value={"violin"}>Violin</option>
                       </select>
                   </span>
+                  {MidiPlayer(instrument, data, timeMap, playing, setPlaying)}
                   <span className={'reveal-toolbar-button'} id={"score"}/>
-                  {MidiPlayer(instrument, data, timeMap)}
                   <span className={'reveal-toolbar-button'} id={"tuner"}/>
               </div>
           </div>
