@@ -22,7 +22,7 @@ function App() {
     verovio.module.onRuntimeInitialized = function () {
         const toolkit = new verovio.toolkit()
         setToolkit(toolkit)
-        window.alert("Welcome to the RecitalGuru Beta!\n\nSelect a song and the key of your instrument to begin. Notes will be highlighted as you play along providing you with feedback on your performance. If you wish to just listen try the Free Play mode.\n\nRecitalGuru requires a device with a microphone and speakers.\nTested on Chrome and Firefox, Safari & Mobile support coming soon")
+        window.alert("Welcome to the RecitalGuru Beta!\n\nSelect a song and the key of your instrument to begin. Notes will be highlighted as you play along providing you with feedback on your performance. If you wish to just listen try the Free Play mode.\n\nRecitalGuru requires a device with a microphone and speakers. Mobile support coming soon")
     }
 
     useEffect(() => {

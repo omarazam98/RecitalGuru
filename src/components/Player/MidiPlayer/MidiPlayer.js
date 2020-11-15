@@ -106,7 +106,8 @@ export const MidiPlayer = (instrument, data, timeMap, playing, setPlaying) => {
         Player.instrument = soundfont;
         Player.loadDataUri('data:audio/midi;base64,' + data);
         Player.on('endOfFile', () => {
-            Player.instrument.stop(ac.currentTime)
+            if(!window.safari)
+                Player.instrument.stop(ac.currentTime)
             setPlaying(false)
             removeHighlights();
             passedNotes = 0;

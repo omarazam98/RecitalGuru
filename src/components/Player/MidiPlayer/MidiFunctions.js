@@ -7,13 +7,13 @@ let pitchDetector;
 export const connectAubioMedia = (ac, func) => {
     Aubio().then(async (aubio) => {
         if (navigator.mediaDevices.getUserMedia === undefined) {
-            navigator.mediaDevices.getUserMedia = await function (constraints) {
-                const getUserMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia
+            navigator.mediaDevices.getUserMedia = await function () {
+                const getUserMedia =  navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia
                 if (!getUserMedia) {
                     alert('getUserMedia is not implemented in this browser')
                 }
                 return new Promise(function (resolve, reject) {
-                    getUserMedia.call(navigator, constraints, resolve, reject)
+                    getUserMedia.call(navigator, {audio:{echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}}, resolve, reject)
                 })
             }
         }
@@ -25,7 +25,7 @@ export const connectAubioMedia = (ac, func) => {
         if(scriptProcessor === undefined){
             scriptProcessor = ac.createScriptProcessor(1024, 1, 1)
             const analyser = ac.createAnalyser();
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+            const stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}})
 
             ac.createMediaStreamSource(stream).connect(analyser)
             analyser.connect(scriptProcessor)
