@@ -1,21 +1,20 @@
 import React from "react";
 import {getSlideSize} from "../MidiPlayer/MidiFunctions";
 
-export default function RevealMusicXML(options, path, toolkit) {
+export default function RevealMusicXML(key, path, toolkit) {
     const setOptions = function () {
-      let zoom = options.zoom ? options.zoom : 60
       let size = getSlideSize();
       let pixelHeight = size.height;
       let pixelWidth = size.width;
       let defaultOptions = {
-        pageHeight: pixelHeight  * (100 / zoom),
-        pageWidth:  pixelWidth * (100 / zoom),
-        scale: zoom,
+        pageHeight: pixelHeight  * (100 / 60),
+        pageWidth:  pixelWidth * (100 / 60),
+        scale: 60,
         breaks: 'line',
         adjustPageHeight: true,
         minLastJustification: 0
       };
-      toolkit.setOptions({ ...defaultOptions, ...options });
+      toolkit.setOptions({ ...defaultOptions, transpose: key });
     };
 
     const render = () => {
@@ -42,7 +41,7 @@ export default function RevealMusicXML(options, path, toolkit) {
             }
           })
           .then(text => {
-              setOptions(options, toolkit);
+              setOptions();
               toolkit.loadData(text);
               return render(toolkit);
           })

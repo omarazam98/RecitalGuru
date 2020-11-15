@@ -17,18 +17,17 @@ function App() {
     const [instrument, setInstrument] = useState("acoustic_grand_piano");
     const [data, setData] = useState(null);
     const [timeMap, setTimeMap] = useState(null);
-
-
-    const settings = {transpose: 'C', zoom: 60};
+    const [key, setKey] = useState('C');
 
     verovio.module.onRuntimeInitialized = function () {
         const toolkit = new verovio.toolkit()
         setToolkit(toolkit)
+        window.alert("Welcome to the RecitalGuru Beta!\n\nSelect a song and the key of your instrument to begin. Notes will be highlighted as you play along providing you with feedback on your performance. If you wish to just listen try the Free Play mode.\n\nRecitalGuru requires a device with a microphone and speakers.\nTested on Chrome and Firefox, Safari & Mobile support coming soon")
     }
 
     useEffect(() => {
             async function render() {
-                const slides = await RevealMusicXML(settings, path, toolkit)
+                const slides = await RevealMusicXML(key, path, toolkit)
                 const data = await toolkit.renderToMIDI()
                 const timeMap = await MidiSync(toolkit)
                 setSlides(slides)
@@ -42,7 +41,8 @@ function App() {
                 revealInitialize();
             }
     },
-    [toolkit, path, instrument]);
+    [toolkit, path, instrument, key]);
+
   return (
       <div style={{height: '100%', width: '100%' }}>
           <div className={'reveal'} style={revealCss}>
@@ -55,6 +55,16 @@ function App() {
                       <select disabled={playing} className={'reveal-toolbar-button'} value={path} onChange={(event) => setPath(event.target.value)}>
                       <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml"}>Senorita</option>
                       <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test3.xml"}>Little lamb</option>
+                  </select>
+                  </span>
+                  <span className={'reveal-toolbar-button'}>
+                      Key:
+                      <select disabled={playing} className={'reveal-toolbar-button'} value={key} onChange={(event) => setKey(event.target.value)}>
+                      <option value={"A"}>A</option>
+                      <option value={"C"}>C</option>
+                      <option value={"D"}>D</option>
+                      <option value={"E"}>E</option>
+                      <option value={"G"}>G</option>
                   </select>
                   </span>
                   <span className={'reveal-toolbar-button'}>
