@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/RecitalGuru/static/css/main.98b06764.chunk.css",
+    "main.css": "/RecitalGuru/static/css/main.a4100849.chunk.css",
     "main.js": "/RecitalGuru/static/js/main.55947df9.chunk.js",
     "main.js.map": "/RecitalGuru/static/js/main.55947df9.chunk.js.map",
     "runtime-main.js": "/RecitalGuru/static/js/runtime-main.1776bd3e.js",
@@ -8,15 +8,15 @@
     "static/js/2.3900d669.chunk.js": "/RecitalGuru/static/js/2.3900d669.chunk.js",
     "static/js/2.3900d669.chunk.js.map": "/RecitalGuru/static/js/2.3900d669.chunk.js.map",
     "index.html": "/RecitalGuru/index.html",
-    "precache-manifest.e0684316f2a2e3cec3c0dd08432ae2ef.js": "/RecitalGuru/precache-manifest.e0684316f2a2e3cec3c0dd08432ae2ef.js",
+    "precache-manifest.505859573e80d555469021cb49427fc4.js": "/RecitalGuru/precache-manifest.505859573e80d555469021cb49427fc4.js",
     "service-worker.js": "/RecitalGuru/service-worker.js",
-    "static/css/main.98b06764.chunk.css.map": "/RecitalGuru/static/css/main.98b06764.chunk.css.map",
+    "static/css/main.a4100849.chunk.css.map": "/RecitalGuru/static/css/main.a4100849.chunk.css.map",
     "static/js/2.3900d669.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/2.3900d669.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.1776bd3e.js",
     "static/js/2.3900d669.chunk.js",
-    "static/css/main.98b06764.chunk.css",
+    "static/css/main.a4100849.chunk.css",
     "static/js/main.55947df9.chunk.js"
   ]
 }
