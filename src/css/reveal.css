@@ -11,8 +11,7 @@
  *********************************************/
 @media screen and (orientation: portrait) {
   html {
-    object-fit: fill;
-  transform: rotate(-90deg);
+  transform: rotate(-90deg) scale(0.7);
   transform-origin: left top;
   width: 100vh;
   height: 100vw;
