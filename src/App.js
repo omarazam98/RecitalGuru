@@ -20,6 +20,8 @@ function App() {
     const [data, setData] = useState(null);
     const [timeMap, setTimeMap] = useState(null);
     const [key, setKey] = useState('C');
+    const height = document.height < document.width ? document.height : document.width
+    const width = document.width > document.height ? document.width : document.height
 
     verovio.module.onRuntimeInitialized = function () {
         const toolkit = new verovio.toolkit()
@@ -46,7 +48,7 @@ function App() {
     [toolkit, path, instrument, key]);
 
   return (
-      <div style={{height: '100%', width: '100%' }}>
+      <div style={{height: height, width: width }}>
           <div className={'reveal'} style={revealCss}>
               <div className={'slides'} style={verovioCss}>
                   {slides}
