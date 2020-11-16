@@ -4,10 +4,12 @@ import './App.css';
 import verovio from 'verovio'
 import {MidiPlayer} from "./components/Player/MidiPlayer/MidiPlayer";
 import RevealMusicXML from "./components/Player/RevealMusicXml/RevealMusicXML";
-
 import revealCss from "./css/reveal.css";
 import verovioCss from "./css/slidesSimple.css";
 import {MidiSync, revealInitialize, resetSlides} from "./components/Player/MidiPlayer/MidiFunctions";
+
+import {Box} from '@material-ui/core'
+import {grey} from "@material-ui/core/colors/grey";
 
 function App() {
     const [playing, setPlaying] = useState(false);
@@ -51,24 +53,24 @@ function App() {
               </div>
               <div className={'reveal-toolbar'}>
                   <span className={'reveal-toolbar-button'}>
-                      Song:
+                      Song
                       <select disabled={playing} className={'reveal-toolbar-button'} value={path} onChange={(event) => setPath(event.target.value)}>
                       <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml"}>Senorita</option>
                       <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test3.xml"}>Little lamb</option>
                   </select>
                   </span>
                   <span className={'reveal-toolbar-button'}>
-                      Key:
+                      Key
                       <select disabled={playing} className={'reveal-toolbar-button'} value={key} onChange={(event) => setKey(event.target.value)}>
                       <option value={"A"}>A</option>
                       <option value={"C"}>C</option>
                       <option value={"D"}>D</option>
                       <option value={"E"}>E</option>
                       <option value={"G"}>G</option>
-                  </select>
+                      </select>
                   </span>
                   <span className={'reveal-toolbar-button'}>
-                      Instrument:
+                      Instrument
                       <select disabled={playing} className={'reveal-toolbar-button'} value={instrument} onChange={(event) => setInstrument(event.target.value)}>
                           <option value={"acoustic_grand_piano"}>Grand Piano</option>
                           <option value={"acoustic_guitar_nylon"}>Acoustic Guitar</option>
@@ -82,8 +84,10 @@ function App() {
                       </select>
                   </span>
                   {MidiPlayer(instrument, data, timeMap, playing, setPlaying)}
-                  <span className={'reveal-toolbar-button'} id={"score"}/>
-                  <span className={'reveal-toolbar-button'} id={"tuner"}/>
+                  <Box className={'reveal-toolbar-button'} bgcolor={grey}>
+                      <div id={"score"}/>
+                      <div id={"tuner"}/>
+                  </Box>
               </div>
           </div>
       </div>

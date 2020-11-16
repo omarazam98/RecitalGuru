@@ -2,26 +2,19 @@ import Soundfont from 'soundfont-player'
 import MidiPlayerJs from 'midi-player-js'
 import {connectAubioMedia, playChangeControls} from "./MidiFunctions";
 import React, {useEffect, useState} from "react";
-import {Button, Switch} from "@material-ui/core";
+import {ButtonGroup, Button, Switch} from "@material-ui/core";
 
 export const MidiPlayer = (instrument, data, timeMap, playing, setPlaying) => {
     const [player, setPlayer] = useState(null);
     const [ac, setAc] = useState(null);
     const [practice, setPractice] = useState(true);
-
-    let soundfont = null
     let micFreq = 0;
+    let soundfont = null
     let totalNotes = document.getElementsByClassName('note').length
     let passedNotes = 0;
 
     const tuner = document.getElementById('tuner')
     const score = document.getElementById('score')
-
-    const connectMic = () => {
-        const AudioContext = window.AudioContext || window.webkitAudioContext || false;
-        const context = new AudioContext();
-        setAc(context)
-    }
 
     const removeHighlights = () => {
         document.querySelectorAll('.passedNote').forEach((note) => {
@@ -34,7 +27,7 @@ export const MidiPlayer = (instrument, data, timeMap, playing, setPlaying) => {
         })
     }
 
-    const playPause = () => {
+    const playPause = (ac, player) => {
         ac.resume().then(() => {
             if (player.isPlaying()) {
                 player.pause();
@@ -48,7 +41,7 @@ export const MidiPlayer = (instrument, data, timeMap, playing, setPlaying) => {
         })
     }
 
-    const initializePlayer = async () => {
+    const initializePlayer = async (ac, practice, instrument) => {
         const Player = await Soundfont.instrument(ac, instrument).then(function (instrument) {
             let notes = {};
             soundfont = instrument;
@@ -95,14 +88,6 @@ export const MidiPlayer = (instrument, data, timeMap, playing, setPlaying) => {
                 }
             });
         });
-
-        connectAubioMedia(ac, freq => {
-            if(freq){
-                micFreq = 12 * (Math.log(freq / 440) / Math.log(2)) + 69
-                tuner.innerHTML = freq + ' HZ';
-            }
-        })
-
         Player.instrument = soundfont;
         Player.loadDataUri('data:audio/midi;base64,' + data);
         Player.on('endOfFile', () => {
@@ -115,32 +100,46 @@ export const MidiPlayer = (instrument, data, timeMap, playing, setPlaying) => {
         return Player;
     }
 
+    const updateFreq = (freq) => {
+        if(freq){
+            micFreq = (12 * (Math.log(freq / 440) / Math.log(2)) + 69)
+            tuner.innerHTML = freq + ' HZ';
+        }
+    }
+
+    const connectMic = (practice, instrument) => {
+        if(!ac){
+            const AudioContext = window.AudioContext || window.webkitAudioContext || false;
+            const context = new AudioContext();
+            connectAubioMedia(context, updateFreq.bind(this))
+            setPractice(practice)
+            initializePlayer(context, practice, instrument).then(async (player) => {
+                setAc(context)
+                setPlayer(player)
+                removeHighlights();
+                playPause(context, player);
+            })
+        }else{
+            setPractice(practice)
+            connectAubioMedia(ac, updateFreq.bind(this))
+            initializePlayer(ac, practice, instrument).then(async (player) => {
+                setAc(ac)
+                setPlayer(player)
+                removeHighlights();
+                playPause(ac, player);
+            })
+        }
+    }
+
     useEffect(() => {
-            setPlayer(null);
-            removeHighlights();
-            if (instrument && timeMap && ac && data) {
-                initializePlayer().then((player) => {
-                    setPlayer(player)
-                })
-            }
+        setPlayer(null)
         },
-        [instrument, ac, data, timeMap, practice]);
+        [instrument, timeMap, data]);
 
     return(
-        player ?
-            [
-                <Button variant="outlined" className={'reveal-toolbar-button'} onClick={() => playPause()}>{playing ? 'Pause' : 'Start'}</Button>,
-                <span className={'reveal-toolbar-button'}>
-                    Practice<Switch disabled={playing} checked={practice} onChange={() => setPractice(!practice)}/>Free Play
-                </span>
-            ]
-            :
-            ac ?
-                <Button className={'reveal-toolbar-button'}>Loading...</Button>
-                :
-                <Button variant="outlined" className={'reveal-toolbar-button'} onClick={() => connectMic()}>Begin Recital</Button>
-
-
-
+        <ButtonGroup disableElevation variant="contained" color="primary">
+            <Button disabled={playing && !practice} onClick={() => player && practice ? playPause(ac, player) : connectMic(true, instrument)}> {playing && practice ? 'Pause' : 'Free Play'}</Button>
+            <Button disabled={playing && practice}  onClick={() => player && !practice ? playPause(ac, player) : connectMic(false, instrument)}>{playing && !practice ? 'Pause' : 'Practice'}</Button>
+        </ButtonGroup>
     )
 }

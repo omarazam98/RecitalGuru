@@ -17,20 +17,25 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
  * GLOBAL STYLES
  *********************************************/
 .reveal .reveal-toolbar{
-  display: inline-block;
+  display: inline-flex;
   position: absolute;
+  justify-content: space-around;
   left: 30px;
   bottom: 23px;
-  width: 90%;
+  width: 85%;
   z-index: 110;
 }
 
 .reveal .reveal-toolbar-button {
-  display: inline-flex;
+  min-width: 5vh;
+  overflow: hidden;
+  border-radius: 25px;
+  background-color: lightgrey;
+  display: block;
   color: maroon;
-  font-size: .55em;
+  font-size: 3vh;
   text-align: center;
-  padding: 7px 35px 7px 7px;
+  padding: 1vh;
   pointer-events: auto;
   cursor: pointer;
   z-index: 2;

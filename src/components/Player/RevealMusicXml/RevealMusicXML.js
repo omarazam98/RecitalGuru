@@ -8,8 +8,8 @@ export default function RevealMusicXML(key, path, toolkit) {
       let pixelWidth = size.width;
       let defaultOptions = {
         pageHeight: pixelHeight  * (100 / 60),
-        pageWidth:  pixelWidth * (100 / 60),
-        scale: 60,
+        pageWidth:  pixelWidth * (100 / 50),
+        scale: 50,
         breaks: 'line',
         adjustPageHeight: true,
         minLastJustification: 0

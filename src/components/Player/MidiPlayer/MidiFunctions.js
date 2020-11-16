@@ -33,7 +33,7 @@ export const connectAubioMedia = (ac, func) => {
         }
 
         scriptProcessor.addEventListener('audioprocess', function(event) {
-            func(Math.round(pitchDetector.do(event.inputBuffer.getChannelData(0)) / 5) * 5)
+                func(Math.round(pitchDetector.do(event.inputBuffer.getChannelData(0)) / 5) * 5)
         })
     })
 }
