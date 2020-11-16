@@ -9,12 +9,16 @@
 /*********************************************
  * VIEW FRAGMENTS
  *********************************************/
-@media screen and (orientation:portrait) {
-  .reveal {
-    -ms-transform: rotate(-90deg); /* IE 9 */
-    -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
-    transform: rotate(-90deg);
-    overflow: scroll;
+@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
+  html {
+  transform: rotate(-90deg);
+  transform-origin: left top;
+  width: 100vh;
+  height: 100vw;
+  overflow-x: hidden;
+  position: absolute;
+  top: 100%;
+  left: 0;
   }
 }
 
