@@ -1,7 +1,7 @@
 import MidiPlayerJs from 'midi-player-js'
-import {connectAubioMedia} from "./MidiFunctions";
+import {connectAubioMedia, removeHighlights} from "./MidiFunctions";
 import React from "react";
-export const MidiPlayer = (ac, soundfont, data, timeMap , practice) => {
+export const MidiPlayer = async (ac, soundfont, data, timeMap , practice) => {
     let micFreq = 0;
     let totalNotes = document.getElementsByClassName('note').length
     let passedNotes = 0;
@@ -60,6 +60,10 @@ export const MidiPlayer = (ac, soundfont, data, timeMap , practice) => {
             }
         }
     });
+
+    Player.on('endOfFile' , () => {
+        passedNotes = 0
+    })
 
     Player.instrument = soundfont;
     Player.loadDataUri('data:audio/midi;base64,' + data);

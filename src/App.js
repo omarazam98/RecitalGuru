@@ -29,7 +29,6 @@ function App() {
     const [data, setData] = useState(null);
     const [timeMap, setTimeMap] = useState(null);
     const [key, setKey] = useState('C');
-
     const [practice, setPractice] = useState(true);
     const [ac, setAc] = useState(null);
 
@@ -79,7 +78,13 @@ function App() {
             if(data && timeMap && ac && instrument){
                 Soundfont.instrument(ac, instrument).then((soundfont) => {
                     removeHighlights();
-                    setPlayer(MidiPlayer(ac, soundfont, data, timeMap, practice))
+                    MidiPlayer(ac, soundfont, data, timeMap, practice).then((player) =>{
+                        setPlayer(player)
+                        player.on('endOfFile' , () => {
+                            setPlaying(false)
+                            removeHighlights();
+                        })
+                    })
                 })
             }
         },
