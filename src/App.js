@@ -47,12 +47,14 @@ function App() {
     }
 
     const playPause = (p) => {
-        if(p !== practice){
-            setPlayer(null)
-            setPractice(p)
-        }
+        ac.resume().then(() => {
+            if(p !== practice){
+                setPlayer(null)
+                setPractice(p)
+            }
 
-        setPlaying(!playing)
+            setPlaying(!playing)
+        })
     }
 
     useEffect(() => {
