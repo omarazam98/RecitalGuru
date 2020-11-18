@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/RecitalGuru/static/css/main.60ff4bd2.chunk.css",
-    "main.js": "/RecitalGuru/static/js/main.86c41242.chunk.js",
-    "main.js.map": "/RecitalGuru/static/js/main.86c41242.chunk.js.map",
+    "main.js": "/RecitalGuru/static/js/main.26c2803b.chunk.js",
+    "main.js.map": "/RecitalGuru/static/js/main.26c2803b.chunk.js.map",
     "runtime-main.js": "/RecitalGuru/static/js/runtime-main.1776bd3e.js",
     "runtime-main.js.map": "/RecitalGuru/static/js/runtime-main.1776bd3e.js.map",
-    "static/js/2.2fbd828a.chunk.js": "/RecitalGuru/static/js/2.2fbd828a.chunk.js",
-    "static/js/2.2fbd828a.chunk.js.map": "/RecitalGuru/static/js/2.2fbd828a.chunk.js.map",
+    "static/js/2.5a22be0b.chunk.js": "/RecitalGuru/static/js/2.5a22be0b.chunk.js",
+    "static/js/2.5a22be0b.chunk.js.map": "/RecitalGuru/static/js/2.5a22be0b.chunk.js.map",
     "index.html": "/RecitalGuru/index.html",
-    "precache-manifest.5879b2f683acd63eeafd5bfe14191795.js": "/RecitalGuru/precache-manifest.5879b2f683acd63eeafd5bfe14191795.js",
+    "precache-manifest.cd8481f2fa988ec797d2e80433487e7f.js": "/RecitalGuru/precache-manifest.cd8481f2fa988ec797d2e80433487e7f.js",
     "service-worker.js": "/RecitalGuru/service-worker.js",
     "static/css/main.60ff4bd2.chunk.css.map": "/RecitalGuru/static/css/main.60ff4bd2.chunk.css.map",
-    "static/js/2.2fbd828a.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/2.2fbd828a.chunk.js.LICENSE.txt"
+    "static/js/2.5a22be0b.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/2.5a22be0b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.1776bd3e.js",
-    "static/js/2.2fbd828a.chunk.js",
+    "static/js/2.5a22be0b.chunk.js",
     "static/css/main.60ff4bd2.chunk.css",
-    "static/js/main.86c41242.chunk.js"
+    "static/js/main.26c2803b.chunk.js"
   ]
 }
