@@ -80,3 +80,14 @@ export const playChangeControls = (player) => {
         controls: !player.isPlaying()
     });
 }
+
+export const removeHighlights = () => {
+    document.querySelectorAll('.passedNote').forEach((note) => {
+        note.classList.remove('highlightedNote')
+        note.classList.remove('passedNote')
+    })
+    document.querySelectorAll('.failedNote').forEach((note) => {
+        note.classList.remove('highlightedNote')
+        note.classList.remove('failedNote')
+    })
+}
