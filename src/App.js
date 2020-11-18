@@ -21,11 +21,11 @@ import Soundfont from "soundfont-player";
 function App() {
     const [playing, setPlaying] = useState(false);
     const [player, setPlayer] = useState(null);
-    const [instrument, setInstrument] = useState("acoustic_grand_piano");
+    const [instrument, setInstrument] = useState("flute");
 
     const [slides, setSlides] = useState(<section>Loading...</section>);
     const [toolkit, setToolkit] = useState(null);
-    const [path, setPath] = useState("https://omarazam98.github.io/MusicXmlData/xmlFiles/Test3.xml");
+    const [path, setPath] = useState("https://omarazam98.github.io/MusicXmlData/xmlFiles/Test8.xml");
     const [data, setData] = useState(null);
     const [timeMap, setTimeMap] = useState(null);
     const [key, setKey] = useState('C');
@@ -76,6 +76,7 @@ function App() {
 
     useEffect(() => {
             if(data && timeMap && ac && instrument){
+                setPlayer(null)
                 Soundfont.instrument(ac, instrument).then((soundfont) => {
                     removeHighlights();
                     MidiPlayer(ac, soundfont, data, timeMap, practice).then((player) =>{
@@ -117,16 +118,20 @@ function App() {
                       <select disabled={playing} className={'reveal-toolbar-button'} value={path} onChange={(event) => setPath(event.target.value)}>
                       <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml"}>Senorita</option>
                       <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test3.xml"}>Little lamb</option>
+                      <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test8.xml"}>Hallelujah</option>
+                      <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test9.xml"}>Viva La Vida</option>
+                      <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test11.xml"}>Dance Monkey</option>
                   </select>
                   </span>
                   <span className={'reveal-toolbar-button'}>
                       Key
                       <select disabled={playing} className={'reveal-toolbar-button'} value={key} onChange={(event) => setKey(event.target.value)}>
                       <option value={"A"}>A</option>
+                      <option value={"B"}>B</option>
                       <option value={"C"}>C</option>
                       <option value={"D"}>D</option>
                       <option value={"E"}>E</option>
-                      <option value={"E"}>Eb</option>
+                      <option value={"F"}>F</option>
                       <option value={"G"}>G</option>
                       </select>
                   </span>
@@ -149,8 +154,8 @@ function App() {
                       <Button disabled={!player || playing && !practice}  onClick={() => playPause(true)}>{playing && practice ? 'Pause' : 'Practice'}</Button>
                   </ButtonGroup>
                   <Box className={'reveal-toolbar-button'} bgcolor={grey}>
-                      <div id={"score"}/>
-                      <div id={"tuner"}/>
+                      <div id={"score"}>Score %</div>
+                      <div id={"tuner"}>Freq Hz</div>
                   </Box>
               </div>
           </div>

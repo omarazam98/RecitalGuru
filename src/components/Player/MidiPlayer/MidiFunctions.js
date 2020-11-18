@@ -19,11 +19,11 @@ export const connectAubioMedia = (ac, func) => {
         }
 
         if(pitchDetector === undefined){
-            pitchDetector = new aubio.Pitch('default', 1024, 1, ac.sampleRate)
+            pitchDetector = new aubio.Pitch('default', 512, 1, ac.sampleRate)
         }
 
         if(scriptProcessor === undefined){
-            scriptProcessor = ac.createScriptProcessor(1024, 1, 1)
+            scriptProcessor = ac.createScriptProcessor(512, 1, 1)
             const analyser = ac.createAnalyser();
             const stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}})
 
@@ -45,10 +45,10 @@ export const MidiSync = async (toolkit) => {
         const noteTime = timeMap[index].qstamp
         syncedNotes[noteTime] = syncedNotes[noteTime] ? syncedNotes[noteTime] : {on: [], off:[], time: 0}
         if(timeMap[index]['on']){
-            syncedNotes[noteTime]['on'].push(...timeMap[index]['on'])
+            syncedNotes[noteTime]['on'] = timeMap[index]['on']
         }
         if(timeMap[index + 1] && timeMap[index + 1]['off']){
-            syncedNotes[noteTime]['off'].push(...timeMap[index + 1]['off'])
+            syncedNotes[noteTime]['off'] = timeMap[index + 1]['off']
             syncedNotes[noteTime]['time'] = (toolkit.getMIDIValuesForElement(timeMap[index + 1]['off'][0]).duration) / 1000
         }
     }
@@ -76,9 +76,6 @@ export const getSlideSize = () => {
 }
 
 export const playChangeControls = (player) => {
-    Reveal.configure({
-        controls: !player.isPlaying()
-    });
 }
 
 export const removeHighlights = () => {

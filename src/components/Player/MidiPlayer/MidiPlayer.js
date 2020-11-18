@@ -23,7 +23,7 @@ export const MidiPlayer = async (ac, soundfont, data, timeMap , practice) => {
         const time = event.tick / Player.division
         const vrvMap = timeMap[time]
 
-        if (event.velocity > 0) {
+        if (event.velocity > 0 && vrvMap.off.length > 0) {
             if(!practice){
                 notes[event.noteNumber] = soundfont.play(event.noteName, ac.currentTime, {
                     gain: 1,
@@ -35,23 +35,17 @@ export const MidiPlayer = async (ac, soundfont, data, timeMap , practice) => {
             const startTime = ac.currentTime
             const interval = setInterval(() => {
                 if (Math.abs(micFreq - event.noteNumber) <= 1) {
-                    vrvMap.off.forEach((note) => {
-                        document.getElementById(note).classList.add('passedNote')
-                        passedNotes++
-                    })
+                    document.getElementById(vrvMap.off).classList.add('passedNote')
+                    passedNotes++
                     clearInterval(interval);
                 } else if ((ac.currentTime - startTime) > vrvMap.time) {
-                    vrvMap.off.forEach((note) => {
-                        document.getElementById(note).classList.add('failedNote')
-                    })
+                    document.getElementById(vrvMap.off).classList.add('failedNote')
                     clearInterval(interval);
                 }
-                score.innerHTML = Math.round((passedNotes) / totalNotes * 1000) / 10 + ' %'
             }, 225)
 
-            vrvMap.on.forEach((note) => {
-                document.getElementById(note).classList.add('highlightedNote')
-            })
+            score.innerHTML = Math.round((passedNotes) / totalNotes * 1000) / 10 + ' %'
+            document.getElementById(vrvMap.on).classList.add('highlightedNote')
 
         } else if (event.velocity === 0) {
             if(!practice){
