@@ -1,55 +1,9 @@
-/* Load the theme (with the scss variables) */
-/**
- * A simple theme for reveal.js presentations, similar
- * to the default theme. The accent color is darkblue.
- *
- * This theme is Copyright (C) 2012 Owen Versteeg, https://github.com/StereotypicalApps. It is MIT licensed.
- * reveal.js is Copyright (C) 2011-2012 Hakim El Hattab, http://hakim.se
- */
 @import url(https://fonts.googleapis.com/css?family=News+Cycle:400,700);
 @import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
 @import url(https://fonts.googleapis.com/css?family=Cousine);
 @import url(https://fonts.googleapis.com/css?family=Tinos);
 section.has-dark-background, section.has-dark-background h1, section.has-dark-background h2, section.has-dark-background h3, section.has-dark-background h4, section.has-dark-background h5, section.has-dark-background h6 {
   color: #fff; }
-
-/*********************************************
- * GLOBAL STYLES
- *********************************************/
-.reveal .reveal-toolbar{
-  display: inline-flex;
-  position: absolute;
-  justify-content: space-between;
-  left: 30px;
-  bottom: 23px;
-  width: 85%;
-  z-index: 110;
-}
-
-.reveal .reveal-toolbar-button {
-  min-width: 7%;
-  overflow: hidden;
-  border-radius: 25px;
-  background-color: lightgrey;
-  display: block;
-  color: maroon;
-  font-size: 3vh;
-  text-align: center;
-  padding: 1vh;
-  pointer-events: auto;
-  cursor: pointer;
-  z-index: 2;
-}
-
-.reveal .reveal-toolbar-button:hover {
-  color: firebrick;
-}
-
-.reveal {
-  font-family: "Lato", sans-serif;
-  font-size: 40px;
-  font-weight: normal;
-  color: #000; }
 
 ::selection {
   color: #fff;
@@ -61,99 +15,23 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   background: rgba(0, 0, 0, 0.99);
   text-shadow: none; }
 
-.reveal .slides section,
+.swiper-slide section,
 .reveal .slides section > section {
   line-height: 1.3;
   font-weight: inherit; }
 
-/*********************************************
- * HEADERS
- *********************************************/
-.reveal h1,
-.reveal h2,
-.reveal h3,
-.reveal h4,
-.reveal h5,
-.reveal h6 {
-  margin: 0 0 20px 0;
-  color: #000;
-  font-family: "News Cycle", Impact, sans-serif;
-  font-weight: normal;
-  line-height: 1.2;
-  letter-spacing: normal;
-  text-transform: none;
-  text-shadow: none;
-  word-wrap: break-word; }
-
-.reveal h1 {
-  font-size: 3.77em; }
-
-.reveal h2 {
-  font-size: 2.11em; }
-
-.reveal h3 {
-  font-size: 1.55em; }
-
-.reveal h4 {
-  font-size: 1em; }
-
-.reveal h1 {
-  text-shadow: none; }
-
-/*********************************************
- * OTHER
- *********************************************/
-.reveal p {
+.swiper-slide p {
   margin: 20px 0;
   line-height: 1.3; }
 
-/* Ensure certain elements are never larger than the slide itself */
-.reveal img,
-.reveal video,
-.reveal iframe {
-  max-width: 95%;
-  max-height: 95%; }
 
-.reveal strong,
-.reveal b {
+.swiper-slide dt {
   font-weight: bold; }
 
-.reveal em {
-  font-style: italic; }
-
-.reveal ol,
-.reveal dl,
-.reveal ul {
-  display: inline-block;
-  text-align: left;
-  margin: 0 0 0 1em; }
-
-.reveal ol {
-  list-style-type: decimal; }
-
-.reveal ul {
-  list-style-type: disc; }
-
-.reveal ul ul {
-  list-style-type: square; }
-
-.reveal ul ul ul {
-  list-style-type: circle; }
-
-.reveal ul ul,
-.reveal ul ol,
-.reveal ol ol,
-.reveal ol ul {
-  display: block;
+.swiper-slide dd {
   margin-left: 40px; }
 
-.reveal dt {
-  font-weight: bold; }
-
-.reveal dd {
-  margin-left: 40px; }
-
-.reveal blockquote {
+.swiper-slide blockquote {
   display: block;
   position: relative;
   width: 70%;
@@ -163,14 +41,14 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   background: rgba(255, 255, 255, 0.05);
   box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.2); }
 
-.reveal blockquote p:first-child,
-.reveal blockquote p:last-child {
+.swiper-slide blockquote p:first-child,
+.swiper-slide blockquote p:last-child {
   display: inline-block; }
 
-.reveal q {
+.swiper-slide q {
   font-style: italic; }
 
-.reveal pre {
+.swiper-slide pre {
   display: block;
   position: relative;
   width: 90%;
@@ -182,143 +60,37 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   word-wrap: break-word;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15); }
 
-.reveal code {
-  font-family: monospace;
-  text-transform: none; }
-
-.reveal pre code {
-  display: block;
-  padding: 5px;
-  overflow: auto;
-  max-height: 400px;
-  word-wrap: normal; }
-
-.reveal table {
-  margin: auto;
-  border-collapse: collapse;
-  border-spacing: 0; }
-
-.reveal table th {
-  font-weight: bold; }
-
-.reveal table th,
-.reveal table td {
-  text-align: left;
-  padding: 0.2em 0.5em 0.2em 0.5em;
-  border-bottom: 1px solid; }
-
-.reveal table th[align="center"],
-.reveal table td[align="center"] {
-  text-align: center; }
-
-.reveal table th[align="right"],
-.reveal table td[align="right"] {
-  text-align: right; }
-
-.reveal table tbody tr:last-child th,
-.reveal table tbody tr:last-child td {
-  border-bottom: none; }
-
-.reveal sup {
-  vertical-align: super;
-  font-size: smaller; }
-
-.reveal sub {
-  vertical-align: sub;
-  font-size: smaller; }
-
-.reveal small {
-  display: inline-block;
-  font-size: 0.6em;
-  line-height: 1.2em;
-  vertical-align: top; }
-
-.reveal small * {
-  vertical-align: top; }
-
-/*********************************************
- * LINKS
- *********************************************/
-.reveal a {
-  color: #00008B;
-  text-decoration: none;
-  -webkit-transition: color .15s ease;
-  -moz-transition: color .15s ease;
-  transition: color .15s ease; }
-
-.reveal a:hover {
-  color: #0000f1;
-  text-shadow: none;
-  border: none; }
-
-.reveal .roll span:after {
-  color: #fff;
-  background: #00003f; }
-
-/*********************************************
- * IMAGES
- *********************************************/
-.reveal section img {
+.swiper-slide section img {
   margin: 15px 0px;
   background: rgba(255, 255, 255, 0.12);
   border: 4px solid #000;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
 
-.reveal section img.plain {
+.swiper-slide section img.plain {
   border: 0;
   box-shadow: none; }
 
-.reveal a img {
+.swiper-slide a img {
   -webkit-transition: all .15s linear;
   -moz-transition: all .15s linear;
   transition: all .15s linear; }
 
-.reveal a:hover img {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: #00008B;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.55); }
+.swiper-slide section svg .highlightedNote path,
+.swiper-slide section svg g.note.highlightedNote,
+.swiper-slide section svg .highlightedNote {
+  stroke: blue;
+  fill: blue; }
 
-/*********************************************
- * NAVIGATION CONTROLS
- *********************************************/
-.reveal .controls {
-  color: #00008B; }
+.swiper-slide section svg .passedNote path,
+.swiper-slide section svg g.note.passedNote,
+.swiper-slide section svg .passedNote {
+  stroke: forestgreen !important;
+  fill: forestgreen !important;
+}
 
-/*********************************************
- * PROGRESS BAR
- *********************************************/
-.reveal .progress {
-  background: rgba(0, 0, 0, 0.2);
-  color: #00008B; }
-
-.reveal .progress span {
-  -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
-  -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
-  transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
-
-/*********************************************
- * PRINT BACKGROUND
- *********************************************/
-@media print {
-  .backgrounds {
-    background-color: #fff; } }
-
-/** Changes for Verovio presentation. **/
-.reveal section svg .highlightedNote path,
-.reveal section svg g.note.highlightedNote,
-.reveal section svg .highlightedNote {
-  stroke: #cc00cc;
-  fill: #cc00cc; }
-
-.reveal section svg .passedNote path,
-.reveal section svg g.note.passedNote,
-.reveal section svg .passedNote {
-  stroke: #00cc00 !important;
-  fill: #00cc00!important; }
-
-.reveal section svg .failedNote path,
-.reveal section svg g.note.failedNote,
-.reveal section svg .failedNote {
+.swiper-slide section svg .failedNote path,
+.swiper-slide section svg g.note.failedNote,
+.swiper-slide section svg .failedNote {
   stroke: #cc0000;
   fill: #cc0000; }
 
@@ -351,7 +123,7 @@ span.footer {
   font-size: 80%; }
 
 /* Allow different verses to be distinguished. */
-.reveal section p[data-verse-num]:not([data-verse-num='1']) {
+.swiper-slide section p[data-verse-num]:not([data-verse-num='1']) {
   font-style: italic; }
 
 p[data-verse-num] span {
@@ -371,11 +143,11 @@ p span.failedNote {
   border-bottom: 10px solid #D2062F; }
 
 /* Monospace Font: Cousine */
-.reveal section svg {
+.swiper-slide section svg {
   font-family: 'Cousine', monospace; }
 
 /* Verovio Text Font: Tinos */
-.reveal.reveal section svg g.page-margin {
+.swiper-slide section svg g.page-margin {
   font-family: 'Tinos', 'Times New Roman', 'Times', 'Liberation Serif', serif; }
 
 /* Verovio SMuFL Font: Bravura */
@@ -383,4 +155,16 @@ html {
   font-family: Bravura;
   background: #fff;
 }
+
+.btn{
+  color: blue
+}
+
+.btn2{
+  color: darkgoldenrod;
+}
+
+
+
+
 

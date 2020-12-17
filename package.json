@@ -4,12 +4,12 @@
   "private": true,
   "homepage": "http://omarazam98.github.io/RecitalGuru",
   "dependencies": {
-    "@material-ui/core": "^4.11.0",
+    "@ionic/core": "^5.5.2",
+    "@ionic/react": "^5.5.2",
     "midi-player-js": "^2.0.13",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-scripts": "3.4.3",
-    "reveal.js": "github:christian-classics-ethereal-library/reveal.js#non-dist-alpha",
     "soundfont-player": "^0.12.0",
     "verovio": "^2.7.2"
   },

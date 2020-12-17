@@ -1,11 +1,8 @@
 import React from "react";
-import {getSlideSize} from "../MidiPlayer/MidiFunctions";
-
 export default function RevealMusicXML(key, path, toolkit) {
     const setOptions = function () {
-      let size = getSlideSize();
-      let pixelHeight = size.height;
-      let pixelWidth = size.width;
+      let pixelHeight = window.innerHeight / 2;
+      let pixelWidth = window.innerWidth;
       let defaultOptions = {
         pageHeight: pixelHeight  * (100 / 60),
         pageWidth:  pixelWidth * (100 / 50),
@@ -17,15 +14,14 @@ export default function RevealMusicXML(key, path, toolkit) {
       toolkit.setOptions({ ...defaultOptions, transpose: key });
     };
 
-    const render = () => {
+    const render = async () => {
       const slides = []
       let max = toolkit.getPageCount();
       for (let i = 1; i <= max; i++) {
         slides.push(
-            <section
-              id={'RevealMusicXML' + i}
-              dangerouslySetInnerHTML={{ __html: toolkit.renderToSVG(i, {}) }}
-            />
+                <section
+                    dangerouslySetInnerHTML={{ __html: toolkit.renderToSVG(i, {}) }}
+                />
         )
       }
       return (slides)

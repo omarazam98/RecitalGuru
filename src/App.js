@@ -1,49 +1,114 @@
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
+import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonMenu, IonList, IonItem, IonMenuToggle, IonTitle} from "@ionic/react";
+import {IonSlides, IonSlide} from "@ionic/react";
+
 import './App.css';
+import '@ionic/react/css/core.css';
 
 import verovio from 'verovio'
 import {MidiPlayer} from "./components/Player/MidiPlayer/MidiPlayer";
 import RevealMusicXML from "./components/Player/RevealMusicXml/RevealMusicXML";
-import revealCss from "./css/reveal.css";
-import verovioCss from "./css/slidesSimple.css";
-import {
-    MidiSync,
-    revealInitialize,
-    resetSlides,
-    playChangeControls,
-    removeHighlights,
-} from "./components/Player/MidiPlayer/MidiFunctions";
-
-import {Box, Button, ButtonGroup} from '@material-ui/core'
-import {grey} from "@material-ui/core/colors/grey";
+import {MidiSync, removeHighlights, connectAubioMedia} from "./components/Player/MidiPlayer/MidiFunctions";
 import Soundfont from "soundfont-player";
+import css from "./css/slidesSimple.css";
+
+const songs = {
+    "Senorita": 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml',
+    "Hallelujah": 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test8.xml',
+    "Viva La Vida": 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test9.xml',
+    "Dance Monkey": 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test11.xml'
+}
 
 function App() {
     const [playing, setPlaying] = useState(false);
     const [player, setPlayer] = useState(null);
     const [instrument, setInstrument] = useState("flute");
 
-    const [slides, setSlides] = useState(<section>Loading...</section>);
+    const [micFreq, setMicFreq] = useState(0);
+    const [event, setEvent] = useState(0);
+
+    const [slides, setSlides] = useState([]);
     const [toolkit, setToolkit] = useState(null);
-    const [path, setPath] = useState("https://omarazam98.github.io/MusicXmlData/xmlFiles/Test8.xml");
+    const [path, setPath] = useState("Hallelujah");
     const [data, setData] = useState(null);
     const [timeMap, setTimeMap] = useState(null);
     const [key, setKey] = useState('C');
     const [practice, setPractice] = useState(true);
     const [ac, setAc] = useState(null);
 
+    const [open, setOpen] = useState(false);
+    const [swiper, setSwiper] = useState({});
 
-    const height = document.height < document.width ? document.height : document.width
-    const width = document.width > document.height ? document.width : document.height
+    const [score, setScore] = useState("0 %");
+    const [notes, setNotes] = useState(0);
+
+
+    let pNotes = 0;
+
+    const getFirstColumn = {
+        name: "First",
+        selectedIndex: 0,
+        options: [
+            { text: "Grand Piano", value: "acoustic_grand_piano" },
+            { text: "Acoustic Guitar", value: "acoustic_guitar_nylon" },
+            { text: "Electric Guitar", value: "electric_guitar_clean" },
+            { text: "Clarinet", value: "clarinet" },
+            { text: "Flute", value: "flute" },
+            { text: "Alto Sax", value: "alto_sax" },
+            { text: "Trumpet", value: "trumpet" },
+            { text: "Cello", value: "cello" },
+            { text: "Violin", value: "violin" },
+        ]
+
+    }
+
+    const getSecondColumn = {
+        name: "Second",
+        selectedIndex: 0,
+        options: [
+            { text: "A", value: "A" },
+            { text: "B", value: "B" },
+            { text: "C", value: "C" },
+            { text: "D", value: "D" },
+            { text: "E", value: "E" },
+            { text: "F", value: "F" },
+            { text: "G", value: "G" }
+        ]
+    };
 
     verovio.module.onRuntimeInitialized = function () {
         setToolkit(new verovio.toolkit())
-        if(window.confirm("Welcome to the RecitalGuru Beta!\n\nSelect a song and the key of your instrument to begin. Notes will be highlighted as you play along providing you with feedback on your performance. If you wish to just listen try the Free Play mode.\n\nRecitalGuru requires a device with a microphone and speakers. Mobile support coming soon")){
-            const AudioContext = window.AudioContext || window.webkitAudioContext || false;
-            const ac = new AudioContext();
-            setAc(ac);
-        }
+
+        const AudioContext = window.AudioContext || window.webkitAudioContext || false;
+        const ac = new AudioContext();
+        setAc(ac);
+
+        connectAubioMedia(ac, (freq) => {
+            if(freq){
+                setMicFreq(Math.round(12 * (Math.log(freq / 440) / Math.log(2)) + 69))
+            }
+        })
+
     }
+
+    const update = useCallback((event, freq) => {
+        if(player){
+            const time = event.tick / player.division
+            const vrvMap = timeMap[time]
+                if (Math.abs(freq - event.noteNumber) <= 1) {
+                    document.getElementById(vrvMap.off).classList.add('passedNote')
+                    pNotes++
+                    setScore(Math.round(pNotes / notes * 100) + " %")
+                } else {
+                    document.getElementById(vrvMap.off).classList.add('failedNote')
+                }
+
+                if((timeMap[time]['page']) !== swiper.activeIndex){
+                    console.log((timeMap[time]['page']))
+                    swiper.slideTo(timeMap[time]['page'])
+                }
+        }
+    }, [player])
 
     const playPause = (p) => {
         ac.resume().then(() => {
@@ -58,18 +123,19 @@ function App() {
 
     useEffect(() => {
             async function render() {
-                const slides = await RevealMusicXML(key, path, toolkit)
+                const slides = await RevealMusicXML(key, songs[path], toolkit)
                 const data = await toolkit.renderToMIDI()
                 const timeMap = await MidiSync(toolkit)
+
                 setSlides(slides)
                 setData(data)
                 setTimeMap(timeMap)
             }
 
             if(toolkit && path && key){
-                render().then(() => resetSlides())
-            }else {
-                revealInitialize();
+                render().then(() => {
+                    setNotes(document.getElementsByClassName('note').length)
+                })
             }
     },
     [toolkit, path, key]);
@@ -83,7 +149,17 @@ function App() {
                         setPlayer(player)
                         player.on('endOfFile' , () => {
                             setPlaying(false)
+                            swiper.slideTo(0)
                             removeHighlights();
+                            setPractice(!practice)
+                        })
+
+
+                        player.on('midiEvent' , (event) => {
+                            if(event.velocity === 0)
+                                setTimeout(() => {
+                                    setEvent(event)
+                                }, 50)
                         })
                     })
                 })
@@ -100,65 +176,73 @@ function App() {
                 } else {
                     player.play();
                 }
-                playChangeControls(player);
             }
         },
         [player, playing]);
 
+    useEffect(() => {
+        update(event, micFreq)
+        },
+        [event]);
 
-  return (
-      <div style={{height: height, width: width }}>
-          <div className={'reveal'} style={revealCss}>
-              <div className={'slides'} style={verovioCss}>
-                  {slides}
-              </div>
-              <div className={'reveal-toolbar'}>
-                  <span className={'reveal-toolbar-button'}>
-                      Song
-                      <select disabled={playing} className={'reveal-toolbar-button'} value={path} onChange={(event) => setPath(event.target.value)}>
-                      <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml"}>Senorita</option>
-                      <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test3.xml"}>Little lamb</option>
-                      <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test8.xml"}>Hallelujah</option>
-                      <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test9.xml"}>Viva La Vida</option>
-                      <option value={"https://omarazam98.github.io/MusicXmlData/xmlFiles/Test11.xml"}>Dance Monkey</option>
-                  </select>
-                  </span>
-                  <span className={'reveal-toolbar-button'}>
-                      Key
-                      <select disabled={playing} className={'reveal-toolbar-button'} value={key} onChange={(event) => setKey(event.target.value)}>
-                      <option value={"A"}>A</option>
-                      <option value={"B"}>B</option>
-                      <option value={"C"}>C</option>
-                      <option value={"D"}>D</option>
-                      <option value={"E"}>E</option>
-                      <option value={"F"}>F</option>
-                      <option value={"G"}>G</option>
-                      </select>
-                  </span>
-                  <span className={'reveal-toolbar-button'}>
-                      Instrument
-                      <select disabled={playing} className={'reveal-toolbar-button'} value={instrument} onChange={(event) => setInstrument(event.target.value)}>
-                          <option value={"acoustic_grand_piano"}>Grand Piano</option>
-                          <option value={"acoustic_guitar_nylon"}>Acoustic Guitar</option>
-                          <option value={"electric_guitar_clean"}>Electric Guitar</option>
-                          <option value={"clarinet"}>Clarinet</option>
-                          <option value={"flute"}>Flute</option>
-                          <option value={"alto_sax"}>Alto Sax</option>
-                          <option value={"trumpet"}>Trumpet</option>
-                          <option value={"cello"}>Cello</option>
-                          <option value={"violin"}>Violin</option>
-                      </select>
-                  </span>
-                  <ButtonGroup disableElevation variant="contained" color="primary">
-                      <Button disabled={!player || playing && practice} onClick={() => playPause(false)}> {playing && !practice ? 'Pause' : 'Free Play'}</Button>
-                      <Button disabled={!player || playing && !practice}  onClick={() => playPause(true)}>{playing && practice ? 'Pause' : 'Practice'}</Button>
-                  </ButtonGroup>
-                  <Box className={'reveal-toolbar-button'} bgcolor={grey}>
-                      <div id={"score"}>Score %</div>
-                      <div id={"tuner"}>Freq Hz</div>
-                  </Box>
-              </div>
-          </div>
+
+
+    return (
+      <div>
+          <IonApp>
+          <IonMenu active={'true'} contentId="content1">
+              <IonList id="song" labelId="song" disabled={playing} value={path}>
+                  {Object.keys(songs).map((key) => {
+                      return <IonMenuToggle><IonItem button menuClose onClick={() => setPath(key)}>{key}</IonItem></IonMenuToggle>
+                  })}
+              </IonList>
+          </IonMenu>
+          <IonPicker
+              isOpen={open}
+              columns={[getFirstColumn, getSecondColumn]}
+              buttons={[
+                  {
+                      text: "Cancel",
+                      role: "cancel",
+                      handler: value => {setOpen(false)}
+                  },
+                  {
+                      text: "Confirm",
+                      handler: value => {
+                          setInstrument(value['First'].value);
+                          setKey(value["Second"].value);
+                          setOpen(false)
+                      }
+                  }
+              ]}>
+          </IonPicker>
+                  <IonHeader>
+                      <IonToolbar>
+                          <IonButtons slot={"start"}>
+                              <IonTitle>Recital Guru</IonTitle>
+                              <IonMenuToggle>
+                                  <IonButton class={"btn2"} id={"content1"} disabled={playing}>Change Song</IonButton>
+                              </IonMenuToggle>
+                              <IonButton class={"btn2"} disabled={playing} onClick={ () => setOpen(true)}>Change Instrument/Key</IonButton>
+                          </IonButtons>
+                          <IonButtons slot={"end"}>
+                              <IonButton class={"btn"} disabled={!player || playing && practice} onClick={() => playPause(false)}> {playing && !practice ? 'Pause' : 'Free Play'}</IonButton>
+                              <IonButton class={"btn"} disabled={!player || playing && !practice}  onClick={() => playPause(true)}>{playing && practice ? 'Pause' : 'Practice'}</IonButton>
+                              <IonTitle id={"tuner"}>{micFreq + "Hz"}</IonTitle>
+                              <IonTitle id={"score"}>Score {score}</IonTitle>
+                          </IonButtons>
+                      </IonToolbar>
+                  </IonHeader>
+                  <IonContent>
+                      <IonSlides key={slides.map(slide => slide.id).join('_')} style={css} options = {{direction: 'vertical', slidesPerView: 2}} onIonSlidesDidLoad={(event) => setSwiper(event.target.swiper)}>
+                          {slides.map((slide) => {
+                              return (
+                                  <IonSlide key={slide.id}> {slide}</IonSlide>
+                              )
+                          })}
+                      </IonSlides>
+                  </IonContent>
+          </IonApp>
       </div>
   )
 }

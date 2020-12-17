@@ -1,4 +1,3 @@
-import Reveal from "reveal.js";
 import * as Aubio from '../../../aubio/aubio'
 
 let scriptProcessor;
@@ -33,49 +32,32 @@ export const connectAubioMedia = (ac, func) => {
         }
 
         scriptProcessor.addEventListener('audioprocess', function(event) {
-                func(Math.round(pitchDetector.do(event.inputBuffer.getChannelData(0)) / 5) * 5)
+                func(pitchDetector.do(event.inputBuffer.getChannelData(0)))
         })
     })
 }
 
 export const MidiSync = async (toolkit) => {
+    let page = 0;
     const syncedNotes = {}
+
     const timeMap = await toolkit.renderToTimemap();
     for (let index = 0; index < timeMap.length; index++){
         const noteTime = timeMap[index].qstamp
-        syncedNotes[noteTime] = syncedNotes[noteTime] ? syncedNotes[noteTime] : {on: [], off:[], time: 0}
+
+        syncedNotes[noteTime] = syncedNotes[noteTime] ? syncedNotes[noteTime] : {on: [], off:[], time: 0, page: page}
         if(timeMap[index]['on']){
             syncedNotes[noteTime]['on'] = timeMap[index]['on']
+            const currentPage = toolkit.getPageWithElement(timeMap[index]['on'][0]) - 1
+            page = currentPage ? currentPage : page
+            syncedNotes[noteTime]['page'] = currentPage
         }
-        if(timeMap[index + 1] && timeMap[index + 1]['off']){
-            syncedNotes[noteTime]['off'] = timeMap[index + 1]['off']
-            syncedNotes[noteTime]['time'] = (toolkit.getMIDIValuesForElement(timeMap[index + 1]['off'][0]).duration) / 1000
+        if(timeMap[index] && timeMap[index]['off']){
+            syncedNotes[noteTime]['off'] = timeMap[index]['off']
+            syncedNotes[noteTime]['time'] = (toolkit.getMIDIValuesForElement(timeMap[index]['off'][0]).duration) / 1000
         }
     }
     return syncedNotes
-}
-
-export const revealInitialize = () => {
-    Reveal.initialize({
-        controlsTutorial: false,
-        navigationMode: 'linear',
-        width: '100%',
-        height: '100%',
-        transition: 'slide',
-        transitionSpeed: 'fast',
-    })
-    resetSlides();
-}
-
-export const resetSlides = () => {
-    Reveal.slide(0, 0)
-}
-
-export const getSlideSize = () => {
-    return Reveal.getComputedSlideSize()
-}
-
-export const playChangeControls = (player) => {
 }
 
 export const removeHighlights = () => {
