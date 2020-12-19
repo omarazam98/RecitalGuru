@@ -3,15 +3,15 @@
     "static/js/0.39e7fef5.chunk.js": "/RecitalGuru/static/js/0.39e7fef5.chunk.js",
     "static/js/0.39e7fef5.chunk.js.map": "/RecitalGuru/static/js/0.39e7fef5.chunk.js.map",
     "main.css": "/RecitalGuru/static/css/main.48261d22.chunk.css",
-    "main.js": "/RecitalGuru/static/js/main.ddc899f7.chunk.js",
-    "main.js.map": "/RecitalGuru/static/js/main.ddc899f7.chunk.js.map",
+    "main.js": "/RecitalGuru/static/js/main.bbc380a1.chunk.js",
+    "main.js.map": "/RecitalGuru/static/js/main.bbc380a1.chunk.js.map",
     "polyfills-dom.js": "/RecitalGuru/static/js/polyfills-dom.caad0738.chunk.js",
     "polyfills-dom.js.map": "/RecitalGuru/static/js/polyfills-dom.caad0738.chunk.js.map",
     "runtime-main.js": "/RecitalGuru/static/js/runtime-main.cfb3f94d.js",
     "runtime-main.js.map": "/RecitalGuru/static/js/runtime-main.cfb3f94d.js.map",
     "static/css/4.4f5fa3e4.chunk.css": "/RecitalGuru/static/css/4.4f5fa3e4.chunk.css",
-    "static/js/4.357bc33b.chunk.js": "/RecitalGuru/static/js/4.357bc33b.chunk.js",
-    "static/js/4.357bc33b.chunk.js.map": "/RecitalGuru/static/js/4.357bc33b.chunk.js.map",
+    "static/js/4.0261bcda.chunk.js": "/RecitalGuru/static/js/4.0261bcda.chunk.js",
+    "static/js/4.0261bcda.chunk.js.map": "/RecitalGuru/static/js/4.0261bcda.chunk.js.map",
     "static/js/5.633262ba.chunk.js": "/RecitalGuru/static/js/5.633262ba.chunk.js",
     "static/js/5.633262ba.chunk.js.map": "/RecitalGuru/static/js/5.633262ba.chunk.js.map",
     "static/js/6.e269649a.chunk.js": "/RecitalGuru/static/js/6.e269649a.chunk.js",
@@ -121,11 +121,11 @@
     "static/js/58.2546630b.chunk.js": "/RecitalGuru/static/js/58.2546630b.chunk.js",
     "static/js/58.2546630b.chunk.js.map": "/RecitalGuru/static/js/58.2546630b.chunk.js.map",
     "index.html": "/RecitalGuru/index.html",
-    "precache-manifest.9e024b46f117cfccf0122a4bc1604de0.js": "/RecitalGuru/precache-manifest.9e024b46f117cfccf0122a4bc1604de0.js",
+    "precache-manifest.3ce55959918a990b8a1bcd249813196c.js": "/RecitalGuru/precache-manifest.3ce55959918a990b8a1bcd249813196c.js",
     "service-worker.js": "/RecitalGuru/service-worker.js",
     "static/css/4.4f5fa3e4.chunk.css.map": "/RecitalGuru/static/css/4.4f5fa3e4.chunk.css.map",
     "static/css/main.48261d22.chunk.css.map": "/RecitalGuru/static/css/main.48261d22.chunk.css.map",
-    "static/js/4.357bc33b.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/4.357bc33b.chunk.js.LICENSE.txt",
+    "static/js/4.0261bcda.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/4.0261bcda.chunk.js.LICENSE.txt",
     "static/js/52.14724a02.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/52.14724a02.chunk.js.LICENSE.txt",
     "static/js/58.2546630b.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/58.2546630b.chunk.js.LICENSE.txt",
     "static/js/polyfills-dom.caad0738.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/polyfills-dom.caad0738.chunk.js.LICENSE.txt"
@@ -133,8 +133,8 @@
   "entrypoints": [
     "static/js/runtime-main.cfb3f94d.js",
     "static/css/4.4f5fa3e4.chunk.css",
-    "static/js/4.357bc33b.chunk.js",
+    "static/js/4.0261bcda.chunk.js",
     "static/css/main.48261d22.chunk.css",
-    "static/js/main.ddc899f7.chunk.js"
+    "static/js/main.bbc380a1.chunk.js"
   ]
 }
