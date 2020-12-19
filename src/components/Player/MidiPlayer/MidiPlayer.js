@@ -4,7 +4,6 @@ import React from "react";
 export const MidiPlayer = async (ac, soundfont, data, timeMap , practice) => {
     let notes = {};
 
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
     const Player = new MidiPlayerJs.Player(function (event) {
         const time = event.tick / Player.division

@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonMenu, IonList, IonItem, IonMenuToggle, IonTitle} from "@ionic/react";
+import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonItem, IonMenuToggle, IonTitle, IonListHeader} from "@ionic/react";
 import {IonSlides, IonSlide} from "@ionic/react";
 
 import './App.css';
@@ -39,7 +39,7 @@ function App() {
     const [open, setOpen] = useState(false);
     const [swiper, setSwiper] = useState({});
 
-    const [score, setScore] = useState("0 %");
+    const [score, setScore] = useState("0%");
     const [notes, setNotes] = useState(0);
 
 
@@ -98,7 +98,7 @@ function App() {
                 if (Math.abs(freq - event.noteNumber) <= 1) {
                     document.getElementById(vrvMap.off).classList.add('passedNote')
                     pNotes++
-                    setScore(Math.round(pNotes / notes * 100) + " %")
+                    setScore(Math.round(pNotes / notes * 100) + "%")
                 } else {
                     document.getElementById(vrvMap.off).classList.add('failedNote')
                 }
@@ -188,16 +188,19 @@ function App() {
 
 
     return (
-      <div>
-          <IonApp>
-          <IonMenu active={'true'} contentId="content1">
+        <IonApp>
+            <IonMenu active={'true'} contentId="content1">
               <IonList id="song" labelId="song" disabled={playing} value={path}>
+                  <IonListHeader lines="full">
+                      <h2>Select Song</h2>
+                  </IonListHeader>
                   {Object.keys(songs).map((key) => {
                       return <IonMenuToggle><IonItem button menuClose onClick={() => setPath(key)}>{key}</IonItem></IonMenuToggle>
                   })}
               </IonList>
-          </IonMenu>
-          <IonPicker
+            </IonMenu>
+            <IonPicker
+              mode={"ios"}
               isOpen={open}
               columns={[getFirstColumn, getSecondColumn]}
               buttons={[
@@ -215,24 +218,28 @@ function App() {
                       }
                   }
               ]}>
-          </IonPicker>
-                  <IonHeader>
-                      <IonToolbar>
-                          <IonButtons slot={"start"}>
-                              <IonTitle>Recital Guru</IonTitle>
-                              <IonMenuToggle>
-                                  <IonButton class={"btn2"} id={"content1"} disabled={playing}>Change Song</IonButton>
-                              </IonMenuToggle>
-                              <IonButton class={"btn2"} disabled={playing} onClick={ () => setOpen(true)}>Change Instrument/Key</IonButton>
-                          </IonButtons>
-                          <IonButtons slot={"end"}>
-                              <IonButton class={"btn"} disabled={!player || playing && practice} onClick={() => playPause(false)}> {playing && !practice ? 'Pause' : 'Free Play'}</IonButton>
-                              <IonButton class={"btn"} disabled={!player || playing && !practice}  onClick={() => playPause(true)}>{playing && practice ? 'Pause' : 'Practice'}</IonButton>
-                              <IonTitle id={"tuner"}>{micFreq + "Hz"}</IonTitle>
-                              <IonTitle id={"score"}>Score {score}</IonTitle>
-                          </IonButtons>
-                      </IonToolbar>
-                  </IonHeader>
+            </IonPicker>
+              <IonHeader>
+                  <IonToolbar>
+                      <IonButtons slot={"start"}>
+                          <IonTitle>Recital Guru</IonTitle>
+                          <IonMenuToggle>
+                              <IonButton class={"btn2"} id={"content1"} disabled={playing}>Song</IonButton>
+                          </IonMenuToggle>
+                          <IonButton class={"btn2"} disabled={playing} onClick={ () => setOpen(true)}>Instrument/Key</IonButton>
+                      </IonButtons>
+                  </IonToolbar>
+              </IonHeader>
+              <IonFooter>
+                  <IonToolbar>
+                      <IonButtons slot={"end"}>
+                          <IonButton class={"btn"} disabled={!player || playing && practice} onClick={() => playPause(false)}> {playing && !practice ? 'Pause' : 'Free Play'}</IonButton>
+                          <IonButton class={"btn"} disabled={!player || playing && !practice}  onClick={() => playPause(true)}>{playing && practice ? 'Pause' : 'Practice'}</IonButton>
+                          <IonTitle id={"tuner"}>{micFreq + "Hz"}</IonTitle>
+                          <IonTitle id={"score"}>Score {score}</IonTitle>
+                      </IonButtons>
+                  </IonToolbar>
+              </IonFooter>
                   <IonContent>
                       <IonSlides key={slides.map(slide => slide.id).join('_')} style={css} options = {{direction: 'vertical', slidesPerView: 2}} onIonSlidesDidLoad={(event) => setSwiper(event.target.swiper)}>
                           {slides.map((slide) => {
@@ -243,7 +250,6 @@ function App() {
                       </IonSlides>
                   </IonContent>
           </IonApp>
-      </div>
   )
 }
 
