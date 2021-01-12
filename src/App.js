@@ -183,6 +183,7 @@ function App() {
         [player, playing]);
 
     useLayoutEffect(() => {
+            getFreq(micFreq)
             update(event, micFreq)
         },
         [event]);
