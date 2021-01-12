@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, useLayoutEffect} from 'react';
 import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonItem, IonMenuToggle, IonTitle, IonListHeader} from "@ionic/react";
 import {IonSlides, IonSlide} from "@ionic/react";
 
@@ -42,7 +42,6 @@ function App() {
     const [score, setScore] = useState("0%");
     const [notes, setNotes] = useState(0);
 
-
     let pNotes = 0;
 
     const getFirstColumn = {
@@ -82,14 +81,18 @@ function App() {
         const AudioContext = window.AudioContext || window.webkitAudioContext || false;
         const ac = new AudioContext();
         setAc(ac);
-
-        connectAubioMedia(ac, (freq) => {
-            if(freq){
-                setMicFreq(Math.round(12 * (Math.log(freq / 440) / Math.log(2)) + 69))
-            }
-        })
-
     }
+
+    const getFreq = useCallback((micFreq) => {
+        if(ac){
+            connectAubioMedia(ac, (freq) => {
+                let f = Math.round(12 * (Math.log(freq / 440) / Math.log(2)) + 69)
+                if(freq && f !== micFreq){
+                    setMicFreq(f)
+                }
+            })
+        }
+    }, [ac])
 
     const update = useCallback((event, freq) => {
         if(player){
@@ -104,7 +107,6 @@ function App() {
                 }
 
                 if((timeMap[time]['page']) !== swiper.activeIndex){
-                    console.log((timeMap[time]['page']))
                     swiper.slideTo(timeMap[time]['page'])
                 }
         }
@@ -159,7 +161,7 @@ function App() {
                             if(event.velocity === 0)
                                 setTimeout(() => {
                                     setEvent(event)
-                                }, 50)
+                                }, 66)
                         })
                     })
                 })
@@ -180,8 +182,8 @@ function App() {
         },
         [player, playing]);
 
-    useEffect(() => {
-        update(event, micFreq)
+    useLayoutEffect(() => {
+            update(event, micFreq)
         },
         [event]);
 

@@ -18,21 +18,18 @@ export const connectAubioMedia = (ac, func) => {
         }
 
         if(pitchDetector === undefined){
-            pitchDetector = new aubio.Pitch('default', 512, 1, ac.sampleRate)
+            pitchDetector = new aubio.Pitch('default', 1024, 1, ac.sampleRate)
         }
 
         if(scriptProcessor === undefined){
-            scriptProcessor = ac.createScriptProcessor(512, 1, 1)
-            const analyser = ac.createAnalyser();
+            scriptProcessor = ac.createScriptProcessor(1024, 1, 1)
             const stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}})
-
-            ac.createMediaStreamSource(stream).connect(analyser)
-            analyser.connect(scriptProcessor)
+            ac.createMediaStreamSource(stream).connect(scriptProcessor)
             scriptProcessor.connect(ac.destination)
         }
 
         scriptProcessor.addEventListener('audioprocess', function(event) {
-                func(pitchDetector.do(event.inputBuffer.getChannelData(0)))
+            func(pitchDetector.do(event.inputBuffer.getChannelData(0)))
         })
     })
 }
