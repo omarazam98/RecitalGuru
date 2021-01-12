@@ -43,6 +43,7 @@ function App() {
     const [notes, setNotes] = useState(0);
 
     let pNotes = 0;
+    let mFreq;
 
     const getFirstColumn = {
         name: "First",
@@ -81,18 +82,14 @@ function App() {
         const AudioContext = window.AudioContext || window.webkitAudioContext || false;
         const ac = new AudioContext();
         setAc(ac);
-    }
 
-    const getFreq = useCallback((micFreq) => {
-        if(ac){
-            connectAubioMedia(ac, (freq) => {
-                let f = Math.round(12 * (Math.log(freq / 440) / Math.log(2)) + 69)
-                if(freq && f !== micFreq){
-                    setMicFreq(f)
-                }
-            })
-        }
-    }, [ac])
+        connectAubioMedia(ac, (freq) => {
+            if(freq &&  mFreq !== micFreq){
+                setMicFreq(mFreq)
+            }
+            mFreq = Math.round(12 * (Math.log(freq / 440) / Math.log(2)) + 69)
+        })
+    }
 
     const update = useCallback((event, freq) => {
         if(player){
@@ -118,7 +115,6 @@ function App() {
                 setPlayer(null)
                 setPractice(p)
             }
-
             setPlaying(!playing)
         })
     }
@@ -183,7 +179,6 @@ function App() {
         [player, playing]);
 
     useLayoutEffect(() => {
-            getFreq(micFreq)
             update(event, micFreq)
         },
         [event]);
