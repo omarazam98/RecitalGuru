@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState, useLayoutEffect} from 'react';
+import React, {useCallback, useEffect, useState, useLayoutEffect, useMemo} from 'react';
 import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonItem, IonMenuToggle, IonTitle, IonListHeader} from "@ionic/react";
 import {IonSlides, IonSlide} from "@ionic/react";
 
@@ -43,7 +43,6 @@ function App() {
     const [notes, setNotes] = useState(0);
 
     let pNotes = 0;
-    let mFreq;
 
     const getFirstColumn = {
         name: "First",
@@ -84,10 +83,9 @@ function App() {
         setAc(ac);
 
         connectAubioMedia(ac, (freq) => {
-            if(freq &&  mFreq !== micFreq){
-                setMicFreq(mFreq)
+            if(freq){
+                setMicFreq(Math.round(12 * (Math.log(freq / 440) / Math.log(2)) + 69))
             }
-            mFreq = Math.round(12 * (Math.log(freq / 440) / Math.log(2)) + 69)
         })
     }
 
@@ -156,7 +154,10 @@ function App() {
                         player.on('midiEvent' , (event) => {
                             if(event.velocity === 0)
                                 setTimeout(() => {
-                                    setEvent(event)
+                                    const update = requestAnimationFrame(() => {
+                                        cancelAnimationFrame(update)
+                                        setEvent(event)
+                                    })
                                 }, 66)
                         })
                     })
