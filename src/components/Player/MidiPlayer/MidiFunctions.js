@@ -29,8 +29,14 @@ export const connectAubioMedia = (ac, func) => {
             scriptProcessor.connect(ac.destination)
         }
 
+        let prevFreq = 0;
         scriptProcessor.addEventListener('audioprocess', function(event) {
-            func(pitchDetector.do(event.inputBuffer.getChannelData(0)))
+            const p =  pitchDetector.do(event.inputBuffer.getChannelData(0))
+            const freq = p ? Math.round(12 * (Math.log(p / 440) / Math.log(2)) + 69) : prevFreq
+            if(freq !== prevFreq){
+                prevFreq = freq
+                func(freq)
+            }
         })
     })
 }
