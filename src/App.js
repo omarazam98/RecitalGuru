@@ -89,15 +89,9 @@ function App() {
         })
     }
 
-    const update = useCallback((event, time, vrvMap, freq) => {
-                if (Math.abs(freq - event.noteNumber) <= 1) {
-                    document.getElementById(vrvMap.on).classList.add('passedNote')
-                    passedNotes.current++
-                    console.log(notes)
-                    setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
-                } else {
-                    document.getElementById(vrvMap.on).classList.add('failedNote')
-                }
+    const update = useCallback(() => {
+        passedNotes.current++
+        setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
     }, [])
 
     const playPause = useCallback((p) => {

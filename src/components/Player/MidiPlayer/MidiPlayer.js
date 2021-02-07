@@ -112,7 +112,6 @@ const Notes = {
 }
 
 export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote) => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const Player =  await new MidiPlayerJs.Player(function (event){
         if(event.velocity){
             const time = event.tick / Player.division
@@ -127,15 +126,26 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 })
             }
 
-            setTimeout( () => {
+            const startTime = ac.currentTime
+            const interval = () => {
                 const freq = freqRef.current
-                setCurNote(Notes[freq])
-                update(event, time, vrvMap, freq)
-            }, vrvMap.time * 1000 + 60)
+                if (Math.abs(freq - event.noteNumber) <= 1) {
+                    setCurNote(Notes[freq])
+                    update();
+                    document.getElementById(vrvMap.on).classList.add('passedNote')
+                } else if ((ac.currentTime - startTime) > (vrvMap.time)) {
+                    document.getElementById(vrvMap.on).classList.add('failedNote')
+                } else {
+                    requestAnimationFrame(interval)
+                }
+            }
+
+            requestAnimationFrame(interval)
 
             if((vrvMap['page']) !== swiper.activeIndex){
                 swiper.slideTo(vrvMap['page'])
             }
+
         }
     })
 
