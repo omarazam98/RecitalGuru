@@ -31,8 +31,7 @@ export const connectAubioMedia = (ac, func) => {
 
         let prevFreq = 0;
         scriptProcessor.addEventListener('audioprocess', function(event) {
-            const p =  pitchDetector.do(event.inputBuffer.getChannelData(0))
-            const freq = p ? Math.round(12 * (Math.log(p / 440) / Math.log(2)) + 69) : prevFreq
+            const freq =  pitchDetector.do(event.inputBuffer.getChannelData(0)) ? Math.round(12 * (Math.log(pitchDetector.do(event.inputBuffer.getChannelData(0)) / 440) / Math.log(2)) + 69) : prevFreq
             if(freq !== prevFreq){
                 prevFreq = freq
                 func(freq)
@@ -55,22 +54,19 @@ export const MidiSync = async (toolkit) => {
             const currentPage = toolkit.getPageWithElement(timeMap[index]['on'][0]) - 1
             page = currentPage ? currentPage : page
             syncedNotes[noteTime]['page'] = currentPage
+            syncedNotes[noteTime]['time'] = (toolkit.getMIDIValuesForElement(timeMap[index]['on'][0]).duration) / 1000
         }
         if(timeMap[index] && timeMap[index]['off']){
             syncedNotes[noteTime]['off'] = timeMap[index]['off']
-            syncedNotes[noteTime]['time'] = (toolkit.getMIDIValuesForElement(timeMap[index]['off'][0]).duration) / 1000
         }
     }
     return syncedNotes
 }
 
 export const removeHighlights = () => {
-    document.querySelectorAll('.passedNote').forEach((note) => {
+    document.querySelectorAll('.note').forEach((note) => {
         note.classList.remove('highlightedNote')
         note.classList.remove('passedNote')
-    })
-    document.querySelectorAll('.failedNote').forEach((note) => {
-        note.classList.remove('highlightedNote')
         note.classList.remove('failedNote')
     })
 }
