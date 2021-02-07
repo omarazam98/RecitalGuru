@@ -147,6 +147,7 @@ function App() {
                         setPlaying(false)
                         swiper.slideTo(0)
                         removeHighlights();
+                        passedNotes.current = 0;
                     })
                 })
             }

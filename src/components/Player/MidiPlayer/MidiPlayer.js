@@ -126,21 +126,27 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 })
             }
 
-            const startTime = ac.currentTime
-            const interval = () => {
+            const startTime = ac.currentTime - 0.225
+            const interval = () => setTimeout(() =>  {
                 const freq = freqRef.current
                 if (Math.abs(freq - event.noteNumber) <= 1) {
-                    setCurNote(Notes[freq])
-                    update();
-                    document.getElementById(vrvMap.on).classList.add('passedNote')
+                    requestAnimationFrame(() => {
+                        setCurNote(Notes[freq])
+                        update();
+                        document.getElementById(vrvMap.on).classList.add('passedNote')
+                    })
                 } else if ((ac.currentTime - startTime) > (vrvMap.time)) {
-                    document.getElementById(vrvMap.on).classList.add('failedNote')
+                    requestAnimationFrame(() => {
+                        document.getElementById(vrvMap.on).classList.add('failedNote')
+                    })
                 } else {
-                    requestAnimationFrame(interval)
+                    interval();
                 }
-            }
+            }, 225)
 
-            requestAnimationFrame(interval)
+
+
+            interval();
 
             if((vrvMap['page']) !== swiper.activeIndex){
                 swiper.slideTo(vrvMap['page'])
