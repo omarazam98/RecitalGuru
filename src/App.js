@@ -45,6 +45,7 @@ function App() {
 
     const notes = useRef(0);
     let passedNotes = useRef(0);
+    let check = useRef(false);
 
     const getFirstColumn = {
         name: "First",
@@ -139,7 +140,7 @@ function App() {
 
     useMemo(() => {
             if(soundFont && swiper){
-                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote).then((player) =>{
+                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check).then((player) =>{
                     setPlayer(player)
                     player.on('endOfFile' , () => {
                         setPlaying(false)

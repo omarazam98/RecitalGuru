@@ -111,8 +111,7 @@ const Notes = {
     21:	'A0'
 }
 
-export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote) => {
-    let check;
+export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check) => {
     const Player =  await new MidiPlayerJs.Player(function (event){
         if(event.velocity){
             const time = event.tick / Player.division
@@ -140,14 +139,14 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         note.classList.add('failedNote')
                         break
                     default :
-                        const c = check ? freqRef.current : "Missed"
+                        const c = check.current ? freqRef.current : "Missed"
                         requestAnimationFrame( () => interval(c));
                         break;
                 }
             }
 
             setTimeout(() => {
-                check = true;
+                check.current = true;
                 interval()
             }, 225)
 
@@ -156,7 +155,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
         } else {
-            check = false;
+            check.current = false;
         }
     })
 
