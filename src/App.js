@@ -84,9 +84,7 @@ function App() {
         const ac = new AudioContext();
         setAc(ac);
 
-        connectAubioMedia(ac, (freq) => {
-            freqRef.current = freq;
-        })
+        connectAubioMedia(ac, freqRef)
     }
 
     const update = useCallback(() => {

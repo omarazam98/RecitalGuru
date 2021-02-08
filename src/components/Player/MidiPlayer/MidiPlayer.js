@@ -112,12 +112,15 @@ const Notes = {
 }
 
 export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote) => {
+    let check;
     const Player =  await new MidiPlayerJs.Player(function (event){
         if(event.velocity){
             const time = event.tick / Player.division
             const vrvMap = timeMap[time]
+            const note =  document.getElementById(vrvMap.on)
+
             if(!practice.current) {
-                document.getElementById(vrvMap.on).classList.add('highlightedNote')
+                note.classList.add('highlightedNote')
                 soundFont.play(event.noteName, ac.currentTime, {
                     duration: vrvMap.time,
                     gain: event.velocity / 10,
@@ -126,32 +129,34 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 })
             }
 
-            const startTime = ac.currentTime - 0.225
-            const interval = () => setTimeout(() =>  {
-                const freq = freqRef.current
-                if (Math.abs(freq - event.noteNumber) <= 1) {
-                    requestAnimationFrame(() => {
-                        setCurNote(Notes[freq])
+            const interval = (c) => {
+                switch (c) {
+                    case (event.noteNumber) :
+                        setCurNote(Notes[freqRef.current])
                         update();
-                        document.getElementById(vrvMap.on).classList.add('passedNote')
-                    })
-                } else if ((ac.currentTime - startTime) > (vrvMap.time)) {
-                    requestAnimationFrame(() => {
-                        document.getElementById(vrvMap.on).classList.add('failedNote')
-                    })
-                } else {
-                    interval();
+                        note.classList.add('passedNote')
+                        break
+                    case "Missed" :
+                        note.classList.add('failedNote')
+                        break
+                    default :
+                        const c = check ? freqRef.current : "Missed"
+                        requestAnimationFrame( () => interval(c));
+                        break;
                 }
+            }
+
+            setTimeout(() => {
+                check = true;
+                interval()
             }, 225)
 
-
-
-            interval();
-
-            if((vrvMap['page']) !== swiper.activeIndex){
+            if ((vrvMap['page']) !== swiper.activeIndex) {
                 swiper.slideTo(vrvMap['page'])
             }
 
+        } else {
+            check = false;
         }
     })
 
