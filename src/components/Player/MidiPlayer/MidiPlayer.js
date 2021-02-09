@@ -141,8 +141,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         note.classList.add('failedNote')
                         break
                     default :
-                        const c = check.current ? freqRef.current : "Missed"
-                        requestAnimationFrame( () => interval(c));
+                        const c2 = check.current ? freqRef.current : "Missed"
+                        requestAnimationFrame( () => interval(c2));
                         break;
                 }
             }
