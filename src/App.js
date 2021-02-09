@@ -105,15 +105,15 @@ function App() {
                         break
                     default :
                         const c2 = t ? freqRef.current : "Missed"
-                        requestAnimationFrame( () => interval(c2, (ac.currentTime - startTime) < vrvMap.time - 200));
+                        requestAnimationFrame( () => interval(c2, (ac.currentTime - startTime) < vrvMap.time));
                         break;
                 }
             }
 
-            setTimeout(() => {
+            requestAnimationFrame(() => {
                 startTime = ac.currentTime;
                 interval("", true)
-            }, 200)
+            })
         }
     }, [player])
 
