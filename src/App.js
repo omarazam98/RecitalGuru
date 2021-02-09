@@ -113,11 +113,11 @@ function App() {
             setTimeout(() => {
                 tRef.current = true;
                 interval()
-            }, 200)
+            }, 210)
 
             setTimeout(() => {
                 tRef.current = false;
-            }, vrvMap.time * 1000)
+            }, vrvMap.time * 1000 + 60)
         }
     }, [player])
 
@@ -181,6 +181,8 @@ function App() {
                         if(event.velocity){
                             const time = event.tick / player.division
                             const vrvMap = timeMap[time]
+                            setEvent(vrvMap)
+
                             vrvMap.on.add('highlightedNote')
 
                             if (!practice.current) {
@@ -191,8 +193,6 @@ function App() {
                                     notes: event.noteNumber
                                 })
                             }
-
-                            setEvent(vrvMap)
 
                             if ((vrvMap['page']) !== swiper.activeIndex) {
                                 swiper.slideTo(vrvMap['page'])
