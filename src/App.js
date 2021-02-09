@@ -47,8 +47,6 @@ function App() {
 
     const notes = useRef(0);
     let passedNotes = useRef(0);
-    let tRef = useRef(true);
-
 
     const getFirstColumn = {
         name: "First",
@@ -92,7 +90,9 @@ function App() {
 
     const update = useCallback((vrvMap) => {
         if(player){
-            const interval = (c) => {
+            let startTime;
+
+            const interval = (c, t) => {
                 switch (c) {
                     case (vrvMap.pitch) :
                         //setCurNote(Notes[freqRef.current])
@@ -104,20 +104,16 @@ function App() {
                         vrvMap.on.add('failedNote')
                         break
                     default :
-                        const c2 = tRef.current ? freqRef.current : "Missed"
-                        requestAnimationFrame( () => interval(c2));
+                        const c2 = t ? freqRef.current : "Missed"
+                        requestAnimationFrame( () => interval(c2, (ac.currentTime - startTime) < vrvMap.time - 200));
                         break;
                 }
             }
 
             setTimeout(() => {
-                tRef.current = true;
-                interval()
-            }, 210)
-
-            setTimeout(() => {
-                tRef.current = false;
-            }, vrvMap.time * 1000 + 60)
+                startTime = ac.currentTime;
+                interval("", true)
+            }, 200)
         }
     }, [player])
 
@@ -181,8 +177,6 @@ function App() {
                         if(event.velocity){
                             const time = event.tick / player.division
                             const vrvMap = timeMap[time]
-                            setEvent(vrvMap)
-
                             vrvMap.on.add('highlightedNote')
 
                             if (!practice.current) {
@@ -194,6 +188,8 @@ function App() {
                                 })
                             }
 
+                            setEvent(vrvMap)
+
                             if ((vrvMap['page']) !== swiper.activeIndex) {
                                 swiper.slideTo(vrvMap['page'])
                             }
@@ -204,7 +200,7 @@ function App() {
         },
         [soundFont, swiper]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         update(event)
     }, [event])
 
