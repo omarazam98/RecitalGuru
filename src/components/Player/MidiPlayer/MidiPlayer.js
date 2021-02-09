@@ -118,6 +118,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const vrvMap = timeMap[time]
             const note =  document.getElementById(vrvMap.on)
 
+            check.current = true;
+
             if(!practice.current) {
                 note.classList.add('highlightedNote')
                 soundFont.play(event.noteName, ac.currentTime, {
@@ -146,8 +148,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             setTimeout(() => {
-                check.current = true;
-                interval()
+                interval("default")
             }, 225)
 
             if ((vrvMap['page']) !== swiper.activeIndex) {
