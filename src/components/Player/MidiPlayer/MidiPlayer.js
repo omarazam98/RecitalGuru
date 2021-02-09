@@ -117,8 +117,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const time = event.tick / Player.division
             const vrvMap = timeMap[time]
 
-            check.current = true;
-
             if (!practice.current) {
                 vrvMap.on.add('highlightedNote')
                 soundFont.play(event.noteName, ac.currentTime, {
@@ -147,8 +145,9 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             setTimeout(() => {
+                check.current = true;
                 interval("default")
-            }, 225)
+            }, 215)
 
             if ((vrvMap['page']) !== swiper.activeIndex) {
                 swiper.slideTo(vrvMap['page'])
