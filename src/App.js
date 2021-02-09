@@ -47,7 +47,8 @@ function App() {
 
     const notes = useRef(0);
     let passedNotes = useRef(0);
-    let check = useRef(false);
+    let tRef = useRef(true);
+
 
     const getFirstColumn = {
         name: "First",
@@ -91,8 +92,6 @@ function App() {
 
     const update = useCallback((vrvMap) => {
         if(player){
-            vrvMap.on.add('highlightedNote')
-
             const interval = (c) => {
                 switch (c) {
                     case (vrvMap.pitch) :
@@ -105,16 +104,20 @@ function App() {
                         vrvMap.on.add('failedNote')
                         break
                     default :
-                        const c2 = check.current ? freqRef.current : "Missed"
+                        const c2 = tRef.current ? freqRef.current : "Missed"
                         requestAnimationFrame( () => interval(c2));
                         break;
                 }
             }
 
             setTimeout(() => {
-                interval("default")
-            }, 225)
+                tRef.current = true;
+                interval()
+            }, 200)
 
+            setTimeout(() => {
+                tRef.current = false;
+            }, vrvMap.time * 1000)
         }
     }, [player])
 
@@ -148,7 +151,6 @@ function App() {
                     notes.current = document.getElementsByClassName('note').length
                     MidiSync(toolkit).then((map) => {
                         setTimeMap(map)
-                        console.log(map)
                     })
                 })
             }
@@ -179,6 +181,7 @@ function App() {
                         if(event.velocity){
                             const time = event.tick / player.division
                             const vrvMap = timeMap[time]
+                            vrvMap.on.add('highlightedNote')
 
                             if (!practice.current) {
                                 soundFont.play(event.noteName, ac.currentTime, {
@@ -188,13 +191,12 @@ function App() {
                                     notes: event.noteNumber
                                 })
                             }
+
                             setEvent(vrvMap)
 
                             if ((vrvMap['page']) !== swiper.activeIndex) {
                                 swiper.slideTo(vrvMap['page'])
                             }
-                        } else {
-                            check.current = false;
                         }
                     })
                 })
@@ -203,7 +205,6 @@ function App() {
         [soundFont, swiper]);
 
     useLayoutEffect(() => {
-        check.current = true;
         update(event)
     }, [event])
 
