@@ -26,6 +26,8 @@ function App() {
     const [soundFont, setSoundFont] = useState(null);
     const [instrument, setInstrument] = useState("flute");
 
+    const [event, setEvent] = useState(null);
+
     const freqRef = useRef(0);
 
     const [slides, setSlides] = useState([]);
@@ -40,7 +42,7 @@ function App() {
     const [open, setOpen] = useState(false);
     const [swiper, setSwiper] = useState({});
 
-    const [curNote, setCurNote] = useState(0);
+    const [curNote, setCurNote] = useState(null);
     const [score, setScore] = useState("0%");
 
     const notes = useRef(0);
@@ -61,7 +63,6 @@ function App() {
             { text: "Cello", value: "cello" },
             { text: "Violin", value: "violin" },
         ]
-
     }
 
     const getSecondColumn = {
@@ -88,10 +89,34 @@ function App() {
         connectAubioMedia(ac, freqRef)
     }
 
-    const update = useCallback(() => {
-        passedNotes.current++
-        setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
-    }, [])
+    const update = useCallback((vrvMap) => {
+        if(player){
+            vrvMap.on.add('highlightedNote')
+
+            const interval = (c) => {
+                switch (c) {
+                    case (vrvMap.pitch) :
+                        //setCurNote(Notes[freqRef.current])
+                        passedNotes.current++
+                        setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
+                        vrvMap.on.add('passedNote')
+                        break
+                    case "Missed" :
+                        vrvMap.on.add('failedNote')
+                        break
+                    default :
+                        const c2 = check.current ? freqRef.current : "Missed"
+                        requestAnimationFrame( () => interval(c2));
+                        break;
+                }
+            }
+
+            setTimeout(() => {
+                interval("default")
+            }, 225)
+
+        }
+    }, [player])
 
     const playPause = useCallback((p) => {
             if(player){
@@ -113,16 +138,18 @@ function App() {
             async function render() {
                 const slides = await RevealMusicXML(key, songs[path], toolkit)
                 const data = await toolkit.renderToMIDI()
-                const timeMap = await MidiSync(toolkit)
 
                 setSlides(slides)
                 setData(data)
-                setTimeMap(timeMap)
             }
 
             if(toolkit && path && key){
                 render().then(() => {
                     notes.current = document.getElementsByClassName('note').length
+                    MidiSync(toolkit).then((map) => {
+                        setTimeMap(map)
+                        console.log(map)
+                    })
                 })
             }
     },
@@ -140,7 +167,7 @@ function App() {
 
     useMemo(() => {
             if(soundFont && swiper){
-                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check).then((player) =>{
+                MidiPlayer(ac, soundFont, data).then((player) => {
                     setPlayer(player)
                     player.on('endOfFile' , () => {
                         setPlaying(false)
@@ -148,10 +175,37 @@ function App() {
                         removeHighlights();
                         passedNotes.current = 0;
                     })
+                    player.on('midiEvent', (event) => {
+                        if(event.velocity){
+                            const time = event.tick / player.division
+                            const vrvMap = timeMap[time]
+
+                            if (!practice.current) {
+                                soundFont.play(event.noteName, ac.currentTime, {
+                                    duration: vrvMap.time,
+                                    gain: event.velocity / 10,
+                                    format: 'ogg',
+                                    notes: event.noteNumber
+                                })
+                            }
+                            setEvent(vrvMap)
+
+                            if ((vrvMap['page']) !== swiper.activeIndex) {
+                                swiper.slideTo(vrvMap['page'])
+                            }
+                        } else {
+                            check.current = false;
+                        }
+                    })
                 })
             }
         },
         [soundFont, swiper]);
+
+    useLayoutEffect(() => {
+        check.current = true;
+        update(event)
+    }, [event])
 
 
 

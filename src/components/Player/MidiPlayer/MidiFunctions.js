@@ -43,16 +43,17 @@ export const MidiSync = async (toolkit) => {
     for (let index = 0; index < timeMap.length; index++){
         const noteTime = timeMap[index].qstamp
 
-        syncedNotes[noteTime] = syncedNotes[noteTime] ? syncedNotes[noteTime] : {on: [], off:[], time: 0, page: page}
+        syncedNotes[noteTime] = syncedNotes[noteTime] ? syncedNotes[noteTime] : {on: [], off:[], time: 0, pitch: 0, page: page}
         if(timeMap[index]['on']){
-            syncedNotes[noteTime]['on'] = timeMap[index]['on']
+            syncedNotes[noteTime]['on'] = document.getElementById(timeMap[index]['on'][0]).classList
             const currentPage = toolkit.getPageWithElement(timeMap[index]['on'][0]) - 1
             page = currentPage ? currentPage : page
             syncedNotes[noteTime]['page'] = currentPage
             syncedNotes[noteTime]['time'] = (toolkit.getMIDIValuesForElement(timeMap[index]['on'][0]).duration) / 1000
+            syncedNotes[noteTime]['pitch'] = (toolkit.getMIDIValuesForElement(timeMap[index]['on'][0]).pitch)
         }
         if(timeMap[index] && timeMap[index]['off']){
-            syncedNotes[noteTime]['off'] = timeMap[index]['off']
+            syncedNotes[noteTime]['off'] = document.getElementById(timeMap[index]['off'][0]).classList
         }
     }
     return syncedNotes
