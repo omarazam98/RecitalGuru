@@ -111,8 +111,53 @@ const Notes = {
     21:	'A0'
 }
 
-export const MidiPlayer = async (ac, soundfont, data) => {
-    const Player =  await new MidiPlayerJs.Player
+export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check) => {
+    const Player =  await new MidiPlayerJs.Player(function (event){
+        if(event.velocity){
+            const time = event.tick / Player.division
+            const vrvMap = timeMap[time]
+
+            check.current = true;
+
+            if (!practice.current) {
+                vrvMap.on.add('highlightedNote')
+                soundFont.play(event.noteName, ac.currentTime, {
+                    duration: vrvMap.time,
+                    gain: event.velocity / 10,
+                    format: 'ogg',
+                    notes: event.noteNumber
+                })
+            }
+
+            const interval = (c) => {
+                switch (c) {
+                    case (event.noteNumber) :
+                        setCurNote(Notes[freqRef.current])
+                        update();
+                        vrvMap.on.add('passedNote')
+                        break
+                    case "Missed" :
+                        vrvMap.on.add('failedNote')
+                        break
+                    default :
+                        const c2 = check.current ? freqRef.current : "Missed"
+                        requestAnimationFrame( () => interval(c2));
+                        break;
+                }
+            }
+
+            setTimeout(() => {
+                interval("default")
+            }, 225)
+
+            if ((vrvMap['page']) !== swiper.activeIndex) {
+                swiper.slideTo(vrvMap['page'])
+            }
+
+        } else {
+            check.current = false;
+        }
+    })
 
     Player.instrument = soundfont;
     Player.loadDataUri('data:audio/midi;base64,' + data);

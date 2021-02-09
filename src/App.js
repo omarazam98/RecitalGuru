@@ -26,8 +26,6 @@ function App() {
     const [soundFont, setSoundFont] = useState(null);
     const [instrument, setInstrument] = useState("flute");
 
-    const [event, setEvent] = useState(null);
-
     const freqRef = useRef(0);
 
     const [slides, setSlides] = useState([]);
@@ -42,11 +40,12 @@ function App() {
     const [open, setOpen] = useState(false);
     const [swiper, setSwiper] = useState({});
 
-    const [curNote, setCurNote] = useState(null);
+    const [curNote, setCurNote] = useState(0);
     const [score, setScore] = useState("0%");
 
     const notes = useRef(0);
     let passedNotes = useRef(0);
+    let check = useRef(false);
 
     const getFirstColumn = {
         name: "First",
@@ -62,6 +61,7 @@ function App() {
             { text: "Cello", value: "cello" },
             { text: "Violin", value: "violin" },
         ]
+
     }
 
     const getSecondColumn = {
@@ -88,34 +88,10 @@ function App() {
         connectAubioMedia(ac, freqRef)
     }
 
-    const update = useCallback((vrvMap) => {
-        if(player){
-            let startTime;
-
-            const interval = (c, t) => {
-                switch (c) {
-                    case (vrvMap.pitch) :
-                        //setCurNote(Notes[freqRef.current])
-                        passedNotes.current++
-                        setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
-                        vrvMap.on.add('passedNote')
-                        break
-                    case "Missed" :
-                        vrvMap.on.add('failedNote')
-                        break
-                    default :
-                        const c2 = t ? freqRef.current : "Missed"
-                        requestAnimationFrame( () => interval(c2, (ac.currentTime - startTime) < vrvMap.time));
-                        break;
-                }
-            }
-
-            requestAnimationFrame(() => {
-                startTime = ac.currentTime;
-                interval("", true)
-            })
-        }
-    }, [player])
+    const update = useCallback(() => {
+        passedNotes.current++
+        setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
+    }, [])
 
     const playPause = useCallback((p) => {
             if(player){
@@ -165,7 +141,7 @@ function App() {
 
     useMemo(() => {
             if(soundFont && swiper){
-                MidiPlayer(ac, soundFont, data).then((player) => {
+                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check).then((player) =>{
                     setPlayer(player)
                     player.on('endOfFile' , () => {
                         setPlaying(false)
@@ -173,36 +149,10 @@ function App() {
                         removeHighlights();
                         passedNotes.current = 0;
                     })
-                    player.on('midiEvent', (event) => {
-                        if(event.velocity){
-                            const time = event.tick / player.division
-                            const vrvMap = timeMap[time]
-                            vrvMap.on.add('highlightedNote')
-
-                            if (!practice.current) {
-                                soundFont.play(event.noteName, ac.currentTime, {
-                                    duration: vrvMap.time,
-                                    gain: event.velocity / 10,
-                                    format: 'ogg',
-                                    notes: event.noteNumber
-                                })
-                            }
-
-                            setEvent(vrvMap)
-
-                            if ((vrvMap['page']) !== swiper.activeIndex) {
-                                swiper.slideTo(vrvMap['page'])
-                            }
-                        }
-                    })
                 })
             }
         },
         [soundFont, swiper]);
-
-    useEffect(() => {
-        update(event)
-    }, [event])
 
 
 
