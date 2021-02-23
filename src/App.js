@@ -1,5 +1,6 @@
-import React, {useCallback, useEffect, useState, useLayoutEffect, useRef, useMemo} from 'react';
-import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonItem, IonMenuToggle, IonTitle, IonListHeader} from "@ionic/react";
+import React, {useCallback, useEffect, useState, useRef, useMemo} from 'react';
+import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonTitle, IonListHeader, IonItem, IonNote, IonChip} from "@ionic/react";
+
 import {IonSlides, IonSlide} from "@ionic/react";
 
 import './App.css';
@@ -24,7 +25,7 @@ function App() {
     const [player, setPlayer] = useState(null);
 
     const [soundFont, setSoundFont] = useState(null);
-    const [instrument, setInstrument] = useState("flute");
+    const [instrumentKey, setInstrumentKey] = useState(3);
 
     const freqRef = useRef(0);
 
@@ -33,48 +34,71 @@ function App() {
     const [path, setPath] = useState("Hallelujah");
     const [data, setData] = useState(null);
     const [timeMap, setTimeMap] = useState(null);
-    const [key, setKey] = useState('C');
-    const practice = useRef(true)
+    const [keyIndex, setKeyIndex] = useState(2);
     const [ac, setAc] = useState(null);
 
     const [open, setOpen] = useState(false);
     const [swiper, setSwiper] = useState({});
 
-    const [curNote, setCurNote] = useState(0);
+    const [expectedNote, setExpectedNote] = useState("N/A");
+    const [curNote, setCurNote] = useState("N/A");
     const [score, setScore] = useState("0%");
 
+    const practice = useRef(true)
     const notes = useRef(0);
     let passedNotes = useRef(0);
-    let check = useRef(false);
+    let check = useRef(true);
+
+    const keys = {
+        0: 'A',
+        1: 'B',
+        2: 'C',
+        3: 'D',
+        4: 'E',
+        5: 'F',
+        6: 'G'
+    }
+
+    const midiInstruments = {
+        0: 'acoustic_grand_piano',
+        1: 'acoustic_guitar_nylon',
+        2: 'clarinet',
+        3: 'flute',
+        4: 'alto_sax',
+        5: 'trumpet',
+        6: 'cello',
+        7: 'violin'
+    }
 
     const getFirstColumn = {
         name: "First",
-        selectedIndex: 0,
+        selectedIndex: instrumentKey,
+        prefix: 'Instrument: ',
         options: [
-            { text: "Grand Piano", value: "acoustic_grand_piano" },
-            { text: "Acoustic Guitar", value: "acoustic_guitar_nylon" },
-            { text: "Electric Guitar", value: "electric_guitar_clean" },
-            { text: "Clarinet", value: "clarinet" },
-            { text: "Flute", value: "flute" },
-            { text: "Alto Sax", value: "alto_sax" },
-            { text: "Trumpet", value: "trumpet" },
-            { text: "Cello", value: "cello" },
-            { text: "Violin", value: "violin" },
+            { text: "Piano", value: 0 },
+            { text: "Guitar", value: 1 },
+            { text: "Clarinet", value: 2 },
+            { text: "Flute", value: 3 },
+            { text: "Alto Sax", value: 4 },
+            { text: "Trumpet", value: 5 },
+            { text: "Cello", value: 6 },
+            { text: "Violin", value: 7 },
         ]
 
     }
 
     const getSecondColumn = {
         name: "Second",
-        selectedIndex: 0,
+        selectedIndex: keyIndex,
+        prefix: 'Key: ',
         options: [
-            { text: "A", value: "A" },
-            { text: "B", value: "B" },
-            { text: "C", value: "C" },
-            { text: "D", value: "D" },
-            { text: "E", value: "E" },
-            { text: "F", value: "F" },
-            { text: "G", value: "G" }
+            { text: "A", value: 0 },
+            { text: "B", value: 1 },
+            { text: "C", value: 2 },
+            { text: "D", value: 3 },
+            { text: "E", value: 4 },
+            { text: "F", value: 5 },
+            { text: "G", value: 6 }
         ]
     };
 
@@ -85,7 +109,7 @@ function App() {
         const ac = new AudioContext();
         setAc(ac);
 
-        connectAubioMedia(ac, freqRef)
+        connectAubioMedia(ac, freqRef, check)
     }
 
     const update = useCallback(() => {
@@ -111,15 +135,17 @@ function App() {
 
     useEffect(() => {
             async function render() {
-                const slides = await RevealMusicXML(key, songs[path], toolkit)
+                const slides = await RevealMusicXML(keys[keyIndex], songs[path], toolkit)
                 const data = await toolkit.renderToMIDI()
 
                 setSlides(slides)
                 setData(data)
             }
 
-            if(toolkit && path && key){
+            if(toolkit && path && keyIndex){
                 render().then(() => {
+                    passedNotes.current = 0;
+                    setScore('0%')
                     notes.current = document.getElementsByClassName('note').length
                     MidiSync(toolkit).then((map) => {
                         setTimeMap(map)
@@ -127,21 +153,21 @@ function App() {
                 })
             }
     },
-    [toolkit, path, key]);
+    [toolkit, path, keyIndex]);
 
     useEffect(() => {
-            if(data && timeMap && ac && instrument){
-                Soundfont.instrument(ac, instrument).then((soundfont) => {
+            if(data && timeMap && ac && instrumentKey){
+                Soundfont.instrument(ac, midiInstruments[instrumentKey]).then((soundfont) => {
                     removeHighlights();
                     setSoundFont(soundfont)
                 })
             }
         },
-        [instrument, data, timeMap, ac]);
+        [instrumentKey, data, timeMap, ac]);
 
-    useMemo(() => {
+    useEffect(() => {
             if(soundFont && swiper){
-                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check).then((player) =>{
+                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote).then((player) =>{
                     setPlayer(player)
                     player.on('endOfFile' , () => {
                         setPlaying(false)
@@ -181,8 +207,8 @@ function App() {
                   {
                       text: "Confirm",
                       handler: value => {
-                          setInstrument(value['First'].value);
-                          setKey(value["Second"].value);
+                          setInstrumentKey(value['First'].value);
+                          setKeyIndex(value["Second"].value);
                           setOpen(false)
                       }
                   }
@@ -192,20 +218,39 @@ function App() {
                   <IonToolbar>
                       <IonButtons slot={"start"}>
                           <IonTitle>Recital Guru</IonTitle>
+                          <IonButton fill={'outline'} class={"btn2"} disabled={playing} onClick={ () => setOpen(true)}>Instrument/Key</IonButton>
                           <IonMenuToggle>
-                              <IonButton class={"btn2"} id={"content1"} disabled={playing}>Song</IonButton>
+                              <IonButton fill={'outline'} class={"btn2"} id={"content1"} disabled={playing}>Song</IonButton>
                           </IonMenuToggle>
-                          <IonButton class={"btn2"} disabled={playing} onClick={ () => setOpen(true)}>Instrument/Key</IonButton>
                       </IonButtons>
+                      <IonTitle slot={'end'}>
+                          Score
+                          <IonChip>
+
+                              {score}
+                          </IonChip>
+                      </IonTitle>
                   </IonToolbar>
               </IonHeader>
               <IonFooter>
                   <IonToolbar>
+                      <IonItem>
+                          <IonNote slot={'start'}>
+                              Actual Note
+                              <IonChip>
+                                  {curNote}
+                              </IonChip>
+                          </IonNote>
+                          <IonNote slot={'start'}>
+                              <IonChip>
+                                  {expectedNote}
+                              </IonChip>
+                              Expected Note
+                          </IonNote>
+                      </IonItem>
                       <IonButtons slot={"end"}>
-                          <IonTitle id={"tuner"}>{curNote}</IonTitle>
-                          <IonButton class={"btn"} disabled={!player || playing && practice.current} onClick={() => playPause(false)}> {playing && !practice.current ? 'Pause' : 'Free Play'}</IonButton>
-                          <IonButton class={"btn"} disabled={!player || playing && !practice.current}  onClick={() => playPause(true)}>{playing && practice.current ? 'Pause' : 'Practice'}</IonButton>
-                          <IonTitle id={"score"}>Score {score}</IonTitle>
+                          <IonButton fill={'outline'} class={"btn"} disabled={!player || playing && practice.current} onClick={() => playPause(false)}> {playing && !practice.current ? 'Pause' : 'Free Play'}</IonButton>
+                          <IonButton fill={'outline'}  class={"btn"} disabled={!player || playing && !practice.current}  onClick={() => playPause(true)}>{playing && practice.current ? 'Pause' : 'Practice'}</IonButton>
                       </IonButtons>
                   </IonToolbar>
               </IonFooter>

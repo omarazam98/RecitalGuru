@@ -3,7 +3,7 @@ import * as Aubio from '../../../aubio/aubio'
 let scriptProcessor;
 let pitchDetector;
 
-export const connectAubioMedia = (ac, freqRef) => {
+export const connectAubioMedia = (ac, freqRef, check) => {
     Aubio().then(async (aubio) => {
         if (navigator.mediaDevices.getUserMedia === undefined) {
             navigator.mediaDevices.getUserMedia = await function () {
@@ -30,7 +30,7 @@ export const connectAubioMedia = (ac, freqRef) => {
         }
 
         scriptProcessor.addEventListener('audioprocess', function(event) {
-            freqRef.current = Math.round(12 * (Math.log(pitchDetector.do(event.inputBuffer.getChannelData(0)) / 440) / Math.log(2)) + 69)
+            freqRef.current = check ? Math.round(12 * (Math.log(pitchDetector.do(event.inputBuffer.getChannelData(0)) / 440) / Math.log(2)) + 69) : "Pause"
         })
     })
 }
