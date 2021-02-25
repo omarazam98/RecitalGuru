@@ -2,9 +2,9 @@
   "files": {
     "static/js/0.39e7fef5.chunk.js": "/RecitalGuru/static/js/0.39e7fef5.chunk.js",
     "static/js/0.39e7fef5.chunk.js.map": "/RecitalGuru/static/js/0.39e7fef5.chunk.js.map",
-    "main.css": "/RecitalGuru/static/css/main.f32d2891.chunk.css",
-    "main.js": "/RecitalGuru/static/js/main.f4cf323d.chunk.js",
-    "main.js.map": "/RecitalGuru/static/js/main.f4cf323d.chunk.js.map",
+    "main.css": "/RecitalGuru/static/css/main.7a608d35.chunk.css",
+    "main.js": "/RecitalGuru/static/js/main.06a4585d.chunk.js",
+    "main.js.map": "/RecitalGuru/static/js/main.06a4585d.chunk.js.map",
     "polyfills-dom.js": "/RecitalGuru/static/js/polyfills-dom.caad0738.chunk.js",
     "polyfills-dom.js.map": "/RecitalGuru/static/js/polyfills-dom.caad0738.chunk.js.map",
     "runtime-main.js": "/RecitalGuru/static/js/runtime-main.aa640138.js",
@@ -121,10 +121,10 @@
     "static/js/58.2546630b.chunk.js": "/RecitalGuru/static/js/58.2546630b.chunk.js",
     "static/js/58.2546630b.chunk.js.map": "/RecitalGuru/static/js/58.2546630b.chunk.js.map",
     "index.html": "/RecitalGuru/index.html",
-    "precache-manifest.92b7af20f7ac5da1f19c2ce03367c176.js": "/RecitalGuru/precache-manifest.92b7af20f7ac5da1f19c2ce03367c176.js",
+    "precache-manifest.de94e9322b3e17ae8374962e49976515.js": "/RecitalGuru/precache-manifest.de94e9322b3e17ae8374962e49976515.js",
     "service-worker.js": "/RecitalGuru/service-worker.js",
     "static/css/4.4f5fa3e4.chunk.css.map": "/RecitalGuru/static/css/4.4f5fa3e4.chunk.css.map",
-    "static/css/main.f32d2891.chunk.css.map": "/RecitalGuru/static/css/main.f32d2891.chunk.css.map",
+    "static/css/main.7a608d35.chunk.css.map": "/RecitalGuru/static/css/main.7a608d35.chunk.css.map",
     "static/js/4.ac0ee528.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/4.ac0ee528.chunk.js.LICENSE.txt",
     "static/js/52.14724a02.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/52.14724a02.chunk.js.LICENSE.txt",
     "static/js/58.2546630b.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/58.2546630b.chunk.js.LICENSE.txt",
@@ -134,7 +134,7 @@
     "static/js/runtime-main.aa640138.js",
     "static/css/4.4f5fa3e4.chunk.css",
     "static/js/4.ac0ee528.chunk.js",
-    "static/css/main.f32d2891.chunk.css",
-    "static/js/main.f4cf323d.chunk.js"
+    "static/css/main.7a608d35.chunk.css",
+    "static/js/main.06a4585d.chunk.js"
   ]
 }
