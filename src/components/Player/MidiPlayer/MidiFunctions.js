@@ -1,10 +1,6 @@
-import * as Aubio from '../../../aubio/aubio'
-
 let scriptProcessor;
-let pitchDetector;
 
-export const connectAubioMedia = (ac, freqRef, check) => {
-    Aubio().then(async (aubio) => {
+export const connectAubioMedia = async (ac, freqRef) => {
         if (navigator.mediaDevices.getUserMedia === undefined) {
             navigator.mediaDevices.getUserMedia = await function () {
                 const getUserMedia =  navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia
@@ -17,10 +13,6 @@ export const connectAubioMedia = (ac, freqRef, check) => {
             }
         }
 
-        if(pitchDetector === undefined){
-            pitchDetector = new aubio.Pitch('default', 512, 1, ac.sampleRate)
-        }
-
         if(scriptProcessor === undefined){
             scriptProcessor = ac.createScriptProcessor(512, 1, 1)
             const stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}})
@@ -30,9 +22,8 @@ export const connectAubioMedia = (ac, freqRef, check) => {
         }
 
         scriptProcessor.addEventListener('audioprocess', function(event) {
-            freqRef.current = check ? Math.round(12 * (Math.log(pitchDetector.do(event.inputBuffer.getChannelData(0)) / 440) / Math.log(2)) + 69) : "Pause"
+            freqRef.current = event.inputBuffer.getChannelData(0)
         })
-    })
 }
 
 export const MidiSync = async (toolkit) => {

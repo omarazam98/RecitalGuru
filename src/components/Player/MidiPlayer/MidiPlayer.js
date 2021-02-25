@@ -1,5 +1,6 @@
 import MidiPlayerJs from 'midi-player-js'
 import React from "react";
+import * as Aubio from '../../../aubio/aubio'
 
 const Notes = {
     127: 'G9',
@@ -111,7 +112,13 @@ const Notes = {
     21:	'A0'
 }
 
+let pitchDetector;
 export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote) => {
+    Aubio().then((aubio) => {
+        pitchDetector = new aubio.Pitch('default', 512, 1, ac.sampleRate)
+
+    })
+
     const Player =  await new MidiPlayerJs.Player(function (event){
         if(event.velocity){
             const time = event.tick / Player.division
@@ -135,15 +142,15 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     case (event.noteNumber) :
                         vrvMap.on.add('passedNote')
                         update();
-                        setCurNote(Notes[freqRef.current])
+                        setCurNote(Notes[c])
                         break
                     case "Missed" :
                         vrvMap.on.add('failedNote')
-                        const note = Notes[freqRef.current] ? Notes[freqRef.current] : 'N/A'
+                        const note = Notes[c] ? Notes[c] : 'N/A'
                         setCurNote(note)
                         break
                     default :
-                        const c2 = check.current ? freqRef.current : "Missed"
+                        const c2 = check.current ? Math.round(12 * (Math.log(pitchDetector.do(freqRef.current) / 440) / Math.log(2)) + 69) : "Missed"
                         requestAnimationFrame( () => interval(c2));
                         break;
                 }
