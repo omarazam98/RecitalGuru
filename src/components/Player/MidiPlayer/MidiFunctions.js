@@ -14,7 +14,7 @@ export const connectAubioMedia = async (ac, freqRef) => {
         }
 
         if(scriptProcessor === undefined){
-            scriptProcessor = ac.createScriptProcessor(512, 1, 1)
+            scriptProcessor = ac.createScriptProcessor(1024, 1, 1)
             const stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}})
 
             ac.createMediaStreamSource(stream).connect(scriptProcessor)

@@ -74,21 +74,15 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   -moz-transition: all .15s linear;
   transition: all .15s linear; }
 
-.swiper-slide section svg .highlightedNote path,
-.swiper-slide section svg g.note.highlightedNote,
 .swiper-slide section svg .highlightedNote {
   stroke: blue;
   fill: blue; }
 
-.swiper-slide section svg .passedNote path,
-.swiper-slide section svg g.note.passedNote,
 .swiper-slide section svg .passedNote {
   stroke: forestgreen !important;
   fill: forestgreen !important;
 }
 
-.swiper-slide section svg .failedNote path,
-.swiper-slide section svg g.note.failedNote,
 .swiper-slide section svg .failedNote {
   stroke: #cc0000;
   fill: #cc0000; }
@@ -128,18 +122,6 @@ span.footer {
 p[data-verse-num] span {
   transition: border-bottom 0.1s;
   border-bottom: 0 solid #00008B; }
-
-p span.highlightedNote {
-  color: #00008B;
-  border-bottom: 10px solid #00008B; }
-
-p span.passedNote {
-  color: #60DE7D;
-  border-bottom: 10px solid #60DE7D; }
-
-p span.failedNote {
-  color: #D2062F;
-  border-bottom: 10px solid #D2062F; }
 
 /* Monospace Font: Cousine */
 .swiper-slide section svg {

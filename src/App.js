@@ -106,7 +106,7 @@ function App() {
         setToolkit(new verovio.toolkit())
 
         const AudioContext = window.AudioContext || window.webkitAudioContext || false;
-        const ac = new AudioContext();
+        const ac = new AudioContext({sampleRate: 44100, latencyHint: "interactive"});
         setAc(ac);
 
         connectAubioMedia(ac, freqRef, check)
