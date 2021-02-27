@@ -124,10 +124,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const time = event.tick / Player.division
             const vrvMap = timeMap[time]
 
-            setExpectedNote(Notes[event.noteNumber])
-            vrvMap.on.add('highlightedNote')
-
-
             if (!practice.current) {
                 soundFont.play(event.noteName, ac.currentTime, {
                     duration: vrvMap.time,
@@ -141,8 +137,20 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 switch (c) {
                     case (event.noteNumber) :
                         vrvMap.on.add('passedNote')
-                        update();
+                        const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
+                        update(point);
                         setCurNote(Notes[c])
+                        break
+                    case (event.noteNumber + 1) :
+                    case (event.noteNumber - 1) :
+                        const c3 = check.current ? Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69) : "Missed"
+                        requestAnimationFrame( () => interval(c3));
+                        const note1 = Notes[c] ? Notes[c] : 'N/A'
+                        setCurNote(note1)
+                        if(!vrvMap.on.contains('semiPassedNote')){
+                            vrvMap.on.add('semiPassedNote')
+                            update(0.5);
+                        }
                         break
                     case "Missed" :
                         vrvMap.on.add('failedNote')
@@ -150,16 +158,20 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         setCurNote(note)
                         break
                     default :
-                        const c2 = check.current ? Math.round(12 * (Math.log(pitchDetector.do(freqRef.current) / 440) / Math.log(2)) + 69) : "Missed"
+                        const c2 = check.current ? Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69) : "Missed"
                         requestAnimationFrame( () => interval(c2));
                         break;
                 }
             }
 
+            setExpectedNote(Notes[event.noteNumber])
+            vrvMap.on.add('highlightedNote')
+
             setTimeout(() => {
                 check.current = true;
-                interval()
-            }, 225)
+                const c2 = check.current ? Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69) : "Missed"
+                requestAnimationFrame(() => interval(c2))
+            }, 198)
 
             if ((vrvMap['page']) !== swiper.activeIndex) {
                 swiper.slideTo(vrvMap['page'])

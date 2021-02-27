@@ -106,14 +106,14 @@ function App() {
         setToolkit(new verovio.toolkit())
 
         const AudioContext = window.AudioContext || window.webkitAudioContext || false;
-        const ac = new AudioContext({sampleRate: 44100, latencyHint: "interactive"});
+        const ac = new AudioContext();
         setAc(ac);
 
         connectAubioMedia(ac, freqRef, check)
     }
 
-    const update = useCallback(() => {
-        passedNotes.current++
+    const update = useCallback((point) => {
+        passedNotes.current = passedNotes.current + point
         setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
     }, [])
 

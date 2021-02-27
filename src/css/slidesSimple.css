@@ -83,6 +83,11 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   fill: forestgreen !important;
 }
 
+.swiper-slide section svg .semiPassedNote {
+  stroke: #cccc33 !important;
+  fill: #cccc33 !important;
+}
+
 .swiper-slide section svg .failedNote {
   stroke: #cc0000;
   fill: #cc0000; }
