@@ -246,7 +246,7 @@ function App() {
                     icon: play,
                     handler: () => {
                         practice.current = true;
-                        playPause()
+                        setShowToast(true)
                     }
                 }, {
                     text: 'Reset',
@@ -257,6 +257,7 @@ function App() {
                         removeHighlights()
                         setScore('0%')
                         passedNotes.current = 0;
+                        swiper.slideTo(0);
                     }
                 }, {
                     text: 'Cancel',

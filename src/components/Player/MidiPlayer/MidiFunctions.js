@@ -64,5 +64,6 @@ export const removeHighlights = () => {
         note.classList.remove('highlightedNote')
         note.classList.remove('passedNote')
         note.classList.remove('failedNote')
+        note.classList.remove('semiPassedNote')
     })
 }
