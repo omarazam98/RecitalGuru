@@ -143,18 +143,54 @@ html {
 }
 
 .btn{
-  color: blue;
-  width: available;
-  height: available;
+  --height: 100%;
+  font-size: 1vw;
 }
 
 .btn2{
-  color: darkgoldenrod;
-  width: 100%;
-  height: 100%;
+  --height: 100%;
+  font-size: 1vw;
 }
 
+.swiper-slide section svg .labelAbbr {
+  display: none;
+}
 
+.swiper-slide section svg .label {
+  display: none;
+}
 
+.swiper-slide section svg .syl {
+  display: none;
+}
 
+.swiper-slide section svg {
+  background-color: beige;
+}
 
+.swiper-slide.swiper-slide {
+  background-color: beige;
+}
+
+.buttons {
+  justify-content: space-around;
+  width: 33%;
+}
+
+.toast {
+  position: fixed;
+  box-sizing: border-box;
+  color: brown;
+  font-size: 43px;
+  width: 70px;
+  height: 70px;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.noteDisplay {
+  width: max-content;
+}

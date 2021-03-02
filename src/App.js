@@ -1,7 +1,10 @@
-import React, {useCallback, useEffect, useState, useRef, useMemo} from 'react';
-import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonTitle, IonListHeader, IonItem, IonNote, IonChip} from "@ionic/react";
+import React, {useCallback, useEffect, useState, useRef} from 'react';
+import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonTitle, IonListHeader, IonItem, IonNote, IonChip, IonToast, IonLabel, IonIcon, IonItemGroup} from "@ionic/react";
 
 import {IonSlides, IonSlide} from "@ionic/react";
+
+import { documentText, musicalNotes, chevronDown, key } from 'ionicons/icons';
+
 
 import './App.css';
 import '@ionic/react/css/core.css';
@@ -14,10 +17,10 @@ import Soundfont from "soundfont-player";
 import css from "./css/slidesSimple.css";
 
 const songs = {
-    "Senorita": 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml',
-    "Hallelujah": 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test8.xml',
-    "Viva La Vida": 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test9.xml',
-    "Dance Monkey": 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test11.xml'
+    0 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml', name: 'Senorita'},
+    1 : {path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test8.xml', name: 'Hallelujah'},
+    2 : {path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test9.xml', name: 'Viva La Vida'},
+    3 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test11.xml' , name: 'Dance Monkey'}
 }
 
 function App() {
@@ -31,7 +34,7 @@ function App() {
 
     const [slides, setSlides] = useState([]);
     const [toolkit, setToolkit] = useState(null);
-    const [path, setPath] = useState("Hallelujah");
+    const [path, setPath] = useState(1);
     const [data, setData] = useState(null);
     const [timeMap, setTimeMap] = useState(null);
     const [keyIndex, setKeyIndex] = useState(2);
@@ -48,6 +51,9 @@ function App() {
     const notes = useRef(0);
     let passedNotes = useRef(0);
     let check = useRef(true);
+
+    const [showToast, setShowToast] = useState(false);
+    const [timer, setTimer] = useState(5);
 
     const keys = {
         0: 'A',
@@ -135,7 +141,7 @@ function App() {
 
     useEffect(() => {
             async function render() {
-                const slides = await RevealMusicXML(keys[keyIndex], songs[path], toolkit)
+                const slides = await RevealMusicXML(keys[keyIndex], songs[path].path, toolkit)
                 const data = await toolkit.renderToMIDI()
 
                 setSlides(slides)
@@ -149,6 +155,9 @@ function App() {
                     notes.current = document.getElementsByClassName('note').length
                     MidiSync(toolkit).then((map) => {
                         setTimeMap(map)
+                        window.onorientationchange = () => {
+                            render();
+                        }
                     })
                 })
             }
@@ -190,7 +199,7 @@ function App() {
                       <h2>Select Song</h2>
                   </IonListHeader>
                   {Object.keys(songs).map((key) => {
-                      return <IonMenuToggle><IonItem button menuClose onClick={() => setPath(key)}>{key}</IonItem></IonMenuToggle>
+                      return <IonMenuToggle><IonItem button menuClose onClick={() => setPath(key)}>{songs[key].name}</IonItem></IonMenuToggle>
                   })}
               </IonList>
             </IonMenu>
@@ -214,43 +223,78 @@ function App() {
                   }
               ]}>
             </IonPicker>
+            <IonToast
+                cssClass={'toast'}
+                isOpen={showToast}
+                onDidDismiss={() => {
+                    setShowToast(false)
+                    if(timer > 1){
+                        setTimer(timer - 1)
+                        setShowToast(true)
+                    } else {
+                        setTimer(5)
+                        playPause(true)
+                    }
+                }}
+                message= {timer}
+                duration={1000}
+                position={'middle'}
+            />
               <IonHeader>
-                  <IonToolbar>
-                      <IonButtons slot={"start"}>
-                          <IonTitle>Recital Guru</IonTitle>
-                          <IonButton fill={'outline'} class={"btn2"} disabled={playing} onClick={ () => setOpen(true)}>Instrument/Key</IonButton>
-                          <IonMenuToggle>
-                              <IonButton fill={'outline'} class={"btn2"} id={"content1"} disabled={playing}>Song</IonButton>
-                          </IonMenuToggle>
-                      </IonButtons>
-                      <IonTitle slot={'end'}>
-                          Score
-                          <IonChip>
-
-                              {score}
-                          </IonChip>
+                  <IonToolbar color={'dark'}>
+                      <IonTitle size={'small'}>
+                          RecitalGuru
                       </IonTitle>
+                      <IonButtons slot={'end'}>
+                          <IonMenuToggle>
+                              <IonButton fill={'outline'}  class={'btn2'} id={"content1"} disabled={playing}>
+                                  <IonIcon icon={documentText}/>
+                                  {songs[path].name}
+                                  <IonIcon icon={chevronDown}/>
+                              </IonButton>
+                          </IonMenuToggle>
+                          <IonButton fill={'outline'} class={"btn2"}  disabled={playing} onClick={ () => setOpen(true)}>
+                              <IonIcon icon={musicalNotes}/>
+                              {midiInstruments[instrumentKey]}
+                              <IonIcon icon={key}/>
+                              {keys[keyIndex]}
+                              <IonIcon icon={chevronDown}/>
+                          </IonButton>
+                      </IonButtons>
                   </IonToolbar>
               </IonHeader>
-              <IonFooter>
-                  <IonToolbar>
-                      <IonItem>
-                          <IonNote slot={'start'}>
-                              Actual Note
-                              <IonChip>
-                                  {curNote}
-                              </IonChip>
-                          </IonNote>
-                          <IonNote slot={'start'}>
-                              <IonChip>
-                                  {expectedNote}
-                              </IonChip>
-                              Expected Note
-                          </IonNote>
-                      </IonItem>
+              <IonFooter >
+                  <IonToolbar color={"dark"}>
+                          <IonItemGroup class={'noteDisplay'}>
+                              <IonItem color={"dark"}>
+                                  <IonNote slot={'end'}>
+                                      Actual
+                                  </IonNote>
+                                  <IonLabel>
+                                      {curNote}
+                                  </IonLabel>
+                              </IonItem>
+                              <IonItem color={"dark"}>
+                                  <IonNote slot={'end'}>
+                                      Expected
+                                  </IonNote>
+                                  <IonLabel>
+                                      {expectedNote}
+                                  </IonLabel>
+                              </IonItem>
+                          </IonItemGroup>
+                      <IonLabel slot={'end'}>
+                          Score: {score}
+                      </IonLabel>
                       <IonButtons slot={"end"}>
-                          <IonButton fill={'outline'} class={"btn"} disabled={!player || playing && practice.current} onClick={() => playPause(false)}> {playing && !practice.current ? 'Pause' : 'Free Play'}</IonButton>
-                          <IonButton fill={'outline'}  class={"btn"} disabled={!player || playing && !practice.current}  onClick={() => playPause(true)}>{playing && practice.current ? 'Pause' : 'Practice'}</IonButton>
+                          <IonItemGroup class={'noteDisplay'}>
+                              <IonItem color={"dark"}>
+                                  <IonButton fill={'outline'} class={"btn"} disabled={!player || playing && practice.current} onClick={() => playPause(false)}> {playing && !practice.current ? 'Pause' : 'Free Play'}</IonButton>
+                              </IonItem>
+                              <IonItem color={"dark"}>
+                                  <IonButton fill={'outline'}  class={"btn"} disabled={!player || playing && !practice.current}  onClick={() => !playing ? setShowToast(true) : playPause(true)}>{playing && practice.current ? 'Pause' : 'Practice'}</IonButton>
+                              </IonItem>
+                          </IonItemGroup>
                       </IonButtons>
                   </IonToolbar>
               </IonFooter>

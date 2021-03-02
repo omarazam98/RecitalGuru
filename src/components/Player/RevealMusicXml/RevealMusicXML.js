@@ -1,15 +1,22 @@
 import React from "react";
+
 export default function RevealMusicXML(key, path, toolkit) {
     const setOptions = function () {
-      let pixelHeight = window.innerHeight / 2;
-      let pixelWidth = window.innerWidth;
+      let pixelHeight = window.innerHeight / 2 ;
+      let pixelWidth = window.innerWidth + 55;
       let defaultOptions = {
-        pageHeight: pixelHeight  * (100 / 60),
-        pageWidth:  pixelWidth * (100 / 50),
-        scale: 50,
-        breaks: 'line',
-        adjustPageHeight: true,
-        minLastJustification: 0
+          pageHeight: pixelHeight  * (100 / 65),
+          pageWidth:  pixelWidth * (100 / 60),
+          scale: 60,
+          adjustPageHeight: true,
+          adjustPageWidth: "smart",
+          minLastJustification: 0,
+          header: 'none',
+          footer: 'none',
+          breaks: 'auto',
+          justifyVertically: true,
+          pageMarginLeft: 0,
+          defaultLeftMargin: 0,
       };
       toolkit.setOptions({ ...defaultOptions, transpose: key });
     };

@@ -1,3 +1,4 @@
+import React from 'react'
 let scriptProcessor;
 
 export const connectAubioMedia = async (ac, freqRef) => {
@@ -36,7 +37,15 @@ export const MidiSync = async (toolkit) => {
 
         syncedNotes[noteTime] = syncedNotes[noteTime] ? syncedNotes[noteTime] : {on: [], off:[], time: 0, pitch: 0, page: page}
         if(timeMap[index]['on']){
-            syncedNotes[noteTime]['on'] = document.getElementById(timeMap[index]['on'][0]).classList
+            const label = document.createElementNS('http://www.w3.org/2000/svg','text');
+            label.setAttribute('fill','orange');
+            label.setAttribute('width','200');
+            label.setAttribute('height','200');
+            const element = document.getElementById(timeMap[index]['on'][0])
+
+            element.appendChild(label)
+
+            syncedNotes[noteTime]['on'] = element.classList
             const currentPage = toolkit.getPageWithElement(timeMap[index]['on'][0]) - 1
             page = currentPage ? currentPage : page
             syncedNotes[noteTime]['page'] = currentPage

@@ -6,6 +6,7 @@
   "dependencies": {
     "@ionic/core": "^5.5.2",
     "@ionic/react": "^5.5.2",
+    "ionicons": "^5.5.0",
     "midi-player-js": "^2.0.13",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
