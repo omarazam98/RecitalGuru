@@ -49,7 +49,7 @@ function App() {
     const [curNote, setCurNote] = useState(<IonIcon icon={musicalNote}/>);
     const [score, setScore] = useState("0%");
 
-    const practice = useRef(true)
+    const practice = useRef(false)
     const notes = useRef(0);
     let passedNotes = useRef(0);
     let check = useRef(true);
@@ -193,6 +193,28 @@ function App() {
         },
         [soundFont, swiper]);
 
+    useEffect(() => {
+        if(swiper && player){
+            document.onkeydown = function(e) {
+                switch(e.which) {
+                    case 38: // up
+                        swiper.slidePrev();
+                        break;
+
+                    case 40: // down
+                        swiper.slideNext();
+                        break;
+                    case 32:
+                        console.log('s')
+                        playPause();
+                        break;
+                    default: return; // exit this handler for other keys
+                }
+                e.preventDefault(); // prevent the default action (scroll / move caret)
+            };
+        }
+    },[swiper, player])
+
 
 
     return (
@@ -257,7 +279,6 @@ function App() {
                         removeHighlights()
                         setScore('0%')
                         passedNotes.current = 0;
-                        swiper.slideTo(0);
                     }
                 }, {
                     text: 'Cancel',
@@ -335,7 +356,7 @@ function App() {
                   </IonToolbar>
               </IonFooter>
                   <IonContent>
-                      <IonSlides key={slides.map(slide => slide.id).join('_')} style={css} options = {{direction: 'vertical', slidesPerView: 2}} onIonSlidesDidLoad={(event) => setSwiper(event.target.swiper)}>
+                      <IonSlides scrollbar={true} key={slides.map(slide => slide.id).join('_')} style={css} options = {{direction: 'vertical', slidesPerView: 2}} onIonSlidesDidLoad={(event) => setSwiper(event.target.swiper)}>
                           {slides.map((slide) => {
                               return (
                                   <IonSlide key={slide.id}> {slide}</IonSlide>
