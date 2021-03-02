@@ -194,3 +194,64 @@ html {
 .noteDisplay {
   width: max-content;
 }
+
+.picker-wrapper.sc-ion-picker-ios {
+  bottom: auto;
+  left: auto;
+
+}
+
+.custom-class .action-sheet-wrapper {
+  left: auto;
+}
+
+.picker-columns .picker-above-highlight {
+  opacity: 1;
+  --background: beige;
+  color: black;
+}
+
+.picker-columns .picker-below-highlight {
+  opacity: 1;
+  --background: beige;
+}
+
+.picker-columns,
+.picker-ios .picker-toolbar {
+  background-color: beige;
+}
+
+.picker-ios .picker-prefix,
+.picker-ios .picker-suffix,
+.picker-ios .picker-opt.picker-opt-selected {
+  background-color: beige;
+  color: #000000;
+  font-family: Montserrat-Medium, serif;
+}
+.picker-ios .picker-opt {
+  background-color: beige;
+  color: #000000;
+  font-family: Montserrat-Medium, serif;
+  z-index: 30;
+}
+
+.picker-ios .picker-button,
+.picker-ios .picker-button.activated {
+  background-color: beige;
+  color: #3380ff;
+  font-family: Montserrat-Regular, serif;
+}
+
+.menu-side-end .list-ios {
+  --background: beige;
+  background-color: beige;
+}
+
+.menu-side-end .list-ios .item {
+  --background: beige;
+  background-color: beige;
+}
+
+.menu-side-end  {
+  --background: beige;
+}

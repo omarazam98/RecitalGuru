@@ -1,9 +1,11 @@
 import React, {useCallback, useEffect, useState, useRef} from 'react';
-import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonTitle, IonListHeader, IonItem, IonNote, IonChip, IonToast, IonLabel, IonIcon, IonItemGroup} from "@ionic/react";
+import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonTitle, IonListHeader, IonItem, IonNote, IonActionSheet, IonToast, IonLabel, IonIcon, IonChip} from "@ionic/react";
 
 import {IonSlides, IonSlide} from "@ionic/react";
 
-import { documentText, musicalNotes, chevronDown, key } from 'ionicons/icons';
+import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote} from 'ionicons/icons';
+
+import {iosEnterAnimation, iosLeaveAnimation} from "./animations/ios";
 
 
 import './App.css';
@@ -43,8 +45,8 @@ function App() {
     const [open, setOpen] = useState(false);
     const [swiper, setSwiper] = useState({});
 
-    const [expectedNote, setExpectedNote] = useState("N/A");
-    const [curNote, setCurNote] = useState("N/A");
+    const [expectedNote, setExpectedNote] = useState(<IonIcon icon={musicalNote}/>);
+    const [curNote, setCurNote] = useState(<IonIcon icon={musicalNote}/>);
     const [score, setScore] = useState("0%");
 
     const practice = useRef(true)
@@ -54,6 +56,9 @@ function App() {
 
     const [showToast, setShowToast] = useState(false);
     const [timer, setTimer] = useState(5);
+
+    const [showActionSheet, setShowActionSheet] = useState(false);
+
 
     const keys = {
         0: 'A',
@@ -123,9 +128,8 @@ function App() {
         setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
     }, [])
 
-    const playPause = useCallback((p) => {
+    const playPause = useCallback(() => {
             if(player){
-                practice.current = p;
                 ac.resume().then(() => {
                     if (player.isPlaying()) {
                         setPlaying(false)
@@ -193,8 +197,8 @@ function App() {
 
     return (
         <IonApp>
-            <IonMenu active={'true'} contentId="content1">
-              <IonList id="song" labelId="song" disabled={playing} value={path}>
+            <IonMenu active={'true'} contentId="content1" side={'end'}>
+              <IonList mode={'ios'} id="song" labelId="song" disabled={playing} value={path}>
                   <IonListHeader lines="full">
                       <h2>Select Song</h2>
                   </IonListHeader>
@@ -204,9 +208,11 @@ function App() {
               </IonList>
             </IonMenu>
             <IonPicker
-              mode={"ios"}
+                mode={'ios'}
               isOpen={open}
               columns={[getFirstColumn, getSecondColumn]}
+              enterAnimation={(baseEl) => iosEnterAnimation(baseEl)}
+              leaveAnimation={(baseEl) => iosLeaveAnimation(baseEl)}
               buttons={[
                   {
                       text: "Cancel",
@@ -223,6 +229,43 @@ function App() {
                   }
               ]}>
             </IonPicker>
+            <IonActionSheet
+                cssClass={"custom-class"}
+                mode={"ios"}
+                isOpen={showActionSheet}
+                onDidDismiss={() => setShowActionSheet(false)}
+                buttons={[{
+                    text: 'Free Play',
+                    icon: volumeHigh,
+                    handler: () => {
+                        practice.current = false;
+                        playPause()
+                    }
+                }, {
+                    text: 'Practice',
+                    icon: play,
+                    handler: () => {
+                        practice.current = true;
+                        playPause()
+                    }
+                }, {
+                    text: 'Reset',
+                    icon: refresh,
+                    handler: () => {
+                        player.resetTracks()
+                        player.skipToSeconds(0)
+                        removeHighlights()
+                        setScore('0%')
+                        passedNotes.current = 0;
+                    }
+                }, {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                        console.log('Cancel clicked');
+                    }
+                }]}
+                />
             <IonToast
                 cssClass={'toast'}
                 isOpen={showToast}
@@ -242,59 +285,51 @@ function App() {
             />
               <IonHeader>
                   <IonToolbar color={'dark'}>
-                      <IonTitle size={'small'}>
+                      <IonTitle size={'small'} slot={'start'}>
                           RecitalGuru
                       </IonTitle>
                       <IonButtons slot={'end'}>
-                          <IonMenuToggle>
-                              <IonButton fill={'outline'}  class={'btn2'} id={"content1"} disabled={playing}>
-                                  <IonIcon icon={documentText}/>
-                                  {songs[path].name}
-                                  <IonIcon icon={chevronDown}/>
-                              </IonButton>
-                          </IonMenuToggle>
-                          <IonButton fill={'outline'} class={"btn2"}  disabled={playing} onClick={ () => setOpen(true)}>
+                          <IonButton fill={'outline'} color={'tertiary'} disabled={playing} onClick={ () => setOpen(true)}>
                               <IonIcon icon={musicalNotes}/>
                               {midiInstruments[instrumentKey]}
                               <IonIcon icon={key}/>
                               {keys[keyIndex]}
                               <IonIcon icon={chevronDown}/>
                           </IonButton>
+                          <IonMenuToggle>
+                              <IonButton fill={'outline'} color={'tertiary'} id={"content1"} disabled={playing}>
+                                  <IonIcon icon={documentText}/>
+                                  {songs[path].name}
+                                  <IonIcon icon={chevronBack}/>
+                              </IonButton>
+                          </IonMenuToggle>
                       </IonButtons>
                   </IonToolbar>
               </IonHeader>
               <IonFooter >
                   <IonToolbar color={"dark"}>
-                          <IonItemGroup class={'noteDisplay'}>
-                              <IonItem color={"dark"}>
-                                  <IonNote slot={'end'}>
-                                      Actual
-                                  </IonNote>
-                                  <IonLabel>
-                                      {curNote}
-                                  </IonLabel>
-                              </IonItem>
-                              <IonItem color={"dark"}>
-                                  <IonNote slot={'end'}>
-                                      Expected
-                                  </IonNote>
-                                  <IonLabel>
-                                      {expectedNote}
-                                  </IonLabel>
-                              </IonItem>
-                          </IonItemGroup>
-                      <IonLabel slot={'end'}>
-                          Score: {score}
-                      </IonLabel>
+                      <IonChip>
+                          <IonLabel color={'success'}>
+                              Expected {expectedNote}
+                          </IonLabel>
+                      </IonChip>
+                      <IonChip>
+                          <IonLabel color={'warning'}>
+                              Actual {curNote}
+                          </IonLabel>
+                      </IonChip>
                       <IonButtons slot={"end"}>
-                          <IonItemGroup class={'noteDisplay'}>
-                              <IonItem color={"dark"}>
-                                  <IonButton fill={'outline'} class={"btn"} disabled={!player || playing && practice.current} onClick={() => playPause(false)}> {playing && !practice.current ? 'Pause' : 'Free Play'}</IonButton>
-                              </IonItem>
-                              <IonItem color={"dark"}>
-                                  <IonButton fill={'outline'}  class={"btn"} disabled={!player || playing && !practice.current}  onClick={() => !playing ? setShowToast(true) : playPause(true)}>{playing && practice.current ? 'Pause' : 'Practice'}</IonButton>
-                              </IonItem>
-                          </IonItemGroup>
+                          <IonButton fill={'outline'} color={'primary'} expand="block" onClick={() => {
+                              if(playing){
+                                  playPause()
+                              } else {
+                                  setShowActionSheet(true)
+                              }
+                          }}>
+                              {playing ? <IonIcon icon={pause}/> : <IonIcon icon={options}/>}
+
+                              {playing ? (' Pause ' + score) : player && player.getCurrentTick() ? (' Resume ' + score) : ' Begin Recital '}
+                          </IonButton>
                       </IonButtons>
                   </IonToolbar>
               </IonFooter>
