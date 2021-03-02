@@ -113,7 +113,7 @@ const Notes = {
 }
 
 let pitchDetector;
-export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote) => {
+export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, difficulty) => {
     Aubio().then((aubio) => {
         pitchDetector = new aubio.Pitch('default', 1024, 512, ac.sampleRate)
 
@@ -140,13 +140,15 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
                         update(point);
                         setCurNote(Notes[c])
+                        if(difficulty.current) {
+                            Player.play()
+                        }
                         break
                     case (event.noteNumber + 1) :
                     case (event.noteNumber - 1) :
                         const c3 = check.current ? Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69) : "Missed"
                         requestAnimationFrame( () => interval(c3));
-                        const note1 = Notes[c] ? Notes[c] : '___'
-                        setCurNote(note1)
+                        setCurNote(c)
                         if(!vrvMap.on.contains('semiPassedNote')){
                             vrvMap.on.add('semiPassedNote')
                             update(0.5);
@@ -170,8 +172,14 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             setTimeout(() => {
                 check.current = true;
                 const c2 = check.current ? Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69) : "Missed"
+                const note1 = Notes[c2] ? Notes[c2] : '___'
+                setCurNote(note1)
                 requestAnimationFrame(() => interval(c2))
             }, 198)
+
+            if(difficulty.current){
+                Player.pause()
+            }
 
             if ((vrvMap['page']) !== swiper.activeIndex) {
                 swiper.slideTo(vrvMap['page'])

@@ -3,7 +3,7 @@ import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHea
 
 import {IonSlides, IonSlide} from "@ionic/react";
 
-import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote} from 'ionicons/icons';
+import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book} from 'ionicons/icons';
 
 import {iosEnterAnimation, iosLeaveAnimation} from "./animations/ios";
 
@@ -53,6 +53,8 @@ function App() {
     const notes = useRef(0);
     let passedNotes = useRef(0);
     let check = useRef(true);
+    let difficulty = useRef(true);
+
 
     const [showToast, setShowToast] = useState(false);
     const [timer, setTimer] = useState(5);
@@ -128,14 +130,13 @@ function App() {
         setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
     }, [])
 
-    const playPause = useCallback(() => {
+    const playPause = useCallback((p) => {
             if(player){
                 ac.resume().then(() => {
-                    if (player.isPlaying()) {
-                        setPlaying(false)
+                    if (p) {
+                        check.current = false;
                         player.pause();
                     } else {
-                        setPlaying(true)
                         player.play();
                     }
                 })
@@ -180,7 +181,7 @@ function App() {
 
     useEffect(() => {
             if(soundFont && swiper){
-                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote).then((player) =>{
+                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, difficulty).then((player) =>{
                     setPlayer(player)
                     player.on('endOfFile' , () => {
                         setPlaying(false)
@@ -205,7 +206,6 @@ function App() {
                         swiper.slideNext();
                         break;
                     case 32:
-                        console.log('s')
                         playPause();
                         break;
                     default: return; // exit this handler for other keys
@@ -261,13 +261,24 @@ function App() {
                     icon: volumeHigh,
                     handler: () => {
                         practice.current = false;
-                        playPause()
+                        difficulty.current = false;
+                        playPause(playing)
+                        setPlaying(!playing)
                     }
                 }, {
                     text: 'Practice',
                     icon: play,
                     handler: () => {
                         practice.current = true;
+                        difficulty.current = false;
+                        setShowToast(true)
+                    }
+                }, {
+                    text: 'Training',
+                    icon: book,
+                    handler: () => {
+                        practice.current = true;
+                        difficulty.current = true;
                         setShowToast(true)
                     }
                 }, {
@@ -298,7 +309,8 @@ function App() {
                         setShowToast(true)
                     } else {
                         setTimer(5)
-                        playPause(true)
+                        playPause(playing)
+                        setPlaying(!playing)
                     }
                 }}
                 message= {timer}
@@ -343,7 +355,8 @@ function App() {
                       <IonButtons slot={"end"}>
                           <IonButton fill={'outline'} color={'primary'} expand="block" onClick={() => {
                               if(playing){
-                                  playPause()
+                                  playPause(playing)
+                                  setPlaying(!playing)
                               } else {
                                   setShowActionSheet(true)
                               }
