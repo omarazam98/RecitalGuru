@@ -115,7 +115,7 @@ const Notes = {
 let pitchDetector;
 export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, difficulty) => {
     Aubio().then((aubio) => {
-        pitchDetector = new aubio.Pitch('default', 512, 1, ac.sampleRate)
+        pitchDetector = new aubio.Pitch('default', 1024, 1, ac.sampleRate)
 
     })
 
