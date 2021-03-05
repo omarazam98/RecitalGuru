@@ -146,17 +146,18 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         break
                     case (event.noteNumber + 1) :
                     case (event.noteNumber - 1) :
-                        const c3 = check.current ? Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69) : "Missed"
-                        requestAnimationFrame( () => interval(c3));
-                        setCurNote(c)
-                        if(!vrvMap.on.contains('semiPassedNote')){
-                            vrvMap.on.add('semiPassedNote')
-                            update(0.5);
+                        //const c3 = check.current ? Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69) : "Missed"
+                        //requestAnimationFrame( () => interval(c3));
+                        setCurNote(Notes[c])
+                        vrvMap.on.add('semiPassedNote')
+                        update(0.5);
+                        if(difficulty.current) {
+                            Player.play()
                         }
                         break
                     case "Missed" :
                         vrvMap.on.add('failedNote')
-                        const note = Notes[c] ? Notes[c] : '---'
+                        const note = Notes[c] ? Notes[c] : '___'
                         setCurNote(note)
                         break
                     default :
@@ -175,7 +176,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 const note1 = Notes[c2] ? Notes[c2] : '___'
                 setCurNote(note1)
                 requestAnimationFrame(() => interval(c2))
-            }, 198)
+            }, 225)
 
             if(difficulty.current){
                 Player.pause()
