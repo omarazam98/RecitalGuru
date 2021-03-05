@@ -8,7 +8,8 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 ::selection {
   color: #fff;
   background: rgba(0, 0, 0, 0.99);
-  text-shadow: none; }
+  text-shadow: none;
+}
 
 ::-moz-selection {
   color: #fff;

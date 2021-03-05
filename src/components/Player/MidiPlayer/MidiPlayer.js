@@ -135,31 +135,21 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
 
             const interval = (c) => {
                 switch (c) {
+                    case (event.noteNumber + 1) :
+                    case (event.noteNumber - 1) :
                     case (event.noteNumber) :
                         vrvMap.on.add('passedNote')
-                        const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
-                        update(point);
+                        //const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
+                        update(1);
                         setCurNote(Notes[c])
                         if(difficulty.current) {
                             Player.play()
                         }
                         break
-                    case (event.noteNumber + 1) :
-                    case (event.noteNumber - 1) :
-                        const c3 = check.current ? Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69) : "Missed"
-                        requestAnimationFrame( () => interval(c3));
-                        setCurNote(c)
-                        if(!vrvMap.on.contains('semiPassedNote')){
-                            vrvMap.on.add('semiPassedNote')
-                            update(0.5);
-                        }
-                        break
                     case "Missed" :
-                        if(!vrvMap.on.contains('semiPassedNote')){
-                            vrvMap.on.add('failedNote')
-                            const note = Notes[c] ? Notes[c] : '___'
-                            setCurNote(note)
-                        }
+                        vrvMap.on.add('failedNote')
+                        const note = Notes[c] ? Notes[c] : '___'
+                        setCurNote(note)
                         break
                     default :
                         const c2 = check.current ? Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69) : "Missed"
