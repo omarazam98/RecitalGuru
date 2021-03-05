@@ -3,7 +3,7 @@ import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHea
 
 import {IonSlides, IonSlide} from "@ionic/react";
 
-import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book} from 'ionicons/icons';
+import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book, accessibility} from 'ionicons/icons';
 
 import {iosEnterAnimation, iosLeaveAnimation} from "./animations/ios";
 
@@ -55,12 +55,12 @@ function App() {
     let check = useRef(true);
     let difficulty = useRef(true);
 
-
     const [showToast, setShowToast] = useState(false);
     const [timer, setTimer] = useState(5);
 
     const [showActionSheet, setShowActionSheet] = useState(false);
 
+    let mode = useRef("free play");
 
     const keys = {
         0: 'A',
@@ -135,6 +135,7 @@ function App() {
                 ac.resume().then(() => {
                     if (p) {
                         check.current = false;
+                        setPlaying(false)
                         player.pause();
                     } else {
                         player.play();
@@ -181,7 +182,7 @@ function App() {
 
     useEffect(() => {
             if(soundFont && swiper){
-                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, difficulty).then((player) =>{
+                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, difficulty, mode).then((player) =>{
                     setPlayer(player)
                     player.on('endOfFile' , () => {
                         setPlaying(false)
@@ -260,8 +261,7 @@ function App() {
                     text: 'Free Play',
                     icon: volumeHigh,
                     handler: () => {
-                        practice.current = false;
-                        difficulty.current = false;
+                        mode.current = 'free play';
                         playPause(playing)
                         setPlaying(!playing)
                     }
@@ -269,16 +269,21 @@ function App() {
                     text: 'Practice',
                     icon: play,
                     handler: () => {
-                        practice.current = true;
-                        difficulty.current = false;
+                        mode.current = 'practice';
                         setShowToast(true)
                     }
                 }, {
                     text: 'Training',
                     icon: book,
                     handler: () => {
-                        practice.current = true;
-                        difficulty.current = true;
+                        mode.current = 'training';
+                        setShowToast(true)
+                    }
+                }, {
+                    text: 'Accessibility',
+                    icon: accessibility,
+                    handler: () => {
+                        mode.current = 'accessibility';
                         setShowToast(true)
                     }
                 }, {
@@ -315,7 +320,7 @@ function App() {
                     }
                 }}
                 message= {timer}
-                duration={1000}
+                duration={100}
                 position={'middle'}
             />
               <IonHeader>

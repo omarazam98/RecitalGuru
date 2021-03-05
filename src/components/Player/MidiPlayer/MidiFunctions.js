@@ -41,6 +41,7 @@ export const MidiSync = async (toolkit) => {
             label.setAttribute('fill','orange');
             label.setAttribute('width','200');
             label.setAttribute('height','200');
+            label.setAttribute('float', 'left')
             const element = document.getElementById(timeMap[index]['on'][0])
 
             element.appendChild(label)
