@@ -115,7 +115,7 @@ const Notes = {
 let pitchDetector;
 export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, difficulty) => {
     Aubio().then((aubio) => {
-        pitchDetector = new aubio.Pitch('default', 1024, 512, ac.sampleRate)
+        pitchDetector = new aubio.Pitch('default', 512, 1, ac.sampleRate)
 
     })
 
@@ -135,8 +135,10 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
 
             const interval = (c) => {
                 switch (c) {
+                    case (event.noteNumber + 2) :
                     case (event.noteNumber + 1) :
                     case (event.noteNumber - 1) :
+                    case (event.noteNumber - 2) :
                     case (event.noteNumber) :
                         vrvMap.on.add('passedNote')
                         //const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
