@@ -8,10 +8,7 @@ async function getWebAudioMediaStream() {
   }
 
   try {
-    const result = await window.navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: false,
-    });
+    const result = await window.navigator.mediaDevices.getUserMedia({audio: {echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false}});
 
     return result;
   } catch (e) {
@@ -36,18 +33,18 @@ export async function setupAudio(onPitchDetectedCallback) {
   // Get the browser's audio. Awaits user "allowing" it for the current tab.
   const mediaStream = await getWebAudioMediaStream();
 
-  const context = new window.AudioContext();
+  const context = new window.AudioContext({latencyHint: 'interactive'});
   const audioSource = context.createMediaStreamSource(mediaStream);
 
   let node;
 
   try {
     // Fetch the WebAssembly module that performs pitch detection.
-    const response = await window.fetch("wasm-audio/wasm_audio_bg.wasm");
+    const response = await window.fetch("./RecitalGuru/wasm-audio/wasm_audio_bg.wasm");
     const wasmBytes = await response.arrayBuffer();
 
     // Add our audio processor worklet to the context.
-    const processorUrl = "PitchProcessor.js";
+    const processorUrl = "./RecitalGuru/PitchProcessor.js";
     try {
       await context.audioWorklet.addModule(processorUrl);
     } catch (e) {
@@ -72,19 +69,22 @@ export async function setupAudio(onPitchDetectedCallback) {
     // processor running in the Worklet thread. Also, pass any configuration
     // parameters for the Wasm detection algorithm.
     node.init(wasmBytes, onPitchDetectedCallback, numAudioSamplesPerAnalysis);
-
+    const distortion = context.createWaveShaper();
+    distortion.oversample = '4x';
     // Connect the audio source (microphone output) to our analysis node.
-    audioSource.connect(node);
+    audioSource.connect(distortion);
+    distortion.connect(node)
 
     // Connect our analysis node to the output. Required even though we do not
     // output any audio. Allows further downstream audio processing or output to
     // occur.
     node.connect(context.destination);
+
   } catch (err) {
     throw new Error(
       `Failed to load audio analyzer WASM module. Further info: ${err.message}`
     );
   }
 
-  return { context, node };
+  return context
 }

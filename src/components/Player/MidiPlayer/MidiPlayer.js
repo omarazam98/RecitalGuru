@@ -1,6 +1,5 @@
 import MidiPlayerJs from 'midi-player-js'
 import React from "react";
-import * as Aubio from '../../../aubio/aubio'
 
 const Notes = {
     127: 'G9 ',
@@ -112,12 +111,7 @@ const Notes = {
     21:	'A0 '
 }
 
-let pitchDetector;
 export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, difficulty) => {
-    Aubio().then((aubio) => {
-        pitchDetector = new aubio.Pitch('default', 512, 1, ac.sampleRate)
-
-    })
 
     const Player =  await new MidiPlayerJs.Player(function (event){
         if(event.velocity){
@@ -135,6 +129,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
 
             const interval = (c) => {
                 switch (c) {
+                    case (event.noteNumber + 1) :
+                    case (event.noteNumber -1 ) :
                     case (event.noteNumber) :
                         vrvMap.on.add('passedNote')
                         //const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
@@ -150,7 +146,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         setCurNote(note)
                         break
                     default :
-                        const c2 = check.current ? Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69) : "Missed"
+                        const c2 = check.current ? (Math.round(12 * (Math.log2(freqRef.current / 440)) + 69)) : "Missed"
                         requestAnimationFrame( () => interval(c2));
                         break;
                 }
@@ -159,13 +155,13 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             setExpectedNote(Notes[event.noteNumber])
             vrvMap.on.add('highlightedNote')
 
-            setTimeout(() => {
+            requestAnimationFrame(() => {
                 check.current = true;
-                const c2 = Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69);
+                const c2 = (Math.round(12 * (Math.log2(freqRef.current / 440)) + 69))
                 const note1 = Notes[c2] ? Notes[c2] : '___'
                 setCurNote(note1)
                 requestAnimationFrame(() => interval(c2))
-            }, 225)
+            })
 
             if(difficulty.current){
                 Player.pause()

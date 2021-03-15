@@ -16,7 +16,8 @@ import {MidiPlayer} from "./components/Player/MidiPlayer/MidiPlayer";
 import RevealMusicXML from "./components/Player/RevealMusicXml/RevealMusicXML";
 import {MidiSync, removeHighlights, connectAubioMedia} from "./components/Player/MidiPlayer/MidiFunctions";
 import Soundfont from "soundfont-player";
-import css from "./css/slidesSimplze.css";
+import css from "./css/slidesSimple.css";
+import {setupAudio} from "./components/Player/PitchDetector/setupAudio";
 
 const songs = {
     0 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml', name: 'Senorita'},
@@ -61,6 +62,9 @@ function App() {
 
     const [showActionSheet, setShowActionSheet] = useState(false);
 
+    const [latestPitch, setLatestPitch] = React.useState(undefined);
+    const [audio, setAudio] = React.useState(undefined);
+    const [running, setRunning] = React.useState(false);
 
     const keys = {
         0: 'A',
@@ -117,12 +121,6 @@ function App() {
 
     verovio.module.onRuntimeInitialized = function () {
         setToolkit(new verovio.toolkit())
-
-        const AudioContext = window.AudioContext || window.webkitAudioContext || false;
-        const ac = new AudioContext();
-        setAc(ac);
-
-        connectAubioMedia(ac, freqRef, check)
     }
 
     const update = useCallback((point) => {
@@ -132,14 +130,12 @@ function App() {
 
     const playPause = useCallback((p) => {
             if(player){
-                ac.resume().then(() => {
                     if (p) {
                         check.current = false;
                         player.pause();
                     } else {
                         player.play();
                     }
-                })
             }
         },
         [player]);
@@ -170,7 +166,8 @@ function App() {
     [toolkit, path, keyIndex]);
 
     useEffect(() => {
-            if(data && timeMap && ac && instrumentKey){
+            if(data && timeMap && ac){
+                console.log(instrumentKey)
                 Soundfont.instrument(ac, midiInstruments[instrumentKey]).then((soundfont) => {
                     removeHighlights();
                     setSoundFont(soundfont)
@@ -295,9 +292,7 @@ function App() {
                 }, {
                     text: 'Cancel',
                     role: 'cancel',
-                    handler: () => {
-                        console.log('Cancel clicked');
-                    }
+                    handler: () => {}
                 }]}
                 />
             <IonToast
@@ -353,7 +348,39 @@ function App() {
                               Actual {curNote}
                           </IonLabel>
                       </IonChip>
+                      <IonChip>
+                          {latestPitch
+                              ? `Latest pitch: ${latestPitch} Hz`
+                              : running
+                                  ? "Listening..."
+                                  : "Paused"}
+                      </IonChip>
                       <IonButtons slot={"end"}>
+                          {!ac ?
+                              <IonButton
+                                  onClick={async () => {
+                                      setAc(await setupAudio(freqRef));
+                                      setRunning(true);
+                                  }}
+                              >
+                                  Start listening
+                              </IonButton> :
+                              <IonButton
+                                  onClick={async () => {
+                                      if (running) {
+                                          await ac.suspend();
+                                          setRunning(ac.state === "running");
+                                      } else {
+                                          await ac.resume();
+                                          setRunning(ac.state === "running");
+                                      }
+                                  }}
+                                  disabled={ac.state !== "running" && ac.state !== "suspended"}
+                              >
+                                  {running ? 'Disconnect' : 'Connect'}
+                              </IonButton>
+                          }
+
                           <IonButton fill={'outline'} color={'primary'} expand="block" onClick={() => {
                               if(playing){
                                   playPause(playing)

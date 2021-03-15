@@ -40,7 +40,7 @@ export default class PitchNode extends AudioWorkletNode {
       });
     } else if (event.type === "pitch") {
       // A pitch was detected. Invoke our callback which will result in the UI updating.
-      this.onPitchDetectedCallback(event.pitch);
+      this.onPitchDetectedCallback.current = event.pitch;
     }
   }
 }

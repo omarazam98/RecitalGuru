@@ -84,15 +84,8 @@ class PitchProcessor extends AudioWorkletProcessor {
         this.samples[numExistingSamples + i] = inputSamples[i];
       }
       this.totalSamples += inputSamples.length;
-    }
-
-    // Once our buffer has enough samples, pass them to the Wasm pitch detector.
-    if (this.totalSamples >= this.numAudioSamplesPerAnalysis && this.detector) {
       const result = this.detector.detect_pitch(this.samples);
-
-      if (result !== 0) {
-        this.port.postMessage({ type: "pitch", pitch: result });
-      }
+      this.port.postMessage({ type: "pitch", pitch: result });
     }
 
     // Returning true tells the Audio system to keep going.

@@ -35,7 +35,7 @@ impl WasmPitchDetector {
     // Include only notes that exceed a power threshold which relates to the
     // amplitude of frequencies in the signal. Use the library's suggested
     // default value of 5.0.
-    const POWER_THRESHOLD: f32 = 5.0;
+    const POWER_THRESHOLD: f32 = 2.0;
 
     // The clarity measure describes how coherent the sound of a note is. For
     // example, the background sound in a crowded room would typically be would
