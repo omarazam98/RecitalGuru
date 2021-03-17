@@ -123,6 +123,7 @@ window.speechSynthesis.onvoiceschanged = function() {
 
 export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, difficulty, mode) => {
 
+
     const Player =  await new MidiPlayerJs.Player(function (event){
         if(event.velocity){
 
@@ -159,7 +160,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                                 const note = Notes[c] ? Notes[c] : '___'
                                 setCurNote(note)
                         }
-
                         break;
                 }
             }
@@ -171,13 +171,14 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 notes: event.noteNumber
             })
 
-            const startInterval = () => setTimeout(() => {
+            const startInterval = requestAnimationFrame(() => {
+                vrvMap.on.add('highlightedNote')
                 check.current = true;
-                const c2 = Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69)
-                const note1 = Notes[c2] ? Notes[c2] : '___'
-                setCurNote(note1)
-                requestAnimationFrame(() => interval(c2))
-            }, 198)
+                interval()
+            })
+            
+            setExpectedNote(Notes[event.noteNumber])
+
 
             switch (mode.current){
                 case 'free play' :
