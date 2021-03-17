@@ -54,7 +54,6 @@ function App() {
     const notes = useRef(0);
     let passedNotes = useRef(0);
     let check = useRef(true);
-    let difficulty = useRef(true);
 
     const [showToast, setShowToast] = useState(false);
     const [timer, setTimer] = useState(5);
@@ -167,7 +166,6 @@ function App() {
 
     useEffect(() => {
             if(data && timeMap && ac){
-                console.log(instrumentKey)
                 Soundfont.instrument(ac, midiInstruments[instrumentKey]).then((soundfont) => {
                     removeHighlights();
                     setSoundFont(soundfont)
@@ -178,7 +176,7 @@ function App() {
 
     useEffect(() => {
             if(soundFont && swiper){
-                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, difficulty, mode).then((player) =>{
+                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, mode).then((player) =>{
                     setPlayer(player)
                     player.on('endOfFile' , () => {
                         setPlaying(false)

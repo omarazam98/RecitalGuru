@@ -121,7 +121,7 @@ window.speechSynthesis.onvoiceschanged = function() {
     voice = window.speechSynthesis.getVoices()[50];
 };
 
-export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, difficulty, mode) => {
+export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, mode) => {
 
 
     const Player =  await new MidiPlayerJs.Player(function (event){
@@ -157,7 +157,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                             requestAnimationFrame( () => interval());
                         } else if(!vrvMap.on.contains('semiPassedNote')){
                                 vrvMap.on.add('failedNote')
-                                const note = Notes[c] ? Notes[c] : '___'
+                                const note = Notes[freqRef.current] ? Notes[freqRef.current] : '___'
                                 setCurNote(note)
                         }
                         break;
@@ -171,7 +171,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 notes: event.noteNumber
             })
 
-            const startInterval = requestAnimationFrame(() => {
+            const startInterval = () => requestAnimationFrame(() => {
                 vrvMap.on.add('highlightedNote')
                 check.current = true;
                 interval()
