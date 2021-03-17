@@ -39,11 +39,6 @@ export async function setupAudio(onPitchDetectedCallback) {
   let node;
 
   try {
-    // Fetch the WebAssembly module that performs pitch detection.
-    const response = await window.fetch("./RecitalGuru/wasm-audio/wasm_audio_bg.wasm");
-    const wasmBytes = await response.arrayBuffer();
-
-    // Add our audio processor worklet to the context.
     const processorUrl = "./RecitalGuru/PitchProcessor.js";
     try {
       await context.audioWorklet.addModule(processorUrl);
@@ -53,31 +48,15 @@ export async function setupAudio(onPitchDetectedCallback) {
       );
     }
 
-    // Create the AudioWorkletNode which enables the main Javascript thread to
-    // communicate with the audio processor (which runs in a Worklet).
     node = new PitchNode(context, "PitchProcessor");
 
-    // numAudioSamplesPerAnalysis specifies the number of consecutive audio samples that
-    // the pitch detection algorithm calculates for each unit of work. Larger values tend
-    // to produce slightly more accurate results but are more expensive to compute and
-    // can lead to notes being missed in faster passages i.e. where the music note is
-    // changing rapidly. 1024 is usually a good balance between efficiency and accuracy
-    // for music analysis.
     const numAudioSamplesPerAnalysis = 1024;
 
-    // Send the Wasm module to the audio node which in turn passes it to the
-    // processor running in the Worklet thread. Also, pass any configuration
-    // parameters for the Wasm detection algorithm.
-    node.init(wasmBytes, onPitchDetectedCallback, numAudioSamplesPerAnalysis);
-    const distortion = context.createWaveShaper();
-    distortion.oversample = '4x';
-    // Connect the audio source (microphone output) to our analysis node.
-    audioSource.connect(distortion);
-    distortion.connect(node)
 
-    // Connect our analysis node to the output. Required even though we do not
-    // output any audio. Allows further downstream audio processing or output to
-    // occur.
+    node.init(onPitchDetectedCallback, numAudioSamplesPerAnalysis);
+
+    audioSource.connect(node);
+
     node.connect(context.destination);
 
   } catch (err) {

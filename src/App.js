@@ -14,7 +14,7 @@ import '@ionic/react/css/core.css';
 import verovio from 'verovio'
 import {MidiPlayer} from "./components/Player/MidiPlayer/MidiPlayer";
 import RevealMusicXML from "./components/Player/RevealMusicXml/RevealMusicXML";
-import {MidiSync, removeHighlights, connectAubioMedia} from "./components/Player/MidiPlayer/MidiFunctions";
+import {MidiSync, removeHighlights} from "./components/Player/MidiPlayer/MidiFunctions";
 import Soundfont from "soundfont-player";
 import css from "./css/slidesSimple.css";
 import {setupAudio} from "./components/Player/PitchDetector/setupAudio";
@@ -61,10 +61,6 @@ function App() {
     const [timer, setTimer] = useState(5);
 
     const [showActionSheet, setShowActionSheet] = useState(false);
-
-    const [latestPitch, setLatestPitch] = React.useState(undefined);
-    const [audio, setAudio] = React.useState(undefined);
-    const [running, setRunning] = React.useState(false);
 
     const keys = {
         0: 'A',
@@ -128,12 +124,14 @@ function App() {
         setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
     }, [])
 
-    const playPause = useCallback((p) => {
+    const playPause = useCallback(async (p) => {
             if(player){
                     if (p) {
                         check.current = false;
                         player.pause();
+                        await ac.suspend();
                     } else {
+                        await ac.resume();
                         player.play();
                     }
             }
@@ -348,41 +346,12 @@ function App() {
                               Actual {curNote}
                           </IonLabel>
                       </IonChip>
-                      <IonChip>
-                          {latestPitch
-                              ? `Latest pitch: ${latestPitch} Hz`
-                              : running
-                                  ? "Listening..."
-                                  : "Paused"}
-                      </IonChip>
                       <IonButtons slot={"end"}>
-                          {!ac ?
-                              <IonButton
-                                  onClick={async () => {
-                                      setAc(await setupAudio(freqRef));
-                                      setRunning(true);
-                                  }}
-                              >
-                                  Start listening
-                              </IonButton> :
-                              <IonButton
-                                  onClick={async () => {
-                                      if (running) {
-                                          await ac.suspend();
-                                          setRunning(ac.state === "running");
-                                      } else {
-                                          await ac.resume();
-                                          setRunning(ac.state === "running");
-                                      }
-                                  }}
-                                  disabled={ac.state !== "running" && ac.state !== "suspended"}
-                              >
-                                  {running ? 'Disconnect' : 'Connect'}
-                              </IonButton>
-                          }
-
-                          <IonButton fill={'outline'} color={'primary'} expand="block" onClick={() => {
-                              if(playing){
+                          <IonButton fill={'outline'} color={'primary'} expand="block" onClick={async () => {
+                              if(!ac){
+                                  setAc(await setupAudio(freqRef));
+                                  setShowActionSheet(true)
+                              } else if(playing){
                                   playPause(playing)
                                   setPlaying(!playing)
                               } else {

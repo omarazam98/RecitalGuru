@@ -127,40 +127,36 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 })
             }
 
-            const interval = (c) => {
-                switch (c) {
-                    case (event.noteNumber + 1) :
-                    case (event.noteNumber -1 ) :
+            const interval = () => {
+                switch (freqRef.current()) {
                     case (event.noteNumber) :
                         vrvMap.on.add('passedNote')
+                        console.log(event.noteNumber)
                         //const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
                         update(1);
-                        setCurNote(Notes[c])
+                        setCurNote(Notes[freqRef.current])
                         if(difficulty.current) {
                             Player.play()
                         }
                         break
-                    case "Missed" :
-                        vrvMap.on.add('failedNote')
-                        const note = Notes[c] ? Notes[c] : '___'
-                        setCurNote(note)
-                        break
                     default :
-                        const c2 = check.current ? (Math.round(12 * (Math.log2(freqRef.current / 440)) + 69)) : "Missed"
-                        requestAnimationFrame( () => interval(c2));
+                        if(check.current){
+                            requestAnimationFrame( () => interval());
+                        } else {
+                            vrvMap.on.add('failedNote')
+                            const note = Notes[freqRef.current] ? Notes[freqRef.current] : '___'
+                            setCurNote(note)
+                        }
                         break;
                 }
             }
 
             setExpectedNote(Notes[event.noteNumber])
-            vrvMap.on.add('highlightedNote')
 
             requestAnimationFrame(() => {
+                vrvMap.on.add('highlightedNote')
                 check.current = true;
-                const c2 = (Math.round(12 * (Math.log2(freqRef.current / 440)) + 69))
-                const note1 = Notes[c2] ? Notes[c2] : '___'
-                setCurNote(note1)
-                requestAnimationFrame(() => interval(c2))
+                interval()
             })
 
             if(difficulty.current){
