@@ -14,9 +14,10 @@ import '@ionic/react/css/core.css';
 import verovio from 'verovio'
 import {MidiPlayer} from "./components/Player/MidiPlayer/MidiPlayer";
 import RevealMusicXML from "./components/Player/RevealMusicXml/RevealMusicXML";
-import {MidiSync, removeHighlights, connectAubioMedia} from "./components/Player/MidiPlayer/MidiFunctions";
+import {MidiSync, removeHighlights} from "./components/Player/MidiPlayer/MidiFunctions";
 import Soundfont from "soundfont-player";
-import css from "./css/slidesSimplze.css";
+import css from "./css/slidesSimple.css";
+import {setupAudio} from "./components/Player/PitchDetector/setupAudio";
 
 const songs = {
     0 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml', name: 'Senorita'},
@@ -60,7 +61,6 @@ function App() {
     const [timer, setTimer] = useState(5);
 
     const [showActionSheet, setShowActionSheet] = useState(false);
-
 
     const keys = {
         0: 'A',
@@ -117,12 +117,6 @@ function App() {
 
     verovio.module.onRuntimeInitialized = function () {
         setToolkit(new verovio.toolkit())
-
-        const AudioContext = window.AudioContext || window.webkitAudioContext || false;
-        const ac = new AudioContext();
-        setAc(ac);
-
-        connectAubioMedia(ac, freqRef, check)
     }
 
     const update = useCallback((point) => {
@@ -130,16 +124,16 @@ function App() {
         setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
     }, [])
 
-    const playPause = useCallback((p) => {
+    const playPause = useCallback(async (p) => {
             if(player){
-                ac.resume().then(() => {
                     if (p) {
                         check.current = false;
                         player.pause();
+                        await ac.suspend();
                     } else {
+                        await ac.resume();
                         player.play();
                     }
-                })
             }
         },
         [player]);
@@ -170,7 +164,8 @@ function App() {
     [toolkit, path, keyIndex]);
 
     useEffect(() => {
-            if(data && timeMap && ac && instrumentKey){
+            if(data && timeMap && ac){
+                console.log(instrumentKey)
                 Soundfont.instrument(ac, midiInstruments[instrumentKey]).then((soundfont) => {
                     removeHighlights();
                     setSoundFont(soundfont)
@@ -295,9 +290,7 @@ function App() {
                 }, {
                     text: 'Cancel',
                     role: 'cancel',
-                    handler: () => {
-                        console.log('Cancel clicked');
-                    }
+                    handler: () => {}
                 }]}
                 />
             <IonToast
@@ -354,8 +347,11 @@ function App() {
                           </IonLabel>
                       </IonChip>
                       <IonButtons slot={"end"}>
-                          <IonButton fill={'outline'} color={'primary'} expand="block" onClick={() => {
-                              if(playing){
+                          <IonButton fill={'outline'} color={'primary'} expand="block" onClick={async () => {
+                              if(!ac){
+                                  setAc(await setupAudio(freqRef));
+                                  setShowActionSheet(true)
+                              } else if(playing){
                                   playPause(playing)
                                   setPlaying(!playing)
                               } else {

@@ -1,31 +1,4 @@
 import React from 'react'
-let scriptProcessor;
-
-export const connectAubioMedia = async (ac, freqRef) => {
-        if (navigator.mediaDevices.getUserMedia === undefined) {
-            navigator.mediaDevices.getUserMedia = await function () {
-                const getUserMedia =  navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia
-                if (!getUserMedia) {
-                    alert('getUserMedia is not implemented in this browser')
-                }
-                return new Promise(function (resolve, reject) {
-                    getUserMedia.call(navigator, {audio:{echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}}, resolve, reject)
-                })
-            }
-        }
-
-        if(scriptProcessor === undefined){
-            scriptProcessor = ac.createScriptProcessor(512, 1, 1)
-            const stream = await navigator.mediaDevices.getUserMedia({audio: {echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}})
-
-            ac.createMediaStreamSource(stream).connect(scriptProcessor)
-            scriptProcessor.connect(ac.destination)
-        }
-
-        scriptProcessor.addEventListener('audioprocess', function(event) {
-            freqRef.current = event.inputBuffer.getChannelData(0)
-        })
-}
 
 export const MidiSync = async (toolkit) => {
     let page = 0;
