@@ -1,6 +1,5 @@
 import MidiPlayerJs from 'midi-player-js'
 import React from "react";
-import * as Aubio from '../../../aubio/aubio'
 
 const Notes = {
     127: 'G 9',
@@ -122,12 +121,7 @@ window.speechSynthesis.onvoiceschanged = function() {
     voice = window.speechSynthesis.getVoices()[50];
 };
 
-let pitchDetector;
 export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, difficulty, mode) => {
-    Aubio().then((aubio) => {
-        pitchDetector = new aubio.Pitch('default', 1024, 512, ac.sampleRate)
-
-    })
 
     const Player =  await new MidiPlayerJs.Player(function (event){
         if(event.velocity){
@@ -137,39 +131,35 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             setExpectedNote(Notes[event.noteNumber])
             vrvMap.on.add('highlightedNote')
 
-            const interval = (c) => {
-                switch (c) {
+            const interval = () => {
+                switch (freqRef.current) {
                     case (event.noteNumber) :
                         vrvMap.on.add('passedNote')
                         const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
                         update(point);
-                        setCurNote(Notes[c])
+                        setCurNote(Notes[freqRef.current])
                         if(mode.current === 'accessibility') {
                             Player.play()
                         }
                         break
                     case (event.noteNumber + 1) :
                     case (event.noteNumber - 1) :
-                        setCurNote(Notes[c])
-                        if(check.current){
-                            const c3 = Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69);
-                            requestAnimationFrame( () => interval(c3));
-                        }
+                        setCurNote(Notes[freqRef.current])
+                        requestAnimationFrame( () => interval());
                         if(!vrvMap.on.contains('semiPassedNote')){
                             vrvMap.on.add('semiPassedNote')
                             update(0.5);
                         }
                         break
-                    case "Missed" :
-                        if(!vrvMap.on.contains('semiPassedNote')){
-                            vrvMap.on.add('failedNote')
-                            const note = Notes[c] ? Notes[c] : '___'
-                            setCurNote(note)
-                        }
-                        break
                     default :
-                        const c2 = check.current ? Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69) : "Missed"
-                        requestAnimationFrame( () => interval(c2));
+                        if (check.current){
+                            requestAnimationFrame( () => interval());
+                        } else if(!vrvMap.on.contains('semiPassedNote')){
+                                vrvMap.on.add('failedNote')
+                                const note = Notes[c] ? Notes[c] : '___'
+                                setCurNote(note)
+                        }
+
                         break;
                 }
             }
