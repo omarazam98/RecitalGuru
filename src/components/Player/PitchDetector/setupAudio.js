@@ -8,7 +8,7 @@ async function getWebAudioMediaStream() {
   }
 
   try {
-    const result = await window.navigator.mediaDevices.getUserMedia({audio: {echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false}});
+    const result = await window.navigator.mediaDevices.getUserMedia({audio: {echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}});
 
     return result;
   } catch (e) {
@@ -50,7 +50,6 @@ export async function setupAudio(onPitchDetectedCallback) {
     node = new PitchNode(context, "PitchProcessor");
 
     const numAudioSamplesPerAnalysis = 1024;
-
 
     node.init(onPitchDetectedCallback, numAudioSamplesPerAnalysis);
 
