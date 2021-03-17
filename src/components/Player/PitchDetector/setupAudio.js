@@ -39,12 +39,11 @@ export async function setupAudio(onPitchDetectedCallback) {
   let node;
 
   try {
-    const processorUrl = "./RecitalGuru/PitchProcessor.js";
     try {
-      await context.audioWorklet.addModule(processorUrl);
+      await context.audioWorklet.addModule('https://omarazam98.github.io/MusicXmlData/wasm/PitchProcessor.js');
     } catch (e) {
       throw new Error(
-        `Failed to load audio analyzer worklet at url: ${processorUrl}. Further info: ${e.message}`
+        `Failed to load audio analyzer worklet. Further info: ${e.message}`
       );
     }
 
