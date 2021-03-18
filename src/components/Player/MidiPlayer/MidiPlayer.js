@@ -159,12 +159,12 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 notes: event.noteNumber
             })
 
+            vrvMap.on.add('highlightedNote')
             const startInterval = () => setTimeout(() => {
-                vrvMap.on.add('highlightedNote')
                 check.current = true;
                 const midiNote = freqRef.current()
-                requestAnimationFrame(() => interval(midiNote))
-            }, 198)
+                interval(midiNote);
+            }, 225)
 
             playMidi()
             startInterval();
