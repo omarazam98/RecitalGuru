@@ -150,7 +150,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         }
                         break
                     default :
-                        console.log(check.current)
                         if (check.current){
                             requestAnimationFrame( () => interval(freqRef.current));
                         } else if(!vrvMap.on.contains('semiPassedNote')){
