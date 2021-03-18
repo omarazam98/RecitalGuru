@@ -129,21 +129,21 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const time = event.tick / Player.division
             const vrvMap = timeMap[time]
 
-            const interval = () => {
-                switch (freqRef.current()) {
+            const interval = (midiNote) => {
+                switch (midiNote) {
                     case (event.noteNumber) :
                         vrvMap.on.add('passedNote')
                         const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
                         update(point);
-                        setCurNote(Notes[freqRef.current])
+                        setCurNote(Notes[midiNote])
                         if(mode.current === 'accessibility') {
                             Player.play()
                         }
                         break
                     case (event.noteNumber + 1) :
                     case (event.noteNumber - 1) :
-                        setCurNote(Notes[freqRef.current])
-                        requestAnimationFrame( () => interval());
+                        setCurNote(Notes[midiNote])
+                        requestAnimationFrame( () => interval(freqRef.current()));
                         if(!vrvMap.on.contains('semiPassedNote')){
                             vrvMap.on.add('semiPassedNote')
                             update(0.5);
@@ -151,10 +151,10 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         break
                     default :
                         if (check.current){
-                            requestAnimationFrame( () => interval());
+                            requestAnimationFrame( () => interval(freqRef.current()));
                         } else if(!vrvMap.on.contains('semiPassedNote')){
                                 vrvMap.on.add('failedNote')
-                                const note = Notes[freqRef.current] ? Notes[freqRef.current] : '___'
+                                const note = Notes[freqRef.current] ? Notes[midiNote] : '___'
                                 setCurNote(note)
                         }
                         break;
