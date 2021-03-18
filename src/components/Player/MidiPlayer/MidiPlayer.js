@@ -161,7 +161,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 }
             }
 
-            const playMidi = async () => await soundFont.play(event.noteName, ac.currentTime, {
+            const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
                 duration: vrvMap.time,
                 gain: event.velocity / 10,
                 format: 'ogg',
@@ -171,19 +171,18 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const startInterval = () => requestAnimationFrame(() => {
                 vrvMap.on.add('highlightedNote')
                 check.current = true;
-                interval()
+                interval(freqRef.current)
             })
-
-            setExpectedNote(Notes[event.noteNumber])
-
 
             switch (mode.current){
                 case 'free play' :
                     playMidi()
                     startInterval();
+                    setExpectedNote(Notes[event.noteNumber])
                     break
                 case 'practice' :
                     startInterval();
+                    setExpectedNote(Notes[event.noteNumber])
                     break
                 case 'training' :
                     Player.pause()
@@ -197,6 +196,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                             Player.play();
                         }
                     }, vrvMap.time * 3000 + 75)
+                    setExpectedNote(Notes[event.noteNumber])
                     break
                 case 'accessibility' :
                     check.current = true;
@@ -209,6 +209,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     noteName.onend = function() {
                         startInterval()
                     }
+                    setExpectedNote(Notes[event.noteNumber])
             }
 
             if ((vrvMap['page']) !== swiper.activeIndex) {
