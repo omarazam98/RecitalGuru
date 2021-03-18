@@ -140,6 +140,15 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                             Player.play()
                         }
                         break
+                    case (event.noteNumber + 1) :
+                    case (event.noteNumber - 1) :
+                        setCurNote(Notes[midiNote])
+                        requestAnimationFrame( () => interval(freqRef.current()));
+                        if(!vrvMap.on.contains('semiPassedNote')){
+                            vrvMap.on.add('semiPassedNote')
+                            update(0.5);
+                        }
+                        break
                     default :
                         if (check.current){
                             requestAnimationFrame( () => interval(freqRef.current()));
@@ -159,18 +168,15 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 notes: event.noteNumber
             })
 
-            vrvMap.on.add('highlightedNote')
-            const startInterval = () => setTimeout(() => {
+            const startInterval = () => requestAnimationFrame(() => {
+                vrvMap.on.add('highlightedNote')
                 check.current = true;
-                const midiNote = freqRef.current()
-                interval(midiNote);
-            }, 225)
+                interval()
+            })
 
-            playMidi()
-            startInterval();
             setExpectedNote(Notes[event.noteNumber])
 
-/**
+
             switch (mode.current){
                 case 'free play' :
                     playMidi()
@@ -204,7 +210,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         interval()
                     }
             }
-**/
+
             if ((vrvMap['page']) !== swiper.activeIndex) {
                 swiper.slideTo(vrvMap['page'])
             }
