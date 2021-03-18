@@ -12,12 +12,12 @@ import './App.css';
 import '@ionic/react/css/core.css';
 
 import verovio from 'verovio'
-import {MidiPlayer} from "./components/Player/MidiPlayer/MidiPlayer";
-import RevealMusicXML from "./components/Player/RevealMusicXml/RevealMusicXML";
-import {MidiSync, removeHighlights} from "./components/Player/MidiPlayer/MidiFunctions";
+import {MidiPlayer} from "./components/MidiPlayer/MidiPlayer";
+import RevealMusicXML from "./components/RevealMusicXml/RevealMusicXML";
+import {MidiSync, removeHighlights} from "./components/MidiPlayer/MidiFunctions";
 import Soundfont from "soundfont-player";
 import css from "./css/slidesSimple.css";
-import {setupAudio} from "./components/Player/PitchDetector/setupAudio";
+import {setupAudio} from "./components/PitchDetector/setupAudio";
 
 const songs = {
     0 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml', name: 'Senorita'},

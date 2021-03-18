@@ -174,7 +174,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 interval()
             })
 
-            switch (mode.current){
+            switch (mode.current) {
                 case 'free play' :
                     playMidi()
                     startInterval();

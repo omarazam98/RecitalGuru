@@ -1,4 +1,4 @@
-import * as Aubio from "../../../aubio/aubio"
+import * as Aubio from "../../aubio/aubio"
 
 async function getWebAudioMediaStream() {
   if (!window.navigator.mediaDevices) {
