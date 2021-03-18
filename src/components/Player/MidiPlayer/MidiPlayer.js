@@ -143,15 +143,16 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     case (event.noteNumber + 1) :
                     case (event.noteNumber - 1) :
                         setCurNote(Notes[midiNote])
-                        requestAnimationFrame( () => interval(freqRef.current()));
+                        requestAnimationFrame( () => interval(freqRef.current));
                         if(!vrvMap.on.contains('semiPassedNote')){
                             vrvMap.on.add('semiPassedNote')
                             update(0.5);
                         }
                         break
                     default :
+                        console.log(check.current)
                         if (check.current){
-                            requestAnimationFrame( () => interval(freqRef.current()));
+                            requestAnimationFrame( () => interval(freqRef.current));
                         } else if(!vrvMap.on.contains('semiPassedNote')){
                                 vrvMap.on.add('failedNote')
                                 const note = Notes[freqRef.current] ? Notes[midiNote] : '___'
@@ -207,7 +208,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     synth.pitch = parseInt(Notes[event.noteNumber].charAt(2)) / 6
                     synth.speak(noteName);
                     noteName.onend = function() {
-                        interval()
+                        startInterval()
                     }
             }
 
