@@ -173,10 +173,12 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 check.current = true;
                 interval()
             })
-            
+
+            playMidi()
+            startInterval();
             setExpectedNote(Notes[event.noteNumber])
 
-
+/**
             switch (mode.current){
                 case 'free play' :
                     playMidi()
@@ -210,7 +212,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         interval()
                     }
             }
-
+**/
             if ((vrvMap['page']) !== swiper.activeIndex) {
                 swiper.slideTo(vrvMap['page'])
             }
