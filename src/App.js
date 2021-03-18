@@ -3,7 +3,7 @@ import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHea
 
 import {IonSlides, IonSlide} from "@ionic/react";
 
-import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book, accessibility} from 'ionicons/icons';
+import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book, accessibility, close} from 'ionicons/icons';
 
 import {iosEnterAnimation, iosLeaveAnimation} from "./animations/ios";
 
@@ -301,6 +301,7 @@ function App() {
                 }, {
                     text: 'Cancel',
                     role: 'cancel',
+                    icon: close,
                     handler: () => {}
                 }]}
                 />
