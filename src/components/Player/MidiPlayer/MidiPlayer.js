@@ -129,27 +129,34 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const time = event.tick / Player.division
             const vrvMap = timeMap[time]
 
-            const interval = () => {
-                switch (freqRef.current) {
+            const interval = (midiNote) => {
+                switch (midiNote) {
                     case (event.noteNumber) :
                         vrvMap.on.add('passedNote')
+                        const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
+                        update(point);
+                        setCurNote(Notes[midiNote])
                         if(mode.current === 'accessibility') {
                             Player.play()
                         }
                         break
                     case (event.noteNumber + 1) :
                     case (event.noteNumber - 1) :
-                        requestAnimationFrame( () => interval());
+                        setCurNote(Notes[midiNote])
+                        requestAnimationFrame( () => interval(freqRef.current));
                         if(!vrvMap.on.contains('semiPassedNote')){
                             vrvMap.on.add('semiPassedNote')
+                            update(0.5);
                         }
                         break
                     default :
                         console.log(check.current)
                         if (check.current){
-                            requestAnimationFrame( () => interval());
+                            requestAnimationFrame( () => interval(freqRef.current));
                         } else if(!vrvMap.on.contains('semiPassedNote')){
                                 vrvMap.on.add('failedNote')
+                                const note = Notes[freqRef.current] ? Notes[midiNote] : '___'
+                                setCurNote(note)
                         }
                         break;
                 }
@@ -162,11 +169,11 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 notes: event.noteNumber
             })
 
-            vrvMap.on.add('highlightedNote')
-            const startInterval = () => setTimeout(() => {
+            const startInterval = () => requestAnimationFrame(() => {
+                vrvMap.on.add('highlightedNote')
                 check.current = true;
                 interval()
-            }, 225)
+            })
 
             setExpectedNote(Notes[event.noteNumber])
 
