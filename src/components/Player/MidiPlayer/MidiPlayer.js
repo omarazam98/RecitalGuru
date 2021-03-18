@@ -172,7 +172,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             vrvMap.on.add('highlightedNote')
             const startInterval = () => setTimeout(() => {
                 check.current = true;
-                interval()
+                interval(freqRef.current)
             }, 225)
 
             setExpectedNote(Notes[event.noteNumber])
