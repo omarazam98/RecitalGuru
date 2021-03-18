@@ -27,7 +27,7 @@ export default class PitchNode extends AudioWorkletNode {
   onmessage(event) {
     if (event.type === "pitch") {
       // A pitch was detected. Invoke our callback which will result in the UI updating.
-      this.onPitchDetectedCallback.current = Math.round(12 * (Math.log2(this.pitchDetector.do(event.pitch) / 440)) + 69);
+      this.onPitchDetectedCallback.current = () => Math.round(12 * (Math.log2(this.pitchDetector.do(event.pitch) / 440)) + 69);
     }
   }
 }

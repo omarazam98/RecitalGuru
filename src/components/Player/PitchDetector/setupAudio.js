@@ -8,9 +8,17 @@ async function getWebAudioMediaStream() {
   }
 
   try {
-    const result = await window.navigator.mediaDevices.getUserMedia({audio: {echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}});
+    const result = navigator.mediaDevices.getUserMedia = await function () {
+      const getUserMedia =  navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia
+      if (!getUserMedia) {
+        alert('getUserMedia is not implemented in this browser')
+      }
+      return new Promise(function (resolve, reject) {
+        getUserMedia.call(navigator, {audio:{echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}}, resolve, reject)
+      })
+    }
 
-    return result;
+    return result();
   } catch (e) {
     switch (e.name) {
       case "NotAllowedError":
@@ -49,7 +57,7 @@ export async function setupAudio(onPitchDetectedCallback) {
 
     node = new PitchNode(context, "PitchProcessor");
 
-    const numAudioSamplesPerAnalysis = 1024;
+    const numAudioSamplesPerAnalysis = 512;
 
     node.init(onPitchDetectedCallback, numAudioSamplesPerAnalysis);
 

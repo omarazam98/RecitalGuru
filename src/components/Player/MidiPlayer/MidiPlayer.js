@@ -129,11 +129,9 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
 
             const time = event.tick / Player.division
             const vrvMap = timeMap[time]
-            setExpectedNote(Notes[event.noteNumber])
-            vrvMap.on.add('highlightedNote')
 
             const interval = () => {
-                switch (freqRef.current) {
+                switch (freqRef.current()) {
                     case (event.noteNumber) :
                         vrvMap.on.add('passedNote')
                         const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
