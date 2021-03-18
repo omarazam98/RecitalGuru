@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState, useRef} from 'react';
-import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonTitle, IonListHeader, IonItem, IonNote, IonActionSheet, IonToast, IonLabel, IonIcon, IonChip} from "@ionic/react";
+import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonTitle, IonListHeader, IonItem, IonActionSheet, IonToast, IonLabel, IonIcon, IonChip} from "@ionic/react";
 
 import {IonSlides, IonSlide} from "@ionic/react";
 

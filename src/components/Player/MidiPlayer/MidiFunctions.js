@@ -1,5 +1,3 @@
-import React from 'react'
-
 export const MidiSync = async (toolkit) => {
     let page = 0;
     const syncedNotes = {}

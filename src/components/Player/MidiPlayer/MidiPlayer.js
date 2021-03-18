@@ -1,5 +1,4 @@
 import MidiPlayerJs from 'midi-player-js'
-import React from "react";
 
 const Notes = {
     127: 'G 9',
