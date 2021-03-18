@@ -171,7 +171,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const startInterval = () => requestAnimationFrame(() => {
                 vrvMap.on.add('highlightedNote')
                 check.current = true;
-                interval(freqRef.current)
+                interval()
             })
 
             switch (mode.current){
@@ -189,19 +189,19 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     playMidi();
                     setTimeout(() => {
                         startInterval();
-                    }, vrvMap.time * 1000 + 75)
+                    }, vrvMap.time * 2000 + 60)
 
                     setTimeout(() => {
                         if(check.current){
                             Player.play();
                         }
-                    }, vrvMap.time * 3000 + 75)
+                    }, vrvMap.time * 3000 + 60)
                     setExpectedNote(Notes[event.noteNumber])
                     break
                 case 'accessibility' :
                     check.current = true;
                     Player.pause()
-                    const noteName = new SpeechSynthesisUtterance(event.noteName.charAt(1) === 'b' ? event.noteName.charAt(0) + 'flat' : event.noteName.charAt(0));
+                    const noteName = new SpeechSynthesisUtterance(event.noteName.charAt(1) === 'b' ? event.noteName.charAt(0) + 'flat' + event.noteName.charAt(2) : event.noteName.charAt(0) + event.noteName.charAt(1));
                     noteName.voice = voice
                     noteName.rate = 1.5
                     synth.pitch = parseInt(Notes[event.noteNumber].charAt(2)) / 6
