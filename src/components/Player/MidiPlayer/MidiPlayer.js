@@ -142,11 +142,11 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         break
                     case (event.noteNumber + 1) :
                     case (event.noteNumber - 1) :
-                        setCurNote(Notes[midiNote])
                         requestAnimationFrame( () => interval(freqRef.current));
                         if(!vrvMap.on.contains('semiPassedNote')){
                             vrvMap.on.add('semiPassedNote')
                             update(0.5);
+                            setCurNote(Notes[midiNote])
                         }
                         break
                     default :
