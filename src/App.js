@@ -83,6 +83,17 @@ function App() {
         7: 'violin'
     }
 
+    const instruments = {
+        0: 'Piano',
+        1: 'Guitar',
+        2: 'Clarinet',
+        3: 'Flute',
+        4: 'Sax',
+        5: 'Trumpet',
+        6: 'Cello',
+        7: 'Violin'
+    }
+
     const getFirstColumn = {
         name: "First",
         selectedIndex: instrumentKey,
@@ -190,25 +201,21 @@ function App() {
         [soundFont, swiper]);
 
     useEffect(() => {
-        if(swiper && player){
+        if(swiper){
             document.onkeydown = function(e) {
                 switch(e.which) {
                     case 38: // up
                         swiper.slidePrev();
                         break;
-
                     case 40: // down
                         swiper.slideNext();
-                        break;
-                    case 32:
-                        playPause();
                         break;
                     default: return; // exit this handler for other keys
                 }
                 e.preventDefault(); // prevent the default action (scroll / move caret)
             };
         }
-    },[swiper, player])
+    },[swiper])
 
 
 
@@ -323,7 +330,7 @@ function App() {
                       <IonButtons slot={'end'}>
                           <IonButton fill={'outline'} color={'tertiary'} disabled={playing} onClick={ () => setOpen(true)}>
                               <IonIcon icon={musicalNotes}/>
-                              {midiInstruments[instrumentKey]}
+                              {instruments[instrumentKey]}
                               <IonIcon icon={key}/>
                               {keys[keyIndex]}
                               <IonIcon icon={chevronDown}/>

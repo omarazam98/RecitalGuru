@@ -8,17 +8,14 @@ async function getWebAudioMediaStream() {
   }
 
   try {
-    const result = navigator.mediaDevices.getUserMedia = await function () {
-      const getUserMedia =  navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia
-      if (!getUserMedia) {
-        alert('getUserMedia is not implemented in this browser')
+    return await window.navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellationType: 'browser',
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false
       }
-      return new Promise(function (resolve, reject) {
-        getUserMedia.call(navigator, {audio:{echoCancellationType:'browser', echoCancellation: false, noiseSuppression: false, autoGainControl: false}}, resolve, reject)
-      })
-    }
-
-    return result();
+    });
   } catch (e) {
     switch (e.name) {
       case "NotAllowedError":
@@ -42,8 +39,8 @@ export async function setupAudio(onPitchDetectedCallback) {
   const numAudioSamplesPerAnalysis = 1024
 
   const mediaStream = await getWebAudioMediaStream();
-
-  const context = new window.AudioContext({latencyHint: 'interactive'});
+  const AudioContext = window.AudioContext || window.webkitAudioContext
+  const context = new AudioContext({latencyHint: 'interactive'});
   const audioSource = context.createMediaStreamSource(mediaStream);
 
   const scriptProcessor = context.createScriptProcessor(numAudioSamplesPerAnalysis, 1, 1)
