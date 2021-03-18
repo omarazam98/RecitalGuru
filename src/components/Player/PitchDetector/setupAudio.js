@@ -1,4 +1,4 @@
-import PitchNode from "./PitchNode";
+import * as Aubio from "../../../aubio/aubio"
 
 async function getWebAudioMediaStream() {
   if (!window.navigator.mediaDevices) {
@@ -39,37 +39,23 @@ async function getWebAudioMediaStream() {
 
 export async function setupAudio(onPitchDetectedCallback) {
   // Get the browser's audio. Awaits user "allowing" it for the current tab.
+  const numAudioSamplesPerAnalysis = 1024
+
   const mediaStream = await getWebAudioMediaStream();
 
   const context = new window.AudioContext({latencyHint: 'interactive'});
   const audioSource = context.createMediaStreamSource(mediaStream);
 
-  let node;
+  const scriptProcessor = context.createScriptProcessor(numAudioSamplesPerAnalysis, 1, 1)
+  audioSource.connect(scriptProcessor).connect(context.destination)
 
-  try {
-    try {
-      await context.audioWorklet.addModule('https://omarazam98.github.io/MusicXmlData/wasm/PitchProcessor.js');
-    } catch (e) {
-      throw new Error(
-        `Failed to load audio analyzer worklet. Further info: ${e.message}`
-      );
-    }
+  Aubio().then((aubio) => {
+    const pitchDetector = new aubio.Pitch('default', numAudioSamplesPerAnalysis, numAudioSamplesPerAnalysis / 2, context.sampleRate)
 
-    node = new PitchNode(context, "PitchProcessor");
-
-    const numAudioSamplesPerAnalysis = 512;
-
-    node.init(onPitchDetectedCallback, numAudioSamplesPerAnalysis);
-
-    audioSource.connect(node);
-
-    node.connect(context.destination);
-
-  } catch (err) {
-    throw new Error(
-      `Failed to load audio analyzer WASM module. Further info: ${err.message}`
-    );
-  }
+    scriptProcessor.addEventListener('audioprocess', function(event) {
+      onPitchDetectedCallback.current = () => Math.round(12 * (Math.log2(pitchDetector.do(event.inputBuffer.getChannelData(0)) / 440)) + 69);
+    })
+  })
 
   return context
 }
