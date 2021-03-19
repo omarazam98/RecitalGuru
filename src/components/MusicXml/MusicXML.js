@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function RevealMusicXML(key, path, toolkit) {
+export default function MusicXML(key, path, toolkit) {
     const setOptions = function () {
       let pixelHeight = window.innerHeight / 2 ;
       let pixelWidth = window.innerWidth + 55;

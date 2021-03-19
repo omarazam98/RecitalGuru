@@ -13,8 +13,8 @@ import '@ionic/react/css/core.css';
 
 import verovio from 'verovio'
 import {MidiPlayer} from "./components/MidiPlayer/MidiPlayer";
-import RevealMusicXML from "./components/RevealMusicXml/RevealMusicXML";
-import {MidiSync, removeHighlights} from "./components/MidiPlayer/MidiFunctions";
+import MusicXML from "./components/MusicXml/MusicXML";
+import {MidiSync, removeHighlights} from "./components/HelperFunctions/MidiFunctions";
 import Soundfont from "soundfont-player";
 import css from "./css/slidesSimple.css";
 import {setupAudio} from "./components/PitchDetector/setupAudio";
@@ -152,7 +152,7 @@ function App() {
 
     useEffect(() => {
             async function render() {
-                const slides = await RevealMusicXML(keys[keyIndex], songs[path].path, toolkit)
+                const slides = await MusicXML(keys[keyIndex], songs[path].path, toolkit)
                 const data = await toolkit.renderToMIDI()
 
                 setSlides(slides)
