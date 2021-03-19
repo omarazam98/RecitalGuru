@@ -46,8 +46,8 @@ function App() {
     const [open, setOpen] = useState(false);
     const [swiper, setSwiper] = useState({});
 
-    const [expectedNote, setExpectedNote] = useState(<IonIcon icon={musicalNote}/>);
-    const [curNote, setCurNote] = useState(<IonIcon icon={musicalNote}/>);
+    const [expectedNote, setExpectedNote] = useState('');
+    const [curNote, setCurNote] = useState('');
     const [score, setScore] = useState("0%");
 
     const practice = useRef(false)
@@ -59,6 +59,9 @@ function App() {
     const [timer, setTimer] = useState(5);
 
     const [showActionSheet, setShowActionSheet] = useState(false);
+
+    const [completed, setCompleted] = useState(false);
+
 
     let mode = useRef("listen");
 
@@ -150,15 +153,25 @@ function App() {
         },
         [player]);
 
+    const render = async function render() {
+        const slides = await MusicXML(keys[keyIndex], songs[path].path, toolkit)
+        const data = await toolkit.renderToMIDI()
+
+        setSlides(slides)
+        setData(data)
+    }
+
+    window.onorientationchange = () => {
+        if(!playing && toolkit){
+            render().then(() => {
+                MidiSync(toolkit).then((map) => {
+                    setTimeMap(map)
+                })
+            });
+        }
+    }
+
     useEffect(() => {
-            async function render() {
-                const slides = await MusicXML(keys[keyIndex], songs[path].path, toolkit)
-                const data = await toolkit.renderToMIDI()
-
-                setSlides(slides)
-                setData(data)
-            }
-
             if(toolkit && path && keyIndex){
                 render().then(() => {
                     passedNotes.current = 0;
@@ -166,13 +179,6 @@ function App() {
                     notes.current = document.getElementsByClassName('note').length
                     MidiSync(toolkit).then((map) => {
                         setTimeMap(map)
-                        window.onorientationchange = () => {
-                            render().then(() => {
-                                MidiSync(toolkit).then((map) => {
-                                    setTimeMap(map)
-                                })
-                            });
-                        }
                     })
                 })
             }
@@ -191,13 +197,13 @@ function App() {
 
     useEffect(() => {
             if(soundFont && swiper){
+                setCompleted(false)
                 MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, mode).then((player) =>{
                     setPlayer(player)
                     player.on('endOfFile' , () => {
                         setPlaying(false)
+                        setCompleted(true)
                         swiper.slideTo(0)
-                        removeHighlights();
-                        passedNotes.current = 0;
                     })
                 })
             }
@@ -361,18 +367,25 @@ function App() {
                   <IonToolbar color={"dark"}>
                       <IonChip>
                           <IonLabel color={'success'}>
-                              Expected {expectedNote}
+                              Expected {playing ? expectedNote : <IonIcon icon={musicalNote}/>}
                           </IonLabel>
                       </IonChip>
                       <IonChip>
                           <IonLabel color={'warning'}>
-                              Actual {curNote}
+                              Actual {playing ? curNote : <IonIcon icon={musicalNote}/>}
                           </IonLabel>
                       </IonChip>
                       <IonButtons slot={"end"}>
                           <IonButton fill={'outline'} color={'primary'} expand="block" onClick={async () => {
                               if(!ac){
                                   setAc(await setupAudio(freqRef));
+                                  setShowActionSheet(true)
+                              } else if (completed){
+                                  swiper.slideTo(0)
+                                  setCompleted(false)
+                                  removeHighlights();
+                                  setScore('0%')
+                                  passedNotes.current = 0;
                                   setShowActionSheet(true)
                               } else if(playing){
                                   playPause(playing)
@@ -383,7 +396,7 @@ function App() {
                           }}>
                               {playing ? <IonIcon icon={pause}/> : <IonIcon icon={options}/>}
 
-                              {playing ? (' Pause ' + score) : player && player.getCurrentTick() ? (' Resume ' + score) : ' Begin Recital '}
+                              {playing ? (' Pause ' + score) : player && player.getCurrentTick() && !completed ? ' Resume ' + score : completed ? ' Retry ' + score : ' Begin Recital '}
                           </IonButton>
                       </IonButtons>
                   </IonToolbar>
