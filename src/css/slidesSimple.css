@@ -256,3 +256,9 @@ html {
 .menu-side-end  {
   --background: beige;
 }
+
+.header1 {
+  width: 100%;
+  height: 6vh;
+  object-fit: contain;
+}

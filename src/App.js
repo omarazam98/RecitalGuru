@@ -325,9 +325,9 @@ function App() {
             />
               <IonHeader>
                   <IonToolbar color={'dark'}>
-                      <IonTitle size={'small'} slot={'start'}>
-                          RecitalGuru
-                      </IonTitle>
+                      <IonLabel slot={'start'}>
+                          <img className="header1" src="https://omarazam98.github.io/MusicXmlData/img/logo.png"/>
+                      </IonLabel>
                       <IonButtons slot={'end'}>
                           <IonButton fill={'outline'} color={'tertiary'} disabled={playing} onClick={ () => setOpen(true)}>
                               <IonIcon icon={musicalNotes}/>
