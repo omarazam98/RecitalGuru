@@ -167,7 +167,11 @@ function App() {
                     MidiSync(toolkit).then((map) => {
                         setTimeMap(map)
                         window.onorientationchange = () => {
-                            render();
+                            render().then(() => {
+                                MidiSync(toolkit).then((map) => {
+                                    setTimeMap(map)
+                                })
+                            });
                         }
                     })
                 })
