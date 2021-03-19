@@ -136,7 +136,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         const point = vrvMap.on.contains('semiPassedNote') ? 0.5 : 1
                         update(point);
                         setCurNote(Notes[midiNote])
-                        if(mode.current === 'accessibility') {
+                        if(mode.current === 'accessibility' || mode.current === 'free play') {
                             Player.play()
                         }
                         break
@@ -175,12 +175,17 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             })
 
             switch (mode.current) {
-                case 'free play' :
+                case 'listen' :
                     playMidi()
                     startInterval();
                     setExpectedNote(Notes[event.noteNumber])
                     break
                 case 'practice' :
+                    startInterval();
+                    setExpectedNote(Notes[event.noteNumber])
+                    break
+                case 'free play' :
+                    Player.pause()
                     startInterval();
                     setExpectedNote(Notes[event.noteNumber])
                     break

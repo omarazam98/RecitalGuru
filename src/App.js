@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useState, useRef} from 'react';
-import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonTitle, IonListHeader, IonItem, IonActionSheet, IonToast, IonLabel, IonIcon, IonChip} from "@ionic/react";
+import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonListHeader, IonItem, IonActionSheet, IonToast, IonLabel, IonIcon, IonChip} from "@ionic/react";
 
 import {IonSlides, IonSlide} from "@ionic/react";
 
-import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book, accessibility, close} from 'ionicons/icons';
+import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book, accessibility, close, time} from 'ionicons/icons';
 
 import {iosEnterAnimation, iosLeaveAnimation} from "./animations/ios";
 
@@ -60,7 +60,7 @@ function App() {
 
     const [showActionSheet, setShowActionSheet] = useState(false);
 
-    let mode = useRef("free play");
+    let mode = useRef("listen");
 
     const keys = {
         0: 'A',
@@ -259,16 +259,16 @@ function App() {
                 isOpen={showActionSheet}
                 onDidDismiss={() => setShowActionSheet(false)}
                 buttons={[{
-                    text: 'Free Play',
+                    text: 'Listen',
                     icon: volumeHigh,
                     handler: () => {
-                        mode.current = 'free play';
+                        mode.current = 'listen';
                         playPause(playing)
                         setPlaying(!playing)
                     }
                 }, {
                     text: 'Practice',
-                    icon: play,
+                    icon: time,
                     handler: () => {
                         mode.current = 'practice';
                         setShowToast(true)
@@ -278,6 +278,13 @@ function App() {
                     icon: book,
                     handler: () => {
                         mode.current = 'training';
+                        setShowToast(true)
+                    }
+                }, {
+                    text: 'Free Play',
+                    icon: play,
+                    handler: () => {
+                        mode.current = 'free play';
                         setShowToast(true)
                     }
                 }, {
