@@ -23,7 +23,10 @@ const songs = {
     0 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml', name: 'Senorita'},
     1 : {path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test8.xml', name: 'Hallelujah'},
     2 : {path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test9.xml', name: 'Viva La Vida'},
-    3 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test11.xml' , name: 'Dance Monkey'}
+    3 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test11.xml' , name: 'Dance Monkey'},
+    4 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test10.xml' , name: 'Zelda Melody'},
+    5 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test7.xml' , name: 'YMCA'},
+    6 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test6.xml' , name: 'Titanium'},
 }
 
 function App() {
