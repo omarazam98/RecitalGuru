@@ -47,10 +47,11 @@ export async function setupAudio(onPitchDetectedCallback) {
   audioSource.connect(scriptProcessor).connect(context.destination)
 
   Aubio().then((aubio) => {
-    const pitchDetector = new aubio.Pitch('default', numAudioSamplesPerAnalysis, 128, context.sampleRate)
+    const pitchDetector = new aubio.Pitch('default', numAudioSamplesPerAnalysis, 512, context.sampleRate)
     scriptProcessor.addEventListener('audioprocess', function(event) {
+      const pitch = pitchDetector.do(event.inputBuffer.getChannelData(0));
       onPitchDetectedCallback.current = (func) => {
-        func(Math.round(12 * (Math.log2(pitchDetector.do(event.inputBuffer.getChannelData(0)) / 440)) + 69));
+        requestAnimationFrame(() => func(Math.round(12 * (Math.log2( pitch / 440)) + 69)));
       }
     })
   })
