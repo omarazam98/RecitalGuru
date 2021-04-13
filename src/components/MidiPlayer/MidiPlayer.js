@@ -137,7 +137,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         Player.play()
                     }
                 } else if(check.current){
-                    freqRef.current(interval2);
+                    requestAnimationFrame(() => freqRef.current(interval2));
                 } else {
                     vrvMap.on('failedNote')
                 }
@@ -155,17 +155,17 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         break;
                     case (event.noteNumber + 1) :
                     case (event.noteNumber - 1) :
-                        freqRef.current(interval2);
+                        requestAnimationFrame(() => freqRef.current(interval2));
                         vrvMap.on('semiPassedNote')
                         update(0.5);
                         setCurNote(Notes[midiNote])
                         break;
                     default :
-                        check.current ? freqRef.current(interval) : vrvMap.on('failedNote')
+                        check.current ? requestAnimationFrame(() => freqRef.current(interval)) : vrvMap.on('failedNote')
                 }
             }
 
-            const startInterval = () => requestAnimationFrame(() => {
+            const startInterval = () => requestAnimationFrame( () => {
                 vrvMap.on('highlightedNote')
                 check.current = true;
                 freqRef.current(interval);
