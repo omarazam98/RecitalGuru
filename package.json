@@ -4,10 +4,10 @@
   "private": true,
   "homepage": "http://omarazam98.github.io/RecitalGuru",
   "dependencies": {
-    "@ionic/core": "^5.5.2",
-    "@ionic/react": "^5.5.2",
-    "ionicons": "^5.5.0",
-    "midi-player-js": "^2.0.13",
+    "@ionic/core": "^5.6.4",
+    "@ionic/react": "^5.6.4",
+    "ionicons": "^5.5.1",
+    "midi-player-js": "^2.0.14",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-scripts": "3.4.3",
@@ -20,11 +20,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "compile-wasm": "wasm-pack build ./wasm-audio --target web",
-    "install-wasm": "xcopy /E /Y .\\wasm-audio\\pkg .\\public\\wasm-audio",
-    "build-wasm": "wasm-pack build ./wasm-audio --target web && rm -rf ./public/wasm-audio && cp -R ./wasm-audio/pkg ./public/wasm-audio",
-    "build-wasm-win": "npm run compile-wasm && npm run install-wasm"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"

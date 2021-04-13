@@ -1,4 +1,5 @@
 import React from "react";
+import css from "../../css/slides.css";
 
 export default function MusicXML(key, path, toolkit) {
     const setOptions = function () {
@@ -26,9 +27,7 @@ export default function MusicXML(key, path, toolkit) {
       let max = toolkit.getPageCount();
       for (let i = 1; i <= max; i++) {
         slides.push(
-                <section
-                    dangerouslySetInnerHTML={{ __html: toolkit.renderToSVG(i, {}) }}
-                />
+            <section style={css} dangerouslySetInnerHTML={{ __html: toolkit.renderToSVG(i, {}) }}/>
         )
       }
       return (slides)

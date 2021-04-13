@@ -16,7 +16,7 @@ import {MidiPlayer} from "./components/MidiPlayer/MidiPlayer";
 import MusicXML from "./components/MusicXml/MusicXML";
 import {MidiSync, removeHighlights} from "./components/HelperFunctions/MidiFunctions";
 import Soundfont from "soundfont-player";
-import css from "./css/slidesSimple.css";
+import css from "./css/app.css";
 import {setupAudio} from "./components/PitchDetector/setupAudio";
 
 const songs = {
@@ -27,6 +27,11 @@ const songs = {
     4 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test10.xml' , name: 'Zelda Melody'},
     5 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test7.xml' , name: 'YMCA'},
     6 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test6.xml' , name: 'Titanium'},
+    7 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test12.xml' , name: 'Believer'},
+    8 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test13.xml' , name: 'Blinding Lights'},
+    9 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test14.xml' , name: 'Christmas Melody'},
+    10 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test15.xml' , name: 'Heart Will Go On'},
+    11 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test16.xml' , name: 'Havana'},
 }
 
 function App() {

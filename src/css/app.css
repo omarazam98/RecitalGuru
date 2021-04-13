@@ -1,0 +1,111 @@
+.btn{
+  --height: 100%;
+  font-size: 1vw;
+}
+
+.btn2{
+  --height: 100%;
+  font-size: 1vw;
+}
+
+.swiper-slide.swiper-slide {
+  background-color: beige;
+}
+
+.buttons {
+  justify-content: space-around;
+  width: 33%;
+}
+
+.toast {
+  position: fixed;
+  box-sizing: border-box;
+  color: brown;
+  font-size: 43px;
+  width: 70px;
+  height: 70px;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+.noteDisplay {
+  width: max-content;
+}
+
+.picker-wrapper.sc-ion-picker-ios {
+  bottom: auto;
+  left: auto;
+
+}
+
+.custom-class .action-sheet-wrapper {
+  left: auto;
+}
+
+.picker-columns .picker-above-highlight {
+  opacity: 1;
+  --background: beige;
+  color: black;
+}
+
+.picker-columns .picker-below-highlight {
+  opacity: 1;
+  --background: beige;
+}
+
+.picker-columns,
+.picker-ios .picker-toolbar {
+  background-color: beige;
+}
+
+.picker-ios .picker-prefix,
+.picker-ios .picker-suffix,
+.picker-ios .picker-opt.picker-opt-selected {
+  background-color: beige;
+  color: #000000;
+  font-family: Montserrat-Medium, serif;
+}
+.picker-ios .picker-opt {
+  background-color: beige;
+  color: #000000;
+  font-family: Montserrat-Medium, serif;
+  z-index: 30;
+}
+
+.picker-ios .picker-button,
+.picker-ios .picker-button.activated {
+  background-color: beige;
+  color: #3380ff;
+  font-family: Montserrat-Regular, serif;
+}
+
+.menu-side-end .list-ios {
+  --background: beige;
+  background-color: beige;
+}
+
+.menu-side-end .list-ios .item {
+  --background: beige;
+  background-color: beige;
+}
+
+.menu-side-end  {
+  --background: beige;
+}
+
+.header1 {
+  width: 100%;
+  height: 6vh;
+  object-fit: contain;
+}
+
+.swiper-slide {
+  will-change: transform;
+}
+
+.parent .swiper-slide {
+  will-change: transform;
+}

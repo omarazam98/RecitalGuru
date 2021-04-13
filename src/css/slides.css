@@ -1,0 +1,58 @@
+@import url(https://fonts.googleapis.com/css?family=News+Cycle:400,700);
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
+@import url(https://fonts.googleapis.com/css?family=Cousine);
+@import url(https://fonts.googleapis.com/css?family=Tinos);
+
+/* Monospace Font: Cousine */
+.svg {
+  font-family: 'Cousine', monospace; }
+
+/* Verovio Text Font: Tinos */
+.g.page-margin {
+  font-family: 'Tinos', 'Times New Roman', 'Times', 'Liberation Serif', serif; }
+
+/* Verovio SMuFL Font: Bravura */
+html {
+  font-family: Bravura;
+  background: #fff;
+}
+
+.dt {
+  font-weight: bold;
+}
+
+.q {
+  font-style: italic;
+}
+
+.highlightedNote {
+  fill: blue;
+}
+
+.passedNote {
+  fill: forestgreen !important;
+}
+
+.semiPassedNote {
+  fill: #cccc33;
+}
+
+.failedNote {
+  fill: #cc0000;
+}
+
+.labelAbbr {
+  display: none;
+}
+
+.label {
+  display: none;
+}
+
+.syl {
+  display: none;
+}
+
+.svg {
+  background-color: beige;
+}

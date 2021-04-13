@@ -125,87 +125,80 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
 
     const Player =  await new MidiPlayerJs.Player(function (event){
         if(event.velocity){
-
             const time = event.tick / Player.division
             const vrvMap = timeMap[time]
 
-            const intervalOptions = {
-                [event.noteNumber] : () => {
-                    vrvMap.on.add('passedNote')
-                    update(1);
+            const interval2 = (midiNote) => {
+                if(event.noteNumber === midiNote){
+                    vrvMap.on('passedNote')
+                    update(0.5);
                     setCurNote(Notes[event.noteNumber])
-                    switch (mode.current){
-                        case 'free play' :
-                        case 'accessibility':
-                            Player.play()
+                    if(mode.current === "free play"){
+                        Player.play()
                     }
-                },
-                [event.noteNumber - 1] : () => {
-                    requestAnimationFrame(() => startInterval())
-                        vrvMap.on.add('semiPassedNote')
-                        setCurNote(Notes[event.noteNumber - 1])
-                },
-                [event.noteNumber + 1] : () => {
-                    requestAnimationFrame(() => startInterval())
-                        vrvMap.on.add('semiPassedNote')
-                        setCurNote(Notes[event.noteNumber + 1])
-
-                },
-            }
-
-            const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
-                duration: vrvMap.time,
-                gain: event.velocity / 10,
-                format: 'ogg',
-                notes: event.noteNumber
-            })
-
-
-            const startInterval = () => {
-                if (check.current) {
-                    requestAnimationFrame(() => intervalOptions[freqRef.current] ? intervalOptions[freqRef.current]() : startInterval())
+                } else if(check.current){
+                    requestAnimationFrame(() => freqRef.current(interval2));
                 } else {
-                    vrvMap.on.add('failedNote')
+                    vrvMap.on('failedNote')
                 }
             }
 
+            const interval = (midiNote) => {
+                switch (midiNote){
+                    case (event.noteNumber) :
+                        vrvMap.on('passedNote')
+                        update(1);
+                        setCurNote(Notes[midiNote])
+                        if(mode.current === "free play"){
+                            Player.play()
+                        }
+                        break;
+                    case (event.noteNumber + 1) :
+                    case (event.noteNumber - 1) :
+                        requestAnimationFrame(() => freqRef.current(interval2));
+                        vrvMap.on('semiPassedNote')
+                        update(0.5);
+                        setCurNote(Notes[midiNote])
+                        break;
+                    default :
+                        check.current ? requestAnimationFrame(() => freqRef.current(interval)) : vrvMap.on('failedNote')
+                }
+            }
+
+            const startInterval = () => requestAnimationFrame(() => {
+                vrvMap.on('highlightedNote')
+                check.current = true;
+                freqRef.current(interval);
+            })
+
+            const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
+                duration: vrvMap.time,
+                gain: event.velocity / 5,
+                format: 'ogg',
+                notes: event.noteNumber
+            })
 
             const modeActions = {
                 'listen' : () => {
                     playMidi()
                     setExpectedNote(Notes[event.noteNumber])
-                    requestAnimationFrame(() => {
-                        vrvMap.on.add('highlightedNote')
-                        check.current = true;
-                        startInterval();
-                    })
+                    startInterval();
                 },
                 'practice' : () => {
                     setExpectedNote(Notes[event.noteNumber])
-                    requestAnimationFrame(() => {
-                        vrvMap.on.add('highlightedNote')
-                        check.current = true;
-                        startInterval();
-                    })
+                    startInterval();
+
                 },
                 'free play' : () => {
                     Player.pause()
                     setExpectedNote(Notes[event.noteNumber])
-                    requestAnimationFrame(() => {
-                        vrvMap.on.add('highlightedNote')
-                        check.current = true;
-                        startInterval();
-                    })
+                    startInterval();
                 },
                 'training' : () => {
                     Player.pause()
                     playMidi();
                     setTimeout(() => {
-                        requestAnimationFrame(() => {
-                            vrvMap.on.add('highlightedNote')
-                            check.current = true;
-                            startInterval();
-                        })
+                        startInterval();
                     }, vrvMap.time * 2000 + 60)
 
                     setTimeout(() => {
@@ -221,15 +214,14 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     Player.pause()
                     const noteName = new SpeechSynthesisUtterance(event.noteName.charAt(1) === 'b' ? event.noteName.charAt(0) + 'flat' + event.noteName.charAt(2) : event.noteName.charAt(0) + event.noteName.charAt(1));
                     noteName.voice = voice
-                    noteName.rate = 1.5
                     synth.pitch = parseInt(Notes[event.noteNumber].charAt(2)) / 6
                     synth.speak(noteName);
                     noteName.onend = function() {
-                        requestAnimationFrame(() => {
-                            vrvMap.on.add('highlightedNote')
-                            check.current = true;
+                        if(check.current){
+                            Player.play()
+                            playMidi()
                             startInterval();
-                        })
+                        }
                     }
                 }
             }
