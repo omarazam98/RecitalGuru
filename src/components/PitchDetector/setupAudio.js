@@ -36,7 +36,7 @@ async function getWebAudioMediaStream() {
 
 export async function setupAudio(onPitchDetectedCallback) {
   // Get the browser's audio. Awaits user "allowing" it for the current tab.
-  const numAudioSamplesPerAnalysis = 512;
+  const numAudioSamplesPerAnalysis = 256;
   const numTotalAudioSamples = 1024;
 
   const mediaStream = await getWebAudioMediaStream();
@@ -59,7 +59,7 @@ export async function setupAudio(onPitchDetectedCallback) {
       }
     })
 
-    onPitchDetectedCallback.current = (func) => func(Math.round(12 * (Math.log2(pitchDetector.do(sample) / 440)) + 69));
+    onPitchDetectedCallback.current = (func) => {setTimeout( () => func(Math.round(12 * (Math.log2(pitchDetector.do(sample) / 440)) + 69)), 1)};
   })
 
   return context

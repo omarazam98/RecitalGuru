@@ -10,9 +10,9 @@ export const MidiSync = async (toolkit) => {
             const currentPage = toolkit.getPageWithElement(timeMap[index]['on'][0]) - 1
             const time =  (toolkit.getMIDIValuesForElement(timeMap[index]['on'][0]).duration) / 1000
             syncedNotes[noteTime] = {
-                'on' : (style) => {
+                'on' : (style) => requestAnimationFrame(() => {
                             element.style.willChange = 'fill'
-                            element.classList.add(style)},
+                            element.classList.add(style)}),
                 'page': currentPage,
                 'time' : time,
             };
