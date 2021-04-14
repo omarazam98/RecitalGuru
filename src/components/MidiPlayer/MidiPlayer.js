@@ -225,13 +225,13 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             if ((vrvMap['page']) !== swiper.activeIndex) {
-                Player.pause()
+                setTimeout(() => Player.pause(), vrvMap.duration - 33)
                 requestAnimationFrame(() => {
                     swiper.slideTo(vrvMap['page'])
+                    modeActions[mode.current]()
                     setTimeout(() => {
                         Player.play()
-                        modeActions[mode.current]()
-                    }, 250)
+                    }, vrvMap.duration + 33)
                 })
             }else {
                 modeActions[mode.current]()
