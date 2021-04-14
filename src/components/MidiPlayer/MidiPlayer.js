@@ -142,7 +142,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             const interval = (midiNote) => {
-                console.log("yo")
                 switch (midiNote){
                     case (event.noteNumber) :
                         vrvMap.on('passedNote')
@@ -228,7 +227,9 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             modeActions[mode.current]()
 
             if ((vrvMap['page']) !== swiper.activeIndex) {
-                swiper.slideTo(vrvMap['page'])
+                requestAnimationFrame(() => {
+                    swiper.slideTo(vrvMap['page'])
+                })
             }
 
         } else {
