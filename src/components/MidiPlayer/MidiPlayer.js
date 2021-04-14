@@ -228,10 +228,11 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 Player.pause()
                 requestAnimationFrame(() => {
                     swiper.slideTo(vrvMap['page'])
-                    modeActions[mode.current]()
-                    Player.play()
+
                 })
-            }else {
+                modeActions[mode.current]()
+                Player.play()
+            } else {
                 modeActions[mode.current]()
             }
 
