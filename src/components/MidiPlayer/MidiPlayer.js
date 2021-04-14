@@ -233,7 +233,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     modeActions[mode.current]()
                     setTimeout(() => {
                         Player.play()
-                    }, 30)
+                    }, 45)
                 })
             }
 
