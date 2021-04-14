@@ -128,7 +128,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const time = event.tick / Player.division
             const vrvMap = timeMap[time]
             let timeOut;
-
             const interval2 = (midiNote) => {
                 if(event.noteNumber === midiNote){
                     vrvMap.on('passedNote')
@@ -144,6 +143,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             const interval = (midiNote) => {
+                console.log(midiNote)
                 switch (midiNote){
                     case (event.noteNumber) :
                         vrvMap.on('passedNote')
