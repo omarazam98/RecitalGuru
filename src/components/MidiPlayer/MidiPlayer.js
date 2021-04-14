@@ -127,13 +127,15 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
         if(event.velocity){
             const time = event.tick / Player.division
             const vrvMap = timeMap[time]
+            let timeOut;
 
             const interval2 = (midiNote) => {
                 if(event.noteNumber === midiNote){
                     vrvMap.on('passedNote')
                     update(0.5);
                     setCurNote(Notes[event.noteNumber])
-                    if(mode.current === "free play"){
+                    if(mode.current === "free play" || mode.current === "practice easy" || mode.current === "practice medium"){
+                        clearTimeout(timeOut)
                         Player.play()
                     }
                 } else if(check.current){
@@ -142,13 +144,13 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             const interval = (midiNote) => {
-                console.log("yo")
                 switch (midiNote){
                     case (event.noteNumber) :
                         vrvMap.on('passedNote')
                         update(1);
                         setCurNote(Notes[midiNote])
-                        if(mode.current === "free play"){
+                        if(mode.current === "free play" || mode.current === "practice easy" || mode.current === "practice medium"){
+                            clearTimeout(timeOut)
                             Player.play()
                         }
                         break;
@@ -164,11 +166,11 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 }
             }
 
-            const startInterval = () => setTimeout( () => {
+            const startInterval = () =>  {
                 vrvMap.on('highlightedNote')
                 check.current = true;
                 freqRef.current(interval);
-            }, 60)
+            }
 
             const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
                 duration: vrvMap.time,
@@ -183,10 +185,27 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     setExpectedNote(Notes[event.noteNumber])
                     startInterval();
                 },
-                'practice' : () => {
+                'practice hard' : () => {
                     setExpectedNote(Notes[event.noteNumber])
                     startInterval();
-
+                },
+                'practice medium' : () => {
+                    setExpectedNote(Notes[event.noteNumber])
+                    startInterval();
+                    Player.pause()
+                    timeOut = setTimeout(() => {
+                        if(check.current)
+                        Player.play()
+                    }, vrvMap.time * 1000)
+                },
+                'practice easy' : () => {
+                    setExpectedNote(Notes[event.noteNumber])
+                    startInterval();
+                    Player.pause();
+                    timeOut = setTimeout(() => {
+                        if(check.current)
+                        Player.play()
+                    }, vrvMap.time * 2000)
                 },
                 'free play' : () => {
                     Player.pause()
@@ -196,7 +215,9 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 'training' : () => {
                     Player.pause()
                     playMidi();
+                    vrvMap.hide()
                     setTimeout(() => {
+                        vrvMap.show();
                         startInterval();
                     }, vrvMap.time * 2000 + 60)
 
@@ -207,15 +228,17 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     }, vrvMap.time * 3000 + 60)
                     setExpectedNote(Notes[event.noteNumber])
                 },
-                'accessibility' : () => {
+                'vocal' : () => {
                     check.current = true;
+                    vrvMap.hide()
                     setExpectedNote(Notes[event.noteNumber])
                     Player.pause()
-                    const noteName = new SpeechSynthesisUtterance(event.noteName.charAt(1) === 'b' ? event.noteName.charAt(0) + 'flat' + event.noteName.charAt(2) : event.noteName.charAt(0) + event.noteName.charAt(1));
+                    const noteName = new SpeechSynthesisUtterance(event.noteName.charAt(1) === 'b' ? event.noteName.charAt(0) + 'flat' : event.noteName.charAt(0) + event.noteName.charAt(1));
                     noteName.voice = voice
                     synth.pitch = parseInt(Notes[event.noteNumber].charAt(2)) / 6
                     synth.speak(noteName);
                     noteName.onend = function() {
+                        vrvMap.show()
                         if(check.current){
                             Player.play()
                             playMidi()
@@ -226,7 +249,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             if ((vrvMap['page']) === swiper.activeIndex) {
-                modeActions[mode.current]()
+                setTimeout(() => modeActions[mode.current](), 60)
             } else {
                 requestAnimationFrame(() => {
                     swiper.slideTo(vrvMap['page'])

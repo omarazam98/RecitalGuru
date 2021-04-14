@@ -15,6 +15,9 @@ export const MidiSync = async (toolkit) => {
                             element.classList.add(style)}),
                 'page': currentPage,
                 'time' : time,
+                'hide' : () => element.style.visibility = 'hidden',
+                'show' : () => element.style.visibility = 'visible',
+                'classList' : element.classList
             };
         }
     }

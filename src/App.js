@@ -3,7 +3,7 @@ import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHea
 
 import {IonSlides, IonSlide} from "@ionic/react";
 
-import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book, accessibility, close, time} from 'ionicons/icons';
+import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book, chatbubble, close, time} from 'ionicons/icons';
 
 import {iosEnterAnimation, iosLeaveAnimation} from "./animations/ios";
 
@@ -285,10 +285,24 @@ function App() {
                         setPlaying(!playing)
                     }
                 }, {
-                    text: 'Practice',
+                    text: 'Practice Hard',
                     icon: time,
                     handler: () => {
-                        mode.current = 'practice';
+                        mode.current = 'practice hard';
+                        setShowToast(true)
+                    }
+                },{
+                    text: 'Practice Medium',
+                    icon: time,
+                    handler: () => {
+                        mode.current = 'practice medium';
+                        setShowToast(true)
+                    }
+                },{
+                    text: 'Practice Easy',
+                    icon: time,
+                    handler: () => {
+                        mode.current = 'practice easy';
                         setShowToast(true)
                     }
                 }, {
@@ -306,10 +320,10 @@ function App() {
                         setShowToast(true)
                     }
                 }, {
-                    text: 'Accessibility',
-                    icon: accessibility,
+                    text: 'Vocal',
+                    icon: chatbubble,
                     handler: () => {
-                        mode.current = 'accessibility';
+                        mode.current = 'vocal';
                         setShowToast(true)
                     }
                 }, {
