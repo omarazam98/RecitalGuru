@@ -56,11 +56,11 @@ export async function setupAudio(onPitchDetectedCallback) {
       for (let i = 0; i < numAudioSamplesPerAnalysis; i++) {
         sample[i] = sample[i + numAudioSamplesPerAnalysis];
         sample[numAudioSamplesPerAnalysis + i] = inputSamples[i];
-        pitch = pitchDetector.do(sample)
       }
+      pitch = pitchDetector.do(sample)
     })
 
-    onPitchDetectedCallback.current = (func) => func(Math.round(12 * (Math.log2(pitch/ 440)) + 69));
+    onPitchDetectedCallback.current = (func) => func(Math.round(12 * (Math.log2(pitch / 440)) + 69));
   })
 
   return context
