@@ -410,7 +410,7 @@ function App() {
                   </IonToolbar>
               </IonFooter>
                   <IonContent>
-                      <IonSlides scrollbar={true} key={slides.map(slide => slide.id).join('_')} style={css} options = {{direction: 'vertical', slidesPerView: 2}} onIonSlidesDidLoad={(event) => setSwiper(event.target.swiper)}>
+                      <IonSlides scrollbar={true} key={slides.map(slide => slide.id).join('_')} style={css} options = {{direction: 'vertical', slidesPerView: 2, autoResize: false, cssWidthAndHeight: true, updateOnWindowResize: false}} onIonSlidesDidLoad={(event) => setSwiper(event.target.swiper)}>
                           {slides.map((slide) => {
                               return (
                                   <IonSlide key={slide.id}> {slide}</IonSlide>

@@ -232,7 +232,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
         } else {
-            setTimeout(() =>{
+            setTimeout(() => {
                 check.current = false;
             }, 60)
         }

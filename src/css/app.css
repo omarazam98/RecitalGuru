@@ -103,9 +103,11 @@
 }
 
 .swiper-slide {
+  overflow: hidden;
   will-change: transform;
 }
 
 .parent .swiper-slide {
+  overflow: hidden;
   will-change: transform;
 }
