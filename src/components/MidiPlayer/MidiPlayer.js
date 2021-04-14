@@ -137,13 +137,14 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         Player.play()
                     }
                 } else if(check.current){
-                    requestAnimationFrame(() => freqRef.current(interval2));
+                    setTimeout(() => freqRef.current(interval2), 0);
                 } else {
                     vrvMap.on('failedNote')
                 }
             }
 
             const interval = (midiNote) => {
+                console.log("yo")
                 switch (midiNote){
                     case (event.noteNumber) :
                         vrvMap.on('passedNote')
@@ -155,21 +156,21 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         break;
                     case (event.noteNumber + 1) :
                     case (event.noteNumber - 1) :
-                        requestAnimationFrame(() => freqRef.current(interval2));
+                        setTimeout(() => freqRef.current(interval2), 0);
                         vrvMap.on('semiPassedNote')
                         update(0.5);
                         setCurNote(Notes[midiNote])
                         break;
                     default :
-                        check.current ? requestAnimationFrame(() => freqRef.current(interval)) : vrvMap.on('failedNote')
+                        check.current ? setTimeout(() => freqRef.current(interval), 0) : vrvMap.on('failedNote')
                 }
             }
 
-            const startInterval = () => requestAnimationFrame( () => {
+            const startInterval = () => setTimeout( () => {
                 vrvMap.on('highlightedNote')
                 check.current = true;
                 freqRef.current(interval);
-            })
+            }, 60)
 
             const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
                 duration: vrvMap.time,
@@ -233,7 +234,9 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
         } else {
-            check.current = false;
+            setTimeout(() =>{
+                check.current = false;
+            }, 60)
         }
     })
 
