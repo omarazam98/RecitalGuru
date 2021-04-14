@@ -36,7 +36,7 @@ async function getWebAudioMediaStream() {
 
 export async function setupAudio(onPitchDetectedCallback) {
   // Get the browser's audio. Awaits user "allowing" it for the current tab.
-  const numAudioSamplesPerAnalysis = 256;
+  const numAudioSamplesPerAnalysis = 512;
   const numTotalAudioSamples = 1024;
 
   const mediaStream = await getWebAudioMediaStream();
