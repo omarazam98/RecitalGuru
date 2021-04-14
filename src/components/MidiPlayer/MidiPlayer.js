@@ -138,8 +138,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     }
                 } else if(check.current){
                     setTimeout(() => freqRef.current(interval2), 0);
-                } else {
-                    vrvMap.on('failedNote')
                 }
             }
 
