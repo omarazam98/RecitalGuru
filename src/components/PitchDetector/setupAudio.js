@@ -36,7 +36,7 @@ async function getWebAudioMediaStream() {
 
 export async function setupAudio(onPitchDetectedCallback) {
   // Get the browser's audio. Awaits user "allowing" it for the current tab.
-  const numAudioSamplesPerAnalysis = 512;
+  const numAudioSamplesPerAnalysis = 256;
   const numTotalAudioSamples = 1024;
 
   const mediaStream = await getWebAudioMediaStream();
@@ -48,9 +48,9 @@ export async function setupAudio(onPitchDetectedCallback) {
   audioSource.connect(scriptProcessor).connect(context.destination)
 
   const sample = new Array(numTotalAudioSamples).fill(0);
-  let pitch;
+
   Aubio().then((aubio) => {
-    const pitchDetector = new aubio.Pitch('default', numTotalAudioSamples, 256, context.sampleRate)
+    const pitchDetector = new aubio.Pitch('default', numTotalAudioSamples, 512, context.sampleRate)
     scriptProcessor.addEventListener('audioprocess', function(event) {
       const inputSamples = event.inputBuffer.getChannelData(0);
       for (let i = 0; i < numAudioSamplesPerAnalysis; i++) {
