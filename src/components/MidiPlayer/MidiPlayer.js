@@ -136,6 +136,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     setCurNote(Notes[event.noteNumber])
                     if(mode.current === "free play" || mode.current === "practice easy" || mode.current === "practice medium"){
                         clearTimeout(timeOut)
+                        Player.pause();
                         Player.play()
                     }
                 } else if(check.current){
@@ -152,6 +153,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         setCurNote(Notes[midiNote])
                         if(mode.current === "free play" || mode.current === "practice easy" || mode.current === "practice medium"){
                             clearTimeout(timeOut)
+                            Player.pause()
                             Player.play()
                         }
                         break;
