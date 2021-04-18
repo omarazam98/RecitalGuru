@@ -62,12 +62,9 @@ function App() {
     const notes = useRef(0);
     let passedNotes = useRef(0);
     let check = useRef(true);
-
     const [showToast, setShowToast] = useState(false);
     const [timer, setTimer] = useState(5);
-
     const [showActionSheet, setShowActionSheet] = useState(false);
-
     const [completed, setCompleted] = useState(false);
 
 

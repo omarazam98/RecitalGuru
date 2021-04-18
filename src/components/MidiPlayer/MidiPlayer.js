@@ -128,6 +128,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const time = event.tick / Player.division
             const vrvMap = timeMap[time]
             let timeOut;
+
             const interval2 = (midiNote) => {
                 if(event.noteNumber === midiNote){
                     vrvMap.on('passedNote')
@@ -143,7 +144,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             const interval = (midiNote) => {
-                console.log(midiNote)
+                console.log("yo")
                 switch (midiNote){
                     case (event.noteNumber) :
                         vrvMap.on('passedNote')
@@ -166,11 +167,11 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 }
             }
 
-            const startInterval = () =>  {
+            const startInterval = () => setTimeout(() => {
                 vrvMap.on('highlightedNote')
                 check.current = true;
                 freqRef.current(interval);
-            }
+            }, 60)
 
             const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
                 duration: vrvMap.time,
@@ -249,12 +250,10 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             if ((vrvMap['page']) === swiper.activeIndex) {
-                setTimeout(() => modeActions[mode.current](), 60)
+                modeActions[mode.current]()
             } else {
-                requestAnimationFrame(() => {
-                    swiper.slideTo(vrvMap['page'])
-                    modeActions[mode.current]()
-                })
+                modeActions[mode.current]()
+                requestAnimationFrame(() => swiper.slideTo(vrvMap['page']))
             }
 
         } else {
