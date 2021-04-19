@@ -398,7 +398,6 @@ function App() {
                           <IonButton fill={'outline'} color={'primary'} expand="block" onClick={async () => {
                               if(!ac){
                                   setAc(await setupAudio(freqRef));
-                                  setShowActionSheet(true)
                               } else if (completed){
                                   swiper.slideTo(0)
                                   setCompleted(false)
@@ -415,7 +414,7 @@ function App() {
                           }}>
                               {playing ? <IonIcon icon={pause}/> : <IonIcon icon={options}/>}
 
-                              {playing ? (' Pause ' + score) : player && player.getCurrentTick() && !completed ? ' Resume ' + score : completed ? ' Retry ' + score : ' Begin Recital '}
+                              {playing ? (' Pause ' + score) : player && player.getCurrentTick() && !completed ? ' Resume ' + score : completed ? ' Retry ' + score : ac ? ' Begin Recital ' : "Connect Mic"}
                           </IonButton>
                       </IonButtons>
                   </IonToolbar>
