@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/RecitalGuru/precache-manifest.dabd0d2e734de6533922beb9475d054b.js"
+  "/RecitalGuru/precache-manifest.39f4fb0fa6c037f1e10e74fa8479210d.js"
 );
 
 self.addEventListener('message', (event) => {
