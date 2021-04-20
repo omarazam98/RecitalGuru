@@ -179,6 +179,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const startInterval = () => setTimeout(() =>{
                 check.current = true;
                 freqRef.current(interval);
+                vrvMap.on('highlightedNote')
+                setExpectedNote(Notes[event.noteNumber])
             }, 60)
 
             const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
@@ -192,19 +194,13 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 'listen' : () => {
                     playMidi()
                     startInterval();
-                    vrvMap.on('highlightedNote')
-                    setExpectedNote(Notes[event.noteNumber])
                 },
                 'practice hard' : () => {
                     startInterval();
-                    vrvMap.on('highlightedNote')
-                    setExpectedNote(Notes[event.noteNumber])
                 },
                 'practice medium' : () => {
                     startInterval();
                     Player.pause()
-                    vrvMap.on('highlightedNote')
-                    setExpectedNote(Notes[event.noteNumber])
                     timeOut = setTimeout(() => {
                         if(check.current)
                         Player.play()
@@ -213,8 +209,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 'practice easy' : () => {
                     startInterval();
                     Player.pause();
-                    vrvMap.on('highlightedNote')
-                    setExpectedNote(Notes[event.noteNumber])
                     timeOut = setTimeout(() => {
                         if(check.current)
                         Player.play()
@@ -223,16 +217,12 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 'free play' : () => {
                     Player.pause()
                     startInterval();
-                    vrvMap.on('highlightedNote')
-                    setExpectedNote(Notes[event.noteNumber])
                 },
                 'training' : () => {
                     setTimeout(() => {
                         check.current = true;
                         Player.pause()
                         playMidi();
-                        vrvMap.on('highlightedNote')
-                        setExpectedNote(Notes[event.noteNumber])
                         vrvMap.hide()
                         setTimeout(() => {
                             vrvMap.show();
@@ -251,8 +241,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 'vocal' : () => {
                     setTimeout(() => {
                         check.current = true;
-                        vrvMap.on('highlightedNote')
-                        setExpectedNote(Notes[event.noteNumber])
                         vrvMap.hide()
                         Player.pause()
                         const noteName = new SpeechSynthesisUtterance(event.noteName.charAt(1) === 'b' ? event.noteName.charAt(0) + 'flat' : event.noteName.charAt(0) + event.noteName.charAt(1));
