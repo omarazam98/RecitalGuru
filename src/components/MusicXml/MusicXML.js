@@ -27,7 +27,7 @@ export default function MusicXML(key, path, toolkit) {
       let max = toolkit.getPageCount();
       for (let i = 1; i <= max; i++) {
         slides.push(
-            <section style={css} dangerouslySetInnerHTML={{ __html: toolkit.renderToSVG(i, {}) }}/>
+            <div style={css} dangerouslySetInnerHTML={{ __html: toolkit.renderToSVG(i, {}) }}/>
         )
       }
       return (slides)
