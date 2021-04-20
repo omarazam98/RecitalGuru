@@ -132,8 +132,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
 
             const interval2 = (midiNote) => {
                 if(event.noteNumber === midiNote){
+                    vrvMap.on('passedNote')
                     ReactDOM.unstable_batchedUpdates(() => {
-                        vrvMap.on('passedNote')
                         update(0.5);
                         setCurNote(Notes[event.noteNumber])
                     })
@@ -151,8 +151,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 console.log("yo")
                 switch (midiNote){
                     case (event.noteNumber) :
+                        vrvMap.on('passedNote')
                         ReactDOM.unstable_batchedUpdates(() => {
-                            vrvMap.on('passedNote')
                             update(1);
                             setCurNote(Notes[midiNote])
                         })
@@ -165,8 +165,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     case (event.noteNumber + 1) :
                     case (event.noteNumber - 1) :
                         freqRef.current(interval2);
+                        vrvMap.on('semiPassedNote')
                         ReactDOM.unstable_batchedUpdates(() => {
-                            vrvMap.on('semiPassedNote')
                             update(0.5);
                             setCurNote(Notes[midiNote])
                         })
@@ -179,10 +179,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const startInterval = () => setTimeout(() =>{
                 check.current = true;
                 freqRef.current(interval);
-                ReactDOM.unstable_batchedUpdates(() => {
-                    vrvMap.on('highlightedNote')
-                    setExpectedNote(Notes[event.noteNumber])
-                })
+                vrvMap.on('highlightedNote')
+                setExpectedNote(Notes[event.noteNumber])
             }, 60)
 
             const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
@@ -229,10 +227,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         setTimeout(() => {
                             vrvMap.show();
                             freqRef.current(interval);
-                            ReactDOM.unstable_batchedUpdates(() => {
-                                vrvMap.on('highlightedNote')
-                                setExpectedNote(Notes[event.noteNumber])
-                            })
+                            vrvMap.on('highlightedNote')
+                            setExpectedNote(Notes[event.noteNumber])
                         }, vrvMap.time * 2000)
 
                         setTimeout(() => {
@@ -258,10 +254,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                                 playMidi()
                                 check.current = true;
                                 freqRef.current(interval);
-                                ReactDOM.unstable_batchedUpdates(() => {
-                                    vrvMap.on('highlightedNote')
-                                    setExpectedNote(Notes[event.noteNumber])
-                                })
+                                vrvMap.on('highlightedNote')
+                                setExpectedNote(Notes[event.noteNumber])
                             }
                         }
                     }, 60)
