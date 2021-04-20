@@ -148,7 +148,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             const interval = (midiNote) => {
-                console.log("yo")
                 switch (midiNote){
                     case (event.noteNumber) :
                         vrvMap.on('passedNote')
