@@ -177,9 +177,12 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             const startInterval = () => setTimeout(() =>{
-                vrvMap.on('highlightedNote')
                 check.current = true;
                 freqRef.current(interval);
+                ReactDOM.unstable_batchedUpdates(() => {
+                    vrvMap.on('highlightedNote')
+                    setExpectedNote(Notes[event.noteNumber])
+                })
             }, 60)
 
             const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
@@ -192,15 +195,12 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             const modeActions = {
                 'listen' : () => {
                     playMidi()
-                    setExpectedNote(Notes[event.noteNumber])
                     startInterval();
                 },
                 'practice hard' : () => {
-                    setExpectedNote(Notes[event.noteNumber])
                     startInterval();
                 },
                 'practice medium' : () => {
-                    setExpectedNote(Notes[event.noteNumber])
                     startInterval();
                     Player.pause()
                     timeOut = setTimeout(() => {
@@ -209,7 +209,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                     }, vrvMap.time * 1000)
                 },
                 'practice easy' : () => {
-                    setExpectedNote(Notes[event.noteNumber])
                     startInterval();
                     Player.pause();
                     timeOut = setTimeout(() => {
@@ -219,7 +218,6 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 },
                 'free play' : () => {
                     Player.pause()
-                    setExpectedNote(Notes[event.noteNumber])
                     startInterval();
                 },
                 'training' : () => {
@@ -230,8 +228,11 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         vrvMap.hide()
                         setTimeout(() => {
                             vrvMap.show();
-                            vrvMap.on('highlightedNote')
                             freqRef.current(interval);
+                            ReactDOM.unstable_batchedUpdates(() => {
+                                vrvMap.on('highlightedNote')
+                                setExpectedNote(Notes[event.noteNumber])
+                            })
                         }, vrvMap.time * 2000)
 
                         setTimeout(() => {
@@ -239,14 +240,12 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                                 Player.play();
                             }
                         }, vrvMap.time * 3000)
-                        setExpectedNote(Notes[event.noteNumber])
                     }, 60)
                 },
                 'vocal' : () => {
                     setTimeout(() => {
                         check.current = true;
                         vrvMap.hide()
-                        setExpectedNote(Notes[event.noteNumber])
                         Player.pause()
                         const noteName = new SpeechSynthesisUtterance(event.noteName.charAt(1) === 'b' ? event.noteName.charAt(0) + 'flat' : event.noteName.charAt(0) + event.noteName.charAt(1));
                         noteName.voice = voice
@@ -257,9 +256,12 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                             if(check.current){
                                 Player.play()
                                 playMidi()
-                                vrvMap.on('highlightedNote')
                                 check.current = true;
                                 freqRef.current(interval);
+                                ReactDOM.unstable_batchedUpdates(() => {
+                                    vrvMap.on('highlightedNote')
+                                    setExpectedNote(Notes[event.noteNumber])
+                                })
                             }
                         }
                     }, 60)
