@@ -168,11 +168,11 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 }
             }
 
-            const startInterval = () => {
+            const startInterval = () => requestAnimationFrame(() => {
                 vrvMap.on('highlightedNote')
                 check.current = true;
                 freqRef.current(interval);
-            }
+            })
 
             const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
                 duration: vrvMap.time,
@@ -251,16 +251,14 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
             }
 
             if ((vrvMap['page']) === swiper.activeIndex) {
-                setTimeout(() =>modeActions[mode.current](), 60)
+                modeActions[mode.current]()
             } else {
-                setTimeout(() => modeActions[mode.current](), 60)
+                modeActions[mode.current]()
                 requestAnimationFrame(() => swiper.slideTo(vrvMap['page']))
             }
 
         } else {
-            setTimeout(() => {
-                check.current = false;
-            }, 60)
+            check.current = false;
         }
     })
 
