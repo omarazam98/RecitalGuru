@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "68919ee87577a94c8d0a66bdbdc7ca6b",
+    "revision": "4c44f3d2b2469e2dec336ebdca7cb8c1",
     "url": "/RecitalGuru/index.html"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/RecitalGuru/static/css/4.f6f411e0.chunk.css"
   },
   {
-    "revision": "de3d64b8fc03fa78207c",
+    "revision": "d67567ba999016a664eb",
     "url": "/RecitalGuru/static/css/main.7e0df32a.chunk.css"
   },
   {
@@ -240,8 +240,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/RecitalGuru/static/js/9.f6fbb08e.chunk.js"
   },
   {
-    "revision": "de3d64b8fc03fa78207c",
-    "url": "/RecitalGuru/static/js/main.71df6a88.chunk.js"
+    "revision": "d67567ba999016a664eb",
+    "url": "/RecitalGuru/static/js/main.808809e5.chunk.js"
   },
   {
     "revision": "4644c20fdba26c6e52b5",
