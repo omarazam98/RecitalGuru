@@ -52,12 +52,11 @@ export async function setupAudio(onPitchDetectedCallback) {
     const pitchDetector = new aubio.Pitch('default', numTotalAudioSamples, 512, context.sampleRate)
     scriptProcessor.addEventListener('audioprocess', function(event) {
       const inputSamples = event.inputBuffer.getChannelData(0);
-      for (let i = numAudioSamplesPerAnalysis - 1; i < 768; i++) {
-        sample[i] = sample[i + numAudioSamplesPerAnalysis];
-      }
       for (let i = 0; i < numAudioSamplesPerAnalysis; i++) {
         sample[i] = sample[i + numAudioSamplesPerAnalysis];
-        sample[numAudioSamplesPerAnalysis + i] = inputSamples[i];
+        sample[i + 256] = sample[i + 512];
+        sample[i + 512] = sample[i + 768];
+        sample[i + 768] = inputSamples[i];
       }
     })
 
