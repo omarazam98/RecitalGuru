@@ -161,7 +161,6 @@ function App() {
     const render = async function render() {
         const slides = await MusicXML(keys[keyIndex], songs[path].path, toolkit)
         const data = await toolkit.renderToMIDI()
-
         setSlides(slides)
         setData(data)
     }
