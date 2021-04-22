@@ -174,7 +174,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 }
             }
 
-            const startInterval = () => setTimeout(() =>{
+            const startInterval = () => setTimeout(() => {
                 check.current = true;
                 freqRef.current(interval);
                 vrvMap.highlight('highlightedNote')
@@ -259,7 +259,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 }
             }
 
-            if ((vrvMap['page']) === swiper.activeIndex) {
+            if (vrvMap.page === swiper.activeIndex) {
                 modeActions[mode.current]()
                 setExpectedNote(Notes[event.noteNumber])
             } else {
