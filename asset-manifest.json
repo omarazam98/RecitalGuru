@@ -2,9 +2,9 @@
   "files": {
     "static/js/0.8ce13d21.chunk.js": "/RecitalGuru/static/js/0.8ce13d21.chunk.js",
     "static/js/0.8ce13d21.chunk.js.map": "/RecitalGuru/static/js/0.8ce13d21.chunk.js.map",
-    "main.css": "/RecitalGuru/static/css/main.d66efcc5.chunk.css",
-    "main.js": "/RecitalGuru/static/js/main.74fe7175.chunk.js",
-    "main.js.map": "/RecitalGuru/static/js/main.74fe7175.chunk.js.map",
+    "main.css": "/RecitalGuru/static/css/main.683f61a3.chunk.css",
+    "main.js": "/RecitalGuru/static/js/main.22a8de57.chunk.js",
+    "main.js.map": "/RecitalGuru/static/js/main.22a8de57.chunk.js.map",
     "polyfills-dom.js": "/RecitalGuru/static/js/polyfills-dom.a17f5207.chunk.js",
     "polyfills-dom.js.map": "/RecitalGuru/static/js/polyfills-dom.a17f5207.chunk.js.map",
     "runtime-main.js": "/RecitalGuru/static/js/runtime-main.87bd0393.js",
@@ -119,10 +119,10 @@
     "static/js/57.d87bb745.chunk.js": "/RecitalGuru/static/js/57.d87bb745.chunk.js",
     "static/js/57.d87bb745.chunk.js.map": "/RecitalGuru/static/js/57.d87bb745.chunk.js.map",
     "index.html": "/RecitalGuru/index.html",
-    "precache-manifest.fbb8a21f54411df4d902e043fb604096.js": "/RecitalGuru/precache-manifest.fbb8a21f54411df4d902e043fb604096.js",
+    "precache-manifest.4eaec938a28b4333f676a59b45b91854.js": "/RecitalGuru/precache-manifest.4eaec938a28b4333f676a59b45b91854.js",
     "service-worker.js": "/RecitalGuru/service-worker.js",
     "static/css/4.403bc24c.chunk.css.map": "/RecitalGuru/static/css/4.403bc24c.chunk.css.map",
-    "static/css/main.d66efcc5.chunk.css.map": "/RecitalGuru/static/css/main.d66efcc5.chunk.css.map",
+    "static/css/main.683f61a3.chunk.css.map": "/RecitalGuru/static/css/main.683f61a3.chunk.css.map",
     "static/js/4.35d97974.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/4.35d97974.chunk.js.LICENSE.txt",
     "static/js/52.737f1e05.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/52.737f1e05.chunk.js.LICENSE.txt",
     "static/js/polyfills-dom.a17f5207.chunk.js.LICENSE.txt": "/RecitalGuru/static/js/polyfills-dom.a17f5207.chunk.js.LICENSE.txt"
@@ -131,7 +131,7 @@
     "static/js/runtime-main.87bd0393.js",
     "static/css/4.403bc24c.chunk.css",
     "static/js/4.35d97974.chunk.js",
-    "static/css/main.d66efcc5.chunk.css",
-    "static/js/main.74fe7175.chunk.js"
+    "static/css/main.683f61a3.chunk.css",
+    "static/js/main.22a8de57.chunk.js"
   ]
 }
