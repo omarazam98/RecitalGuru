@@ -220,6 +220,7 @@ function App() {
                 slidesPerView: 2,
                 vertical: true,
                 resetSlide: true,
+                rubberband: false,
             })
             slider.resize();
             document.onkeydown = function(e) {
