@@ -216,11 +216,10 @@ function App() {
     useEffect(() => {
         if(slider && slides){
             slider.refresh({
-                mode: "free",
+                mode: "snap",
                 slidesPerView: 2,
                 vertical: true,
                 resetSlide: true,
-                dragSpeed: 0.7
             })
             slider.resize();
             document.onkeydown = function(e) {
