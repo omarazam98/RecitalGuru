@@ -388,9 +388,6 @@ function App() {
                       </IonButtons>
                   </IonToolbar>
               </IonHeader>
-            <div>
-
-            </div>
             <div ref={sliderRef} className="keen-slider" style={sliderCss}>
                 {slides ? slides : <div className={"keen-slider__slide loading"}>LOADING</div>}
             </div>
