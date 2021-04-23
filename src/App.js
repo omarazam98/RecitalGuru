@@ -392,7 +392,7 @@ function App() {
 
             </div>
             <div ref={sliderRef} className="keen-slider" style={sliderCss}>
-                {slides}
+                {slides ? slides : <div className={"keen-slider__slide loading"}>LOADING</div>}
             </div>
               <IonFooter >
                   <IonToolbar color={"dark"}>
