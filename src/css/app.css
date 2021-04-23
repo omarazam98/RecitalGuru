@@ -101,13 +101,3 @@
   height: 6vh;
   object-fit: contain;
 }
-
-.swiper-slide {
-  overflow: hidden;
-  will-change: transform;
-}
-
-.parent .swiper-slide {
-  overflow: hidden;
-  will-change: transform;
-}

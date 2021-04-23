@@ -5,7 +5,9 @@
 
 /* Monospace Font: Cousine */
 .svg {
-  font-family: 'Cousine', monospace; }
+  font-family: 'Cousine', monospace;
+  background-color: beige;
+}
 
 /* Verovio Text Font: Tinos */
 .g.page-margin {
@@ -53,6 +55,9 @@ html {
   display: none;
 }
 
-.svg {
+.keen-slider__slide {
+  display: block;
   background-color: beige;
+  overflow: hidden;
+  will-change: transform;
 }

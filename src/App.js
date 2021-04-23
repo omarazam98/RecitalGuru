@@ -1,23 +1,21 @@
 import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonListHeader, IonItem, IonActionSheet, IonToast, IonLabel, IonIcon, IonChip} from "@ionic/react";
-
-import {IonSlides, IonSlide} from "@ionic/react";
-
-import { documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book, chatbubble, close, time} from 'ionicons/icons';
-
+import {documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book, chatbubble, close, time} from 'ionicons/icons';
 import {iosEnterAnimation, iosLeaveAnimation} from "./animations/ios";
-
 
 import './App.css';
 import '@ionic/react/css/core.css';
+import css from "./css/app.css";
 
 import verovio from 'verovio'
 import {MidiPlayer} from "./components/MidiPlayer/MidiPlayer";
 import MusicXML from "./components/MusicXml/MusicXML";
 import {MidiSync, removeHighlights} from "./components/HelperFunctions/MidiFunctions";
 import Soundfont from "soundfont-player";
-import css from "./css/app.css";
 import {setupAudio} from "./components/PitchDetector/setupAudio";
+
+import { useKeenSlider } from "keen-slider/react"
+import sliderCss from "keen-slider/keen-slider.min.css"
 
 const songs = {
     0 : { path: 'https://omarazam98.github.io/MusicXmlData/xmlFiles/Test2.xml', name: 'Senorita'},
@@ -43,7 +41,7 @@ function App() {
 
     const freqRef = useRef(0);
 
-    const [slides, setSlides] = useState([]);
+    const [slides, setSlides] = useState(null);
     const [toolkit, setToolkit] = useState(null);
     const [path, setPath] = useState(1);
     const [data, setData] = useState(null);
@@ -52,7 +50,6 @@ function App() {
     const [ac, setAc] = useState(null);
 
     const [open, setOpen] = useState(false);
-    const [swiper, setSwiper] = useState({});
 
     const [expectedNote, setExpectedNote] = useState('');
     const [curNote, setCurNote] = useState('');
@@ -66,6 +63,8 @@ function App() {
     const [timer, setTimer] = useState(5);
     const [showActionSheet, setShowActionSheet] = useState(false);
     const [completed, setCompleted] = useState(false);
+
+    const [sliderRef, slider] = useKeenSlider()
 
 
     let mode = useRef("listen");
@@ -200,36 +199,44 @@ function App() {
         [instrumentKey, data, timeMap, ac]);
 
     useEffect(() => {
-            if(soundFont && swiper){
+            if(soundFont && slider){
                 setCompleted(false)
-                MidiPlayer(ac, soundFont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, mode).then((player) =>{
+                MidiPlayer(ac, soundFont, data, freqRef, practice, slider, update, timeMap, soundFont, setCurNote, check, setExpectedNote, mode).then((player) =>{
                     setPlayer(player)
                     player.on('endOfFile' , () => {
                         setPlaying(false)
                         setCompleted(true)
-                        swiper.slideTo(0)
+                        slider.moveToSlideRelative(0)
                     })
                 })
             }
         },
-        [soundFont, swiper]);
+        [soundFont, slider]);
 
     useEffect(() => {
-        if(swiper){
+        if(slider && slides){
+            slider.refresh({
+                mode: "free",
+                slidesPerView: 2,
+                vertical: true,
+                resetSlide: true,
+                dragSpeed: 0.7
+            })
+            slider.resize();
             document.onkeydown = function(e) {
                 switch(e.which) {
                     case 38: // up
-                        swiper.slidePrev();
+                        slider.prev();
                         break;
                     case 40: // down
-                        swiper.slideNext();
+                        slider.next();
                         break;
                     default: return; // exit this handler for other keys
                 }
                 e.preventDefault(); // prevent the default action (scroll / move caret)
             };
         }
-    },[swiper])
+    },[slider, slides])
 
 
 
@@ -331,7 +338,7 @@ function App() {
                         removeHighlights()
                         setScore('0%')
                         passedNotes.current = 0;
-                        swiper.slideTo(0);
+                        slider.slideTo(0);
                     }
                 }, {
                     text: 'Cancel',
@@ -381,6 +388,12 @@ function App() {
                       </IonButtons>
                   </IonToolbar>
               </IonHeader>
+            <div>
+
+            </div>
+            <div ref={sliderRef} className="keen-slider" style={sliderCss}>
+                {slides}
+            </div>
               <IonFooter >
                   <IonToolbar color={"dark"}>
                       <IonChip>
@@ -398,7 +411,7 @@ function App() {
                               if(!ac){
                                   setAc(await setupAudio(freqRef));
                               } else if (completed){
-                                  swiper.slideTo(0)
+                                  slider.moveToSlideRelative(0)
                                   setCompleted(false)
                                   removeHighlights();
                                   setScore('0%')
@@ -418,15 +431,6 @@ function App() {
                       </IonButtons>
                   </IonToolbar>
               </IonFooter>
-                  <IonContent>
-                      <IonSlides scrollbar={true} key={slides.map(slide => slide.id).join('_')} style={css} options = {{direction: 'vertical', slidesPerView: 2, autoResize: false, cssWidthAndHeight: true, updateOnWindowResize: false, updateOnImagesReady: false}} onIonSlidesDidLoad={(event) => setSwiper(event.target.swiper)}>
-                          {slides.map((slide) => {
-                              return (
-                                  <IonSlide key={slide.id}> {slide}</IonSlide>
-                              )
-                          })}
-                      </IonSlides>
-                  </IonContent>
           </IonApp>
   )
 }

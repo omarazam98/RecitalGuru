@@ -259,13 +259,13 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                 }
             }
 
-            if (vrvMap.page === swiper.activeIndex) {
+            if (vrvMap.page === swiper.details().relativeSlide) {
                 modeActions[mode.current]()
                 setExpectedNote(Notes[event.noteNumber])
             } else {
                 modeActions[mode.current]()
                 setExpectedNote(Notes[event.noteNumber])
-                requestAnimationFrame(() => swiper.slideTo(vrvMap['page']))
+                requestAnimationFrame(() => swiper.moveToSlide(vrvMap['page']))
             }
 
         } else {
