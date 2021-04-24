@@ -313,7 +313,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
         } else {
             setTimeout(() => {
                 check.current = false;
-            }, 50)
+            }, 60)
         }
     })
 
