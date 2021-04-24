@@ -60,8 +60,7 @@ export async function setupAudio(onPitchDetectedCallback) {
       }
     })
 
-    onPitchDetectedCallback.current = (func, vrvMap) => setTimeout( () => func(Math.round(12 * (Math.log2(pitchDetector.do(sample) / 440)) + 69), vrvMap), 0);
-
+    onPitchDetectedCallback.current = () => Math.round(12 * (Math.log2(pitchDetector.do(sample) / 440)) + 69);
   })
 
   return context

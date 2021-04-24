@@ -132,7 +132,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 setCurNote(Notes[vrvMap.pitch])
             })
         } else if(check.current){
-            freqRef.current(interval2, vrvMap);
+            setTimeout( () => interval2(freqRef.current(), vrvMap), 0);
         }
     }
 
@@ -147,7 +147,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 break;
             case (vrvMap.pitch + 1) :
             case (vrvMap.pitch - 1) :
-                freqRef.current(interval2, vrvMap);
+                setTimeout( () =>interval2(freqRef.current(), vrvMap), 0);
                 vrvMap.highlight('semiPassedNote')
                 ReactDOM.unstable_batchedUpdates(() => {
                     update(vrvMap.totalNotes / 2);
@@ -155,7 +155,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 })
                 break;
             default :
-                check.current ? freqRef.current(interval, vrvMap) : vrvMap.highlight('failedNote')
+                check.current ? setTimeout( () =>interval(freqRef.current(), vrvMap), 0) : vrvMap.highlight('failedNote')
         }
     }
 
@@ -171,7 +171,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
             Player.pause();
             Player.play()
         } else if(check.current){
-            freqRef.current(interval2, vrvMap);
+            setTimeout( () =>altInterval2(freqRef.current(), vrvMap), 0);
         }
     }
 
@@ -183,14 +183,13 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                     update(vrvMap.totalNotes);
                     setCurNote(Notes[midiNote])
                 })
-
                 clearTimeout(timeOut)
                 Player.pause()
                 Player.play()
                 break;
             case (vrvMap.pitch + 1) :
             case (vrvMap.pitch - 1) :
-                freqRef.current(altInterval2, vrvMap);
+                setTimeout( () =>altInterval2(freqRef.current(), vrvMap), 0);
                 vrvMap.highlight('semiPassedNote')
                 ReactDOM.unstable_batchedUpdates(() => {
                     update(vrvMap.totalNotes / 2);
@@ -198,19 +197,19 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 })
                 break;
             default :
-                check.current ? freqRef.current(interval, vrvMap) : vrvMap.highlight('failedNote')
+                check.current ? setTimeout( () =>altInterval(freqRef.current(), vrvMap), 0) : vrvMap.highlight('failedNote')
         }
     }
 
     const startInterval = (vrvMap) => setTimeout(() => {
         check.current = true;
-        freqRef.current(interval, vrvMap);
+        interval(freqRef.current(), vrvMap);
         vrvMap.highlight('highlightedNote')
     }, 60)
 
     const altStartInterval = (vrvMap) => setTimeout(() => {
         check.current = true;
-        freqRef.current(altInterval, vrvMap);
+        altInterval(freqRef.current(), vrvMap);
         vrvMap.highlight('highlightedNote')
     }, 60)
 
