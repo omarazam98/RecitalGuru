@@ -283,6 +283,7 @@ function App() {
                     text: 'Listen',
                     icon: volumeHigh,
                     handler: () => {
+                        player.triggerPlayerEvent('mode', 'listen')
                         mode.current = 'listen';
                         playPause(playing)
                         setPlaying(!playing)
@@ -291,6 +292,7 @@ function App() {
                     text: 'Practice Hard',
                     icon: time,
                     handler: () => {
+                        player.triggerPlayerEvent('mode', 'practice hard')
                         mode.current = 'practice hard';
                         setShowToast(true)
                     }
@@ -298,6 +300,7 @@ function App() {
                     text: 'Practice Medium',
                     icon: time,
                     handler: () => {
+                        player.triggerPlayerEvent('mode', 'practice medium')
                         mode.current = 'practice medium';
                         setShowToast(true)
                     }
@@ -305,6 +308,7 @@ function App() {
                     text: 'Practice Easy',
                     icon: time,
                     handler: () => {
+                        player.triggerPlayerEvent('mode', 'practice easy')
                         mode.current = 'practice easy';
                         setShowToast(true)
                     }
@@ -312,6 +316,7 @@ function App() {
                     text: 'Training',
                     icon: book,
                     handler: () => {
+                        player.triggerPlayerEvent('mode', 'training')
                         mode.current = 'training';
                         setShowToast(true)
                     }
@@ -319,6 +324,7 @@ function App() {
                     text: 'Free Play',
                     icon: play,
                     handler: () => {
+                        player.triggerPlayerEvent('mode', 'free play')
                         mode.current = 'free play';
                         setShowToast(true)
                     }
@@ -326,6 +332,7 @@ function App() {
                     text: 'Vocal',
                     icon: chatbubble,
                     handler: () => {
+                        player.triggerPlayerEvent('mode', 'vocal')
                         mode.current = 'vocal';
                         setShowToast(true)
                     }

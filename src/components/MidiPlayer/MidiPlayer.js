@@ -122,148 +122,190 @@ window.speechSynthesis.onvoiceschanged = function() {
 };
 
 export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote, mode) => {
+    let timeOut;
+
+    const interval2 = (midiNote, event, vrvMap) => {
+        if(event.noteNumber === midiNote){
+            vrvMap.highlight('passedNote')
+            ReactDOM.unstable_batchedUpdates(() => {
+                update(vrvMap.totalNotes / 2);
+                setCurNote(Notes[event.noteNumber])
+            })
+        } else if(check.current){
+            freqRef.current(interval2, event, vrvMap);
+        }
+    }
+
+    const interval = (midiNote, event, vrvMap) => {
+        switch (midiNote){
+            case (event.noteNumber) :
+                vrvMap.highlight('passedNote')
+                ReactDOM.unstable_batchedUpdates(() => {
+                    update(vrvMap.totalNotes);
+                    setCurNote(Notes[midiNote])
+                })
+                break;
+            case (event.noteNumber + 1) :
+            case (event.noteNumber - 1) :
+                freqRef.current(interval2, event, vrvMap);
+                vrvMap.highlight('semiPassedNote')
+                ReactDOM.unstable_batchedUpdates(() => {
+                    update(vrvMap.totalNotes / 2);
+                    setCurNote(Notes[midiNote])
+                })
+                break;
+            default :
+                check.current ? freqRef.current(interval, event, vrvMap) : vrvMap.highlight('failedNote')
+        }
+    }
+
+    const altInterval2 = (midiNote, event, vrvMap) => {
+        if(event.noteNumber === midiNote){
+            vrvMap.highlight('passedNote')
+            ReactDOM.unstable_batchedUpdates(() => {
+                update(vrvMap.totalNotes / 2);
+                setCurNote(Notes[event.noteNumber])
+            })
+
+            clearTimeout(timeOut)
+            Player.pause();
+            Player.play()
+        } else if(check.current){
+            freqRef.current(interval2, event, vrvMap);
+        }
+    }
+
+    const altInterval = (midiNote, event, vrvMap) => {
+        console.log(event)
+        switch (midiNote){
+            case (event.noteNumber) :
+                vrvMap.highlight('passedNote')
+                ReactDOM.unstable_batchedUpdates(() => {
+                    update(vrvMap.totalNotes);
+                    setCurNote(Notes[midiNote])
+                })
+
+                clearTimeout(timeOut)
+                Player.pause()
+                Player.play()
+                break;
+            case (event.noteNumber + 1) :
+            case (event.noteNumber - 1) :
+                freqRef.current(altInterval2, event, vrvMap);
+                vrvMap.highlight('semiPassedNote')
+                ReactDOM.unstable_batchedUpdates(() => {
+                    update(vrvMap.totalNotes / 2);
+                    setCurNote(Notes[midiNote])
+                })
+                break;
+            default :
+                check.current ? freqRef.current(interval, event, vrvMap) : vrvMap.highlight('failedNote')
+        }
+    }
+
+    const startInterval = (event,vrvMap) => setTimeout(() => {
+        check.current = true;
+        freqRef.current(interval, event, vrvMap);
+        vrvMap.highlight('highlightedNote')
+    }, 50)
+
+    const altStartInterval = (event,vrvMap) => setTimeout(() => {
+        check.current = true;
+        freqRef.current(altInterval, event, vrvMap);
+        vrvMap.highlight('highlightedNote')
+    }, 50)
+
+    const playMidi = (event, vrvMap) => soundFont.play(event.noteName, ac.currentTime, {
+        duration: vrvMap.time,
+        gain: event.velocity / 5,
+        format: 'ogg',
+        notes: event.noteNumber
+    })
+
+    const modeActions = {
+        'listen' : (event, vrvMap) => {
+            playMidi(event, vrvMap)
+            startInterval(event, vrvMap);
+        },
+        'practice hard' : (event, vrvMap) => {
+            startInterval(event, vrvMap);
+        },
+        'practice medium' : (event, vrvMap, player) => {
+            altStartInterval(event, vrvMap);
+            player.pause()
+            timeOut = setTimeout(() => {
+                if(check.current)
+                    player.play()
+            }, vrvMap.time * 1000)
+        },
+        'practice easy' : (event, vrvMap, player) => {
+            altStartInterval();
+            player.pause();
+            timeOut = setTimeout(() => {
+                if(check.current)
+                    player.play()
+            }, vrvMap.time * 2000)
+        },
+        'free play' : (event, vrvMap, player) => {
+            player.pause()
+            altStartInterval(event, vrvMap);
+        },
+        'training' : (event, vrvMap, player) => {
+            setTimeout(() => {
+                check.current = true;
+                player.pause()
+                playMidi(event, vrvMap);
+                vrvMap.visibility("hide")
+                setTimeout(() => {
+                    vrvMap.visibility("visible");
+                    freqRef.current(interval, event, vrvMap);
+                    vrvMap.highlight('highlightedNote')
+                    setExpectedNote(Notes[event.noteNumber])
+                }, vrvMap.time * 2000)
+
+                setTimeout(() => {
+                    if(check.current){
+                        player.play();
+                    }
+                }, vrvMap.time * 3000)
+            }, 60)
+        },
+        'vocal' : (event, vrvMap, player) => {
+            setTimeout(() => {
+                check.current = true;
+                vrvMap.visibility("hide")
+                player.pause()
+                const noteName = new SpeechSynthesisUtterance(event.noteName.charAt(1) === 'b' ? event.noteName.charAt(0) + 'flat' : event.noteName.charAt(0) + event.noteName.charAt(1));
+                noteName.voice = voice
+                synth.pitch = parseInt(Notes[event.noteNumber].charAt(2)) / 6
+                synth.speak(noteName);
+                noteName.onend = function() {
+                    vrvMap.visibility("visible")
+                    if(check.current){
+                        player.play()
+                        playMidi(event, vrvMap)
+                        check.current = true;
+                        freqRef.current(interval, event, vrvMap);
+                        vrvMap.highlight('highlightedNote')
+                        setExpectedNote(Notes[event.noteNumber])
+                    }
+                }
+            }, 60)
+        }
+    }
+
+    let func = modeActions["listen"]
 
     const Player =  await new MidiPlayerJs.Player(function (event){
         if(event.velocity){
             const time = event.tick / Player.division
             const vrvMap = timeMap[time]
-            let timeOut;
-
-            const interval2 = (midiNote) => {
-                if(event.noteNumber === midiNote){
-                    vrvMap.highlight('passedNote')
-                    ReactDOM.unstable_batchedUpdates(() => {
-                        update(vrvMap.totalNotes / 2);
-                        setCurNote(Notes[event.noteNumber])
-                    })
-                    if(mode.current === "free play" || mode.current === "practice easy" || mode.current === "practice medium"){
-                        clearTimeout(timeOut)
-                        Player.pause();
-                        Player.play()
-                    }
-                } else if(check.current){
-                    freqRef.current(interval2);
-                }
-            }
-
-            const interval = (midiNote) => {
-                switch (midiNote){
-                    case (event.noteNumber) :
-                        vrvMap.highlight('passedNote')
-                        ReactDOM.unstable_batchedUpdates(() => {
-                            update(vrvMap.totalNotes);
-                            setCurNote(Notes[midiNote])
-                        })
-                        if(mode.current === "free play" || mode.current === "practice easy" || mode.current === "practice medium"){
-                            clearTimeout(timeOut)
-                            Player.pause()
-                            Player.play()
-                        }
-                        break;
-                    case (event.noteNumber + 1) :
-                    case (event.noteNumber - 1) :
-                        freqRef.current(interval2);
-                        vrvMap.highlight('semiPassedNote')
-                        ReactDOM.unstable_batchedUpdates(() => {
-                            update(vrvMap.totalNotes / 2);
-                            setCurNote(Notes[midiNote])
-                        })
-                        break;
-                    default :
-                        check.current ? freqRef.current(interval) : vrvMap.highlight('failedNote')
-                }
-            }
-
-            const startInterval = () => setTimeout(() => {
-                check.current = true;
-                freqRef.current(interval);
-                vrvMap.highlight('highlightedNote')
-            }, 50)
-
-            const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
-                duration: vrvMap.time,
-                gain: event.velocity / 5,
-                format: 'ogg',
-                notes: event.noteNumber
-            })
-
-            const modeActions = {
-                'listen' : () => {
-                    playMidi()
-                    startInterval();
-                },
-                'practice hard' : () => {
-                    startInterval();
-                },
-                'practice medium' : () => {
-                    startInterval();
-                    Player.pause()
-                    timeOut = setTimeout(() => {
-                        if(check.current)
-                        Player.play()
-                    }, vrvMap.time * 1000)
-                },
-                'practice easy' : () => {
-                    startInterval();
-                    Player.pause();
-                    timeOut = setTimeout(() => {
-                        if(check.current)
-                        Player.play()
-                    }, vrvMap.time * 2000)
-                },
-                'free play' : () => {
-                    Player.pause()
-                    startInterval();
-                },
-                'training' : () => {
-                    setTimeout(() => {
-                        check.current = true;
-                        Player.pause()
-                        playMidi();
-                        vrvMap.visibility("hide")
-                        setTimeout(() => {
-                            vrvMap.visibility("visible");
-                            freqRef.current(interval);
-                            vrvMap.highlight('highlightedNote')
-                            setExpectedNote(Notes[event.noteNumber])
-                        }, vrvMap.time * 2000)
-
-                        setTimeout(() => {
-                            if(check.current){
-                                Player.play();
-                            }
-                        }, vrvMap.time * 3000)
-                    }, 60)
-                },
-                'vocal' : () => {
-                    setTimeout(() => {
-                        check.current = true;
-                        vrvMap.visibility("hide")
-                        Player.pause()
-                        const noteName = new SpeechSynthesisUtterance(event.noteName.charAt(1) === 'b' ? event.noteName.charAt(0) + 'flat' : event.noteName.charAt(0) + event.noteName.charAt(1));
-                        noteName.voice = voice
-                        synth.pitch = parseInt(Notes[event.noteNumber].charAt(2)) / 6
-                        synth.speak(noteName);
-                        noteName.onend = function() {
-                            vrvMap.visibility("visible")
-                            if(check.current){
-                                Player.play()
-                                playMidi()
-                                check.current = true;
-                                freqRef.current(interval);
-                                vrvMap.highlight('highlightedNote')
-                                setExpectedNote(Notes[event.noteNumber])
-                            }
-                        }
-                    }, 60)
-                }
-            }
 
             if (vrvMap.page === swiper.details().relativeSlide) {
-                modeActions[mode.current]()
+                func(event, vrvMap, Player)
                 setExpectedNote(Notes[event.noteNumber])
             } else {
-                modeActions[mode.current]()
+                func(event, vrvMap, Player)
                 setExpectedNote(Notes[event.noteNumber])
                 swiper.moveToSlide(vrvMap['page'])
             }
@@ -277,6 +319,9 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
 
     Player.instrument = soundfont;
     Player.loadDataUri('data:audio/midi;base64,' + data);
+    Player.on('mode', (mode) => {
+        func = modeActions[mode]
+    })
 
     return  Player;
 }
