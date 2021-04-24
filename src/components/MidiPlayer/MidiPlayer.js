@@ -268,7 +268,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         player.play();
                     }
                 }, vrvMap.time * 3000)
-            }, 60)
+            }, 50)
         },
         'vocal' : (event, vrvMap, player) => {
             setTimeout(() => {
@@ -290,7 +290,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
                         setExpectedNote(Notes[event.noteNumber])
                     }
                 }
-            }, 60)
+            }, 50)
         }
     }
 
@@ -313,7 +313,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, practice, swiper,
         } else {
             setTimeout(() => {
                 check.current = false;
-            }, 60)
+            }, 50)
         }
     })
 
