@@ -21,7 +21,6 @@ export const MidiSync = async (toolkit) => {
         if(timeMap[index]['on']){
             const noteTime = timeMap[index].qstamp
             const elementsArr = timeMap[index]['on'];
-            const pitch = toolkit.getMIDIValuesForElement(elementsArr[0]).pitch
             let time = (toolkit.getMIDIValuesForElement(elementsArr[0]).duration) / 1000
 
             const nextElementsArr = timeMap[index + 1]['on']
@@ -37,7 +36,6 @@ export const MidiSync = async (toolkit) => {
             syncedNotes[noteTime] = {
                 'page': currentPage,
                 'time' : time,
-                'pitch': pitch,
                 'totalNotes': totalNotes,
                 'highlight' : totalNotes > 1 ? (className) => multipleHighlight(className, elements, totalNotes) :
                     (className) => singleHighLight(className, elements[0]),

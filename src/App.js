@@ -66,6 +66,7 @@ function App() {
     const [sliderRef, slider] = useKeenSlider()
 
 
+    let mode = useRef("listen");
 
     const keys = {
         0: 'A',
@@ -199,7 +200,7 @@ function App() {
     useEffect(() => {
             if(soundFont && slider){
                 setCompleted(false)
-                MidiPlayer(ac, soundFont, data, freqRef, slider, update, timeMap, soundFont, setCurNote, check, setExpectedNote).then((player) =>{
+                MidiPlayer(ac, soundFont, data, freqRef, slider, update, timeMap, soundFont, setCurNote, check, setExpectedNote, mode).then((player) =>{
                     setPlayer(player)
                     player.on('endOfFile' , () => {
                         setPlaying(false)
@@ -281,7 +282,7 @@ function App() {
                     text: 'Listen',
                     icon: volumeHigh,
                     handler: () => {
-                        player.triggerPlayerEvent('mode', 'listen')
+                        mode.current = 'listen';
                         playPause(playing)
                         setPlaying(!playing)
                     }
@@ -289,42 +290,42 @@ function App() {
                     text: 'Practice Hard',
                     icon: time,
                     handler: () => {
-                        player.triggerPlayerEvent('mode', 'practice hard')
+                        mode.current = 'practice hard';
                         setShowToast(true)
                     }
                 },{
                     text: 'Practice Medium',
                     icon: time,
                     handler: () => {
-                        player.triggerPlayerEvent('mode', 'practice medium')
+                        mode.current = 'practice medium';
                         setShowToast(true)
                     }
                 },{
                     text: 'Practice Easy',
                     icon: time,
                     handler: () => {
-                        player.triggerPlayerEvent('mode', 'practice easy')
+                        mode.current = 'practice easy';
                         setShowToast(true)
                     }
                 }, {
                     text: 'Training',
                     icon: book,
                     handler: () => {
-                        player.triggerPlayerEvent('mode', 'training')
+                        mode.current = 'training';
                         setShowToast(true)
                     }
                 }, {
                     text: 'Free Play',
                     icon: play,
                     handler: () => {
-                        player.triggerPlayerEvent('mode', 'free play')
+                        mode.current = 'free play';
                         setShowToast(true)
                     }
                 }, {
                     text: 'Vocal',
                     icon: chatbubble,
                     handler: () => {
-                        player.triggerPlayerEvent('mode', 'vocal')
+                        mode.current = 'vocal';
                         setShowToast(true)
                     }
                 }, {
