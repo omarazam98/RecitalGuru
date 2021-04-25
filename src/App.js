@@ -187,7 +187,7 @@ function App() {
     },
     [toolkit, path, keyIndex]);
 
-    useEffect(() => {
+    useMemo(() => {
             if(data && timeMap && ac){
                 Soundfont.instrument(ac, midiInstruments[instrumentKey]).then((soundfont) => {
                     removeHighlights();
@@ -197,7 +197,7 @@ function App() {
         },
         [instrumentKey, data, timeMap, ac]);
 
-    useEffect(() => {
+    useMemo(() => {
             if(soundFont && slider){
                 setCompleted(false)
                 MidiPlayer(ac, soundFont, data, freqRef, slider, update, timeMap, soundFont, setCurNote, check, setExpectedNote, mode).then((player) =>{
@@ -212,7 +212,7 @@ function App() {
         },
         [soundFont, slider]);
 
-    useEffect(() => {
+    useMemo(() => {
         if(slider && slides){
             slider.refresh({
                 mode: "snap",
