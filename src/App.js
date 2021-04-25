@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState, useRef} from 'react';
+import React, {useCallback, useEffect, useState, useRef, useMemo} from 'react';
 import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonListHeader, IonItem, IonActionSheet, IonToast, IonLabel, IonIcon, IonChip} from "@ionic/react";
 import {documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book, chatbubble, close, time} from 'ionicons/icons';
 import {iosEnterAnimation, iosLeaveAnimation} from "./animations/ios";
@@ -9,7 +9,7 @@ import css from "./css/app.css";
 
 import verovio from 'verovio'
 import {MidiPlayer} from "./components/MidiPlayer/MidiPlayer";
-import MusicXML from "./components/MusicXml/MusicXML";
+import {MusicXML} from "./components/MusicXml/MusicXML";
 import {MidiSync, removeHighlights} from "./components/HelperFunctions/MidiFunctions";
 import Soundfont from "soundfont-player";
 import {setupAudio} from "./components/PitchDetector/setupAudio";
@@ -173,7 +173,7 @@ function App() {
         }
     }
 
-    useEffect(() => {
+    useMemo(() => {
             if(toolkit && path && keyIndex){
                 render().then(() => {
                     passedNotes.current = 0;

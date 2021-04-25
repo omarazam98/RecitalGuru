@@ -178,7 +178,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 check.current = true;
                 freqRef.current(interval);
                 vrvMap.highlight('highlightedNote')
-            }, 60)
+            }, 50)
 
             const playMidi = () => soundFont.play(event.noteName, ac.currentTime, {
                 duration: vrvMap.time,
@@ -271,7 +271,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
         } else {
             setTimeout(() => {
                 check.current = false;
-            }, 60)
+            }, 50)
         }
     })
 

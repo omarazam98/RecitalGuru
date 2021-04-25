@@ -1,7 +1,7 @@
 import React from "react";
 import css from "../../css/slides.css";
 
-export default function MusicXML(key, path, toolkit) {
+export const MusicXML = (key, path, toolkit) =>{
     const setOptions = function () {
       let pixelHeight = window.innerHeight / 2;
       let pixelWidth = window.innerWidth + 25;
@@ -27,12 +27,10 @@ export default function MusicXML(key, path, toolkit) {
       let max = toolkit.getPageCount();
       for (let i = 1; i <= max; i++) {
         slides.push(
-            <div className={"keen-slider__slide"}>
-                <section style={css} dangerouslySetInnerHTML={{ __html: toolkit.renderToSVG(i, {}) }}/>
-            </div>
+            <section className={"keen-slider__slide"} style={css} dangerouslySetInnerHTML={{ __html: toolkit.renderToSVG(i, {}) }}/>
         )
       }
-      return (slides)
+      return (slides.map((slide) => slide))
     };
 
     const loadExternalMusicXML = (url) => {
