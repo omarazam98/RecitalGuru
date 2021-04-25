@@ -189,6 +189,8 @@ function App() {
 
     useMemo(() => {
             if(data && timeMap && ac){
+                passedNotes.current = 0;
+                setScore('0%')
                 Soundfont.instrument(ac, midiInstruments[instrumentKey]).then((soundfont) => {
                     removeHighlights();
                     setSoundFont(soundfont)
@@ -212,7 +214,7 @@ function App() {
         },
         [soundFont, slider]);
 
-    useMemo(() => {
+    useEffect(() => {
         if(slider && slides){
             slider.refresh({
                 mode: "snap",
