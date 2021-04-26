@@ -131,7 +131,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
     const interval = (midiNote) => {
         switch (midiNote){
             case (vrvMap.pitch) :
-                currentInterval = null;
+                clearInterval(currentInterval)
+                currentInterval = 0;
                 vrvMap.highlight('passedNote')
                 ReactDOM.unstable_batchedUpdates(() => {
                     update(vrvMap.totalNotes / 2);
@@ -154,7 +155,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
 
     const interval2 = (midiNote) => {
         if(vrvMap.pitch === midiNote){
-            currentInterval = null;
+            clearInterval(currentInterval)
+            currentInterval = 0;
             vrvMap.highlight('passedNote')
             ReactDOM.unstable_batchedUpdates(() => {
                 update(vrvMap.totalNotes / 2);
@@ -168,7 +170,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
     const altInterval = (midiNote) => {
         switch (midiNote){
             case (vrvMap.pitch) :
-                currentInterval = null;
+                clearInterval(currentInterval)
+                currentInterval = 0;
                 vrvMap.highlight('passedNote')
                 ReactDOM.unstable_batchedUpdates(() => {
                     update(vrvMap.totalNotes / 2);
@@ -194,7 +197,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
 
     const altInterval2 = (midiNote) => {
         if(vrvMap.pitch === midiNote){
-            currentInterval = null;
+            clearInterval(currentInterval)
+            currentInterval = 0;
             vrvMap.highlight('passedNote')
             ReactDOM.unstable_batchedUpdates(() => {
                 update(vrvMap.totalNotes / 2);
@@ -300,6 +304,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
             setTimeout(() => {
                 if(currentInterval){
                     clearTimeout(currentInterval);
+                    currentInterval = 0;
                     vrvMap.highlight('failedNote')
                 }
             }, 60)
