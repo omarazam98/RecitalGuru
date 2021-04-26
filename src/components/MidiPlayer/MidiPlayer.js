@@ -118,7 +118,8 @@ const Notes = {
 const synth = window.speechSynthesis;
 let voice;
 window.speechSynthesis.onvoiceschanged = function() {
-    voice = window.speechSynthesis.getVoices()[60];
+    console.log( window.speechSynthesis.getVoices())
+    voice = window.speechSynthesis.getVoices()[2];
 };
 
 export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote) => {
@@ -211,13 +212,13 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
         prevVrvMap = vrvMap;
         freqRef.current(interval);
         vrvMap.highlight('highlightedNote')
-    }, 60)
+    }, 65)
 
     const startAltInterval = () => setTimeout(() => {
         prevVrvMap = vrvMap;
         freqRef.current(altInterval);
         vrvMap.highlight('highlightedNote')
-    }, 60)
+    }, 65)
 
     const playMidi = () => soundFont.play(vrvMap.pitch, ac.currentTime, {
         duration: vrvMap.time,
@@ -267,7 +268,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 if(check.current){
                     Player.play();
                 }
-            }, vrvMap.time * 3000 + 60)
+            }, vrvMap.time * 3000 + 65)
         },
         'vocal' : () => {
             vrvMap.visibility("hide")
@@ -279,6 +280,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 vrvMap.visibility("visible")
                     if(check.current){
                         Player.play()
+                        playMidi();
                         startInterval()
                     }
             }
@@ -300,7 +302,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                     clearTimeout(currentInterval);
                     vrvMap.highlight('failedNote')
                 }
-            }, 60)
+            }, 65)
         }
     })
 

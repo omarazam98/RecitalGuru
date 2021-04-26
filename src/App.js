@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState, useRef, useMemo} from 'react';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {IonPicker, IonContent, IonApp, IonToolbar, IonButtons, IonButton, IonHeader, IonFooter, IonMenu, IonList, IonMenuToggle, IonListHeader, IonItem, IonActionSheet, IonToast, IonLabel, IonIcon, IonChip} from "@ionic/react";
 import {documentText, musicalNotes, chevronDown, chevronBack, key, pause, play, volumeHigh, refresh , options, musicalNote, book, chatbubble, close, time} from 'ionicons/icons';
 import {iosEnterAnimation, iosLeaveAnimation} from "./animations/ios";
@@ -162,6 +162,7 @@ function App() {
         });
 
     const render = async function render() {
+        page = 0;
         const slides = await MusicXML(keys[keyIndex], songs[path].path, toolkit)
         const data = await toolkit.renderToMIDI()
         setSlides(slides)
@@ -194,6 +195,7 @@ function App() {
 
     useEffect(() => {
             if(data && timeMap && ac){
+                page = 0;
                 passedNotes.current = 0;
                 setScore('0%')
                 Soundfont.instrument(ac, midiInstruments[instrumentKey]).then((soundfont) => {
@@ -205,6 +207,7 @@ function App() {
         [instrumentKey, data, timeMap, ac]);
 
     useEffect(() => {
+            page = 0;
             if(soundFont && slider){
                 setCompleted(false)
                 MidiPlayer(ac, soundFont, data, freqRef, slider, update, timeMap, soundFont, setCurNote, check, setExpectedNote).then((player) =>{
