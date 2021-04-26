@@ -48,7 +48,7 @@ export async function setupAudio() {
   audioSource.connect(scriptProcessor).connect(context.destination)
 
   const sample = new Array(numTotalAudioSamples).fill(0);
-  let func;
+  let func = () => {} ;
   Aubio().then((aubio) => {
     const pitchDetector = new aubio.Pitch('default', numTotalAudioSamples, 512, context.sampleRate)
     scriptProcessor.addEventListener('audioprocess', function(event) {
