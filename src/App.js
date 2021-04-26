@@ -39,7 +39,7 @@ function App() {
     const [soundFont, setSoundFont] = useState(null);
     const [instrumentKey, setInstrumentKey] = useState(0);
 
-    const freqRef = useRef(0);
+    const [freq, setFreq] = useState(null);
 
     const [slides, setSlides] = useState(null);
     const [toolkit, setToolkit] = useState(null);
@@ -198,9 +198,9 @@ function App() {
 
     useEffect(() => {
             page = 0;
-            if(soundFont && slider){
+            if(soundFont && slider && freq){
                 setCompleted(false)
-                MidiPlayer(ac, soundFont, data, freqRef, slider, update, timeMap, soundFont, setCurNote, check, setExpectedNote).then((player) =>{
+                MidiPlayer(ac, soundFont, data, freq, slider, update, timeMap, soundFont, setCurNote, check, setExpectedNote).then((player) =>{
                     setPlayer(player)
                     player.on('endOfFile' , () => {
                         setPlaying(false)
@@ -210,7 +210,7 @@ function App() {
                 })
             }
         },
-        [soundFont, slider]);
+        [soundFont, slider, freq]);
 
     useEffect(() => {
         if(slider && slides){
@@ -406,7 +406,9 @@ function App() {
                       <IonButtons slot={"end"}>
                           <IonButton fill={'outline'} color={'primary'} expand="block" onClick={async () => {
                               if(!ac){
-                                  setAc(await setupAudio(freqRef));
+                                  const audio = await setupAudio()
+                                  setAc(audio.ac);
+                                  setFreq(audio.detector)
                               } else if (completed){
                                   slider.moveToSlideRelative(0)
                                   setCompleted(false)
