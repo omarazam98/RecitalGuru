@@ -169,16 +169,6 @@ function App() {
         setData(data)
     }
 
-    window.onorientationchange = () => {
-        if(!playing && toolkit){
-            render().then(() => {
-                MidiSync(toolkit).then((map) => {
-                    setTimeMap(map)
-                })
-            });
-        }
-    }
-
     useEffect(() => {
             if(toolkit && path && keyIndex){
                 render().then(() => {
