@@ -122,7 +122,7 @@ window.speechSynthesis.onvoiceschanged = function() {
     voice = window.speechSynthesis.getVoices()[2];
 };
 
-export const MidiPlayer = async (ac, soundfont, data, freq, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote) => {
+export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote) => {
     let timeOut;
     let currentInterval
     let vrvMap;
@@ -141,7 +141,7 @@ export const MidiPlayer = async (ac, soundfont, data, freq, swiper, update, time
                 break;
             case (vrvMap.pitch + 1) :
             case (vrvMap.pitch - 1) :
-                currentInterval = setTimeout(() => freq(interval2), 0)
+                currentInterval = setTimeout(() => freqRef(interval2), 0)
                 vrvMap.highlight('semiPassedNote')
                 ReactDOM.unstable_batchedUpdates(() => {
                     update(vrvMap.totalNotes / 2);
@@ -149,7 +149,7 @@ export const MidiPlayer = async (ac, soundfont, data, freq, swiper, update, time
                 })
                 break;
             default :
-                currentInterval = setTimeout(() => freq(interval), 0)
+                currentInterval = setTimeout(() => freqRef(interval), 0)
         }
     }
 
@@ -163,7 +163,7 @@ export const MidiPlayer = async (ac, soundfont, data, freq, swiper, update, time
                 setCurNote(Notes[midiNote])
             })
         } else {
-            currentInterval = setTimeout(() => freq(interval2), 0)
+            currentInterval = setTimeout(() => freqRef(interval2), 0)
         }
     }
 
@@ -183,7 +183,7 @@ export const MidiPlayer = async (ac, soundfont, data, freq, swiper, update, time
                 break;
             case (vrvMap.pitch + 1) :
             case (vrvMap.pitch - 1) :
-                currentInterval = setTimeout(() => freq(altInterval2), 0)
+                currentInterval = setTimeout(() => freqRef(altInterval2), 0)
                 vrvMap.highlight('semiPassedNote')
                 ReactDOM.unstable_batchedUpdates(() => {
                     update(vrvMap.totalNotes / 2);
@@ -191,7 +191,7 @@ export const MidiPlayer = async (ac, soundfont, data, freq, swiper, update, time
                 })
                 break;
             default :
-                currentInterval = setTimeout(() => freq(altInterval), 0)
+                currentInterval = setTimeout(() => freqRef(altInterval), 0)
         }
     }
 
@@ -208,19 +208,19 @@ export const MidiPlayer = async (ac, soundfont, data, freq, swiper, update, time
             Player.pause();
             Player.play()
         } else {
-            currentInterval = setTimeout(() => freq(altInterval2), 0)
+            currentInterval = setTimeout(() => freqRef(altInterval2), 0)
         }
     }
 
     const startInterval = () => setTimeout(() => {
         prevVrvMap = vrvMap;
-        freq(interval);
+        freqRef(interval);
         vrvMap.highlight('highlightedNote')
     }, 60)
 
     const startAltInterval = () => setTimeout(() => {
         prevVrvMap = vrvMap;
-        freq(altInterval);
+        freqRef(altInterval);
         vrvMap.highlight('highlightedNote')
     }, 60)
 
