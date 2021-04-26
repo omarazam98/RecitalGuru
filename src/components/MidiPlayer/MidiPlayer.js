@@ -222,13 +222,13 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
         prevVrvMap = vrvMap;
         interval();
         vrvMap.highlight('highlightedNote')
-    }, 50)
+    }, 60)
 
     const startAltInterval = () => setTimeout(() => {
         prevVrvMap = vrvMap;
         altInterval();
         vrvMap.highlight('highlightedNote')
-    }, 50)
+    }, 60)
 
     const playMidi = () => soundFont.play(vrvMap.pitch, ac.currentTime, {
         duration: vrvMap.time,
