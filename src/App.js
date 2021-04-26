@@ -342,6 +342,7 @@ function App() {
                     text: 'Reset',
                     icon: refresh,
                     handler: () => {
+                        page = 0;
                         player.resetTracks()
                         player.skipToSeconds(0)
                         removeHighlights()
