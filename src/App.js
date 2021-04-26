@@ -138,22 +138,28 @@ function App() {
         setScore(Math.round(passedNotes.current / notes.current * 100) + "%")
     }, [])
 
-    const playPause = useCallback(async (p) => {
+    let page = 0
+    const playPause = (async (p) => {
             if(player){
                     if (p) {
+                        page = slider.details().relativeSlide
                         check.current = false;
                         setPlaying(false)
                         player.triggerPlayerEvent('pause', [])
                         player.pause();
+                        slider.controls(true);
                         await ac.suspend();
                     } else {
+                        if(page !== slider.details().relativeSlide){
+                            slider.moveToSlideRelative(page);
+                        }
+                        slider.controls(false);
                         check.current = true;
                         await ac.resume();
                         player.play();
                     }
             }
-        },
-        [player]);
+        });
 
     const render = async function render() {
         const slides = await MusicXML(keys[keyIndex], songs[path].path, toolkit)
@@ -178,13 +184,13 @@ function App() {
                     passedNotes.current = 0;
                     setScore('0%')
                     notes.current = document.getElementsByClassName('note').length
-                    MidiSync(toolkit).then((map) => {
+                    MidiSync(toolkit, slider).then((map) => {
                         setTimeMap(map)
                     })
                 })
             }
     },
-    [toolkit, path, keyIndex]);
+    [toolkit, path, keyIndex, slider]);
 
     useEffect(() => {
             if(data && timeMap && ac){

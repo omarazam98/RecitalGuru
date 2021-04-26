@@ -13,10 +13,11 @@ const multipleVisibility = (style, elements, totalNotes) => requestAnimationFram
     }
 })
 
-export const MidiSync = async (toolkit) => {
+export const MidiSync = async (toolkit, slider) => {
     const syncedNotes = {}
-
     const timeMap = await toolkit.renderToTimemap();
+    let page = 0;
+
     for (let index = 0; index < timeMap.length; index++){
         if(timeMap[index]['on']){
             const noteTime = timeMap[index].qstamp
@@ -34,13 +35,33 @@ export const MidiSync = async (toolkit) => {
             const elements = elementsArr.map((el) => document.getElementById(el))
             const currentPage = toolkit.getPageWithElement(timeMap[index]['on'][0]) - 1
 
+            let onHighlight;
+            if(currentPage > page && totalNotes > 1){
+                page = currentPage;
+                onHighlight = (className) => {
+                    slider.moveToSlideRelative(currentPage);
+                    multipleHighlight(className, elements, totalNotes)
+                }
+            }else if(totalNotes > 1) {
+                onHighlight = (className) => {
+                    multipleHighlight(className, elements, totalNotes)
+                }
+            } else if(currentPage > page){
+                onHighlight = (className) => {
+                    slider.moveToSlideRelative(currentPage);
+                    singleHighLight(className, elements[0])
+                }
+            } else {
+                onHighlight = (className) => {
+                    singleHighLight(className, elements[0])
+                }
+            }
             syncedNotes[noteTime] = {
                 'page': currentPage,
                 'time' : time,
                 'pitch': pitch,
                 'totalNotes': totalNotes,
-                'highlight' : totalNotes > 1 ? (className) => multipleHighlight(className, elements, totalNotes) :
-                    (className) => singleHighLight(className, elements[0]),
+                'highlight' : onHighlight,
                 'visibility' : totalNotes > 1 ? (style) => multipleVisibility(style, elements, totalNotes) :
                     (style) => singleVisibility(style, elements[0])
             };
