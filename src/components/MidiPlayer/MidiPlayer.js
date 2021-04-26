@@ -231,7 +231,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                         vrvMap.highlight('highlightedNote')
                     }
                 }
-            }, 60)
+            }, 50)
         }
     }
 
