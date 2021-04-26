@@ -158,7 +158,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
         prevVrvMap = vrvMap;
         freqRef.current(interval);
         vrvMap.highlight('highlightedNote')
-    }, 50)
+    }, 60)
 
     const playMidi = () => soundFont.play(vrvMap.pitch, ac.currentTime, {
         duration: vrvMap.time,
@@ -212,7 +212,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                         Player.play();
                     }
                 }, vrvMap.time * 3000)
-            }, 50)
+            }, 60)
         },
         'vocal' : () => {
             setTimeout(() => {
@@ -231,7 +231,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                         vrvMap.highlight('highlightedNote')
                     }
                 }
-            }, 50)
+            }, 60)
         }
     }
 
@@ -261,7 +261,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
             setTimeout(() => {
                 clearTimeout(currentInterval);
                 prevVrvMap.highlight('failedNote')
-            }, 60)
+            }, 50)
         }
     })
 
