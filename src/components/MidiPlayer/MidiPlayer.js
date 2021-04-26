@@ -293,11 +293,11 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
             func()
             setExpectedNote(Notes[event.noteNumber])
 
-
         } else if(currentInterval){
+            const vrvMap = prevVrvMap;
             setTimeout(() => {
                 clearTimeout(currentInterval);
-                prevVrvMap.highlight('failedNote')
+                vrvMap.highlight('failedNote')
             }, 60)
         }
     })
