@@ -1,4 +1,3 @@
-import * as Aubio from "../../aubio/aubio"
 
 async function getWebAudioMediaStream() {
   if (!window.navigator.mediaDevices) {
@@ -36,7 +35,7 @@ async function getWebAudioMediaStream() {
 
 export async function setupAudio(onPitchDetectedCallback) {
   // Get the browser's audio. Awaits user "allowing" it for the current tab.
-  const numAudioSamplesPerAnalysis = 256;
+  const numAudioSamplesPerAnalysis = 512;
   const numTotalAudioSamples = 1024;
 
   const mediaStream = await getWebAudioMediaStream();
@@ -47,22 +46,16 @@ export async function setupAudio(onPitchDetectedCallback) {
   const scriptProcessor = context.createScriptProcessor(numAudioSamplesPerAnalysis, 1, 1)
   audioSource.connect(scriptProcessor).connect(context.destination)
 
-  const sample = new Array(numTotalAudioSamples).fill(0);
-  Aubio().then((aubio) => {
-    const pitchDetector = new aubio.Pitch('default', numTotalAudioSamples, 512, context.sampleRate)
+  onPitchDetectedCallback.current = new Array(numTotalAudioSamples).fill(0);
     scriptProcessor.addEventListener('audioprocess', function(event) {
       const inputSamples = event.inputBuffer.getChannelData(0);
       for (let i = 0; i < numAudioSamplesPerAnalysis; i++) {
-        sample[i] = sample[i + numAudioSamplesPerAnalysis];
-        sample[i + 256] = sample[i + 512];
-        sample[i + 512] = sample[i + 768];
-        sample[i + 768] = inputSamples[i];
+        onPitchDetectedCallback.current[i] = onPitchDetectedCallback.current[i + numAudioSamplesPerAnalysis];
+        onPitchDetectedCallback.current[i + 256] = onPitchDetectedCallback.current[i + 512];
+        onPitchDetectedCallback.current[i + 512] = onPitchDetectedCallback.current[i + 768];
+        onPitchDetectedCallback.current[i + 768] = inputSamples[i];
       }
     })
-
-    onPitchDetectedCallback.current = (func) => func(Math.round(12 * (Math.log2(pitchDetector.do(sample) / 440)) + 69));
-
-  })
 
   return context
 }

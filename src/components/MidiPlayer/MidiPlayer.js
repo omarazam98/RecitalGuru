@@ -1,4 +1,5 @@
 import MidiPlayerJs from 'midi-player-js'
+import * as Aubio from "../../aubio/aubio"
 import ReactDOM from "react-dom";
 
 const Notes = {
@@ -111,6 +112,7 @@ const Notes = {
     21:	'A 0'
 }
 
+let pitchDetector;
 
 
 
@@ -123,12 +125,17 @@ window.speechSynthesis.onvoiceschanged = function() {
 };
 
 export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote) => {
+    Aubio().then((aubio) => {
+        pitchDetector = new aubio.Pitch('default', 1024, 512, ac.sampleRate)
+    })
+
     let timeOut;
     let currentInterval
     let vrvMap;
     let prevVrvMap;
 
-    const interval = (midiNote) => {
+    const interval = () => {
+        const midiNote = Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69)
         switch (midiNote){
             case (vrvMap.pitch) :
                 currentInterval = null;
@@ -140,7 +147,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 break;
             case (vrvMap.pitch + 1) :
             case (vrvMap.pitch - 1) :
-                currentInterval = setTimeout(() => freqRef.current(interval2), 0)
+                currentInterval = setTimeout(() => interval2(), 0)
                 vrvMap.highlight('semiPassedNote')
                 ReactDOM.unstable_batchedUpdates(() => {
                     update(vrvMap.totalNotes / 2);
@@ -148,11 +155,12 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 })
                 break;
             default :
-                currentInterval = setTimeout(() => freqRef.current(interval), 0)
+                currentInterval = setTimeout(() => interval(), 0)
         }
     }
 
-    const interval2 = (midiNote) => {
+    const interval2 = () => {
+        const midiNote = Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69)
         if(vrvMap.pitch === midiNote){
             currentInterval = null;
             vrvMap.highlight('passedNote')
@@ -161,11 +169,12 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 setCurNote(Notes[midiNote])
             })
         } else {
-            currentInterval = setTimeout(() => freqRef.current(interval2), 0)
+            currentInterval = setTimeout(() => interval2(), 0)
         }
     }
 
-    const altInterval = (midiNote) => {
+    const altInterval = () => {
+        const midiNote = Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69)
         switch (midiNote){
             case (vrvMap.pitch) :
                 currentInterval = null;
@@ -180,7 +189,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 break;
             case (vrvMap.pitch + 1) :
             case (vrvMap.pitch - 1) :
-                currentInterval = setTimeout(() => freqRef.current(altInterval2), 0)
+                currentInterval = setTimeout(() => altInterval2(), 0)
                 vrvMap.highlight('semiPassedNote')
                 ReactDOM.unstable_batchedUpdates(() => {
                     update(vrvMap.totalNotes / 2);
@@ -188,11 +197,12 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 })
                 break;
             default :
-                currentInterval = setTimeout(() => freqRef.current(altInterval), 0)
+                currentInterval = setTimeout(() => altInterval(), 0)
         }
     }
 
-    const altInterval2 = (midiNote) => {
+    const altInterval2 = () => {
+        const midiNote = Math.round(12 * (Math.log2(pitchDetector.do(freqRef.current) / 440)) + 69)
         if(vrvMap.pitch === midiNote){
             currentInterval = null;
             vrvMap.highlight('passedNote')
@@ -204,19 +214,19 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
             Player.pause();
             Player.play()
         } else {
-            currentInterval = setTimeout(() => freqRef.current(altInterval2), 0)
+            currentInterval = setTimeout(() => altInterval2(), 0)
         }
     }
 
     const startInterval = () => setTimeout(() => {
         prevVrvMap = vrvMap;
-        freqRef.current(interval);
+        interval();
         vrvMap.highlight('highlightedNote')
     }, 50)
 
     const startAltInterval = () => setTimeout(() => {
         prevVrvMap = vrvMap;
-        freqRef.current(altInterval);
+        altInterval();
         vrvMap.highlight('highlightedNote')
     }, 50)
 
