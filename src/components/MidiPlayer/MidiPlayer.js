@@ -118,7 +118,7 @@ const Notes = {
 const synth = window.speechSynthesis;
 let voice;
 window.speechSynthesis.onvoiceschanged = function() {
-    voice = window.speechSynthesis.getVoices()[50];
+    voice = window.speechSynthesis.getVoices()[60];
 };
 
 export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, timeMap, soundFont, setCurNote, check, setExpectedNote) => {
@@ -158,7 +158,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
         prevVrvMap = vrvMap;
         freqRef.current(interval);
         vrvMap.highlight('highlightedNote')
-    }, 60)
+    }, 50)
 
     const playMidi = () => soundFont.play(vrvMap.pitch, ac.currentTime, {
         duration: vrvMap.time,
@@ -212,7 +212,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                         Player.play();
                     }
                 }, vrvMap.time * 3000)
-            }, 60)
+            }, 50)
         },
         'vocal' : () => {
             setTimeout(() => {
