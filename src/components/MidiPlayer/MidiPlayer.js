@@ -196,33 +196,31 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
             startInterval();
         },
         'training' : () => {
+            Player.pause()
+            playMidi();
+            vrvMap.visibility("hide")
             setTimeout(() => {
-                Player.pause()
-                playMidi();
-                vrvMap.visibility("hide")
-                setTimeout(() => {
-                    vrvMap.visibility("visible");
-                    prevVrvMap = vrvMap;
-                    freqRef.current(interval);
-                    vrvMap.highlight('highlightedNote')
-                }, vrvMap.time * 2000)
+                vrvMap.visibility("visible");
+                prevVrvMap = vrvMap;
+                freqRef.current(interval);
+                vrvMap.highlight('highlightedNote')
+            }, vrvMap.time * 2000 + 60)
 
-                setTimeout(() => {
-                    if(check.current){
-                        Player.play();
-                    }
-                }, vrvMap.time * 3000)
-            }, 60)
+            setTimeout(() => {
+                if(check.current){
+                    Player.play();
+                }
+            }, vrvMap.time * 3000 + 60)
         },
         'vocal' : () => {
-            setTimeout(() => {
-                vrvMap.visibility("hide")
-                Player.pause()
-                const noteName = new SpeechSynthesisUtterance(Notes[vrvMap.pitch].charAt(1) === 'b' ? Notes[vrvMap.pitch].charAt(0) + 'flat' : Notes[vrvMap.pitch].charAt(0) + Notes[vrvMap.pitch].charAt(1));
-                noteName.voice = voice
-                synth.speak(noteName);
-                noteName.onend = function() {
-                    vrvMap.visibility("visible")
+            vrvMap.visibility("hide")
+            Player.pause()
+            const noteName = new SpeechSynthesisUtterance(Notes[vrvMap.pitch].charAt(1) === 'b' ? Notes[vrvMap.pitch].charAt(0) + 'flat' : Notes[vrvMap.pitch].charAt(0) + Notes[vrvMap.pitch].charAt(1));
+            noteName.voice = voice
+            synth.speak(noteName);
+            noteName.onend = function() {
+                vrvMap.visibility("visible")
+                setTimeout(() => {
                     if(check.current){
                         prevVrvMap = vrvMap;
                         Player.play()
@@ -230,8 +228,8 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                         freqRef.current(interval);
                         vrvMap.highlight('highlightedNote')
                     }
-                }
-            }, 60)
+                }, 60)
+            }
         }
     }
 
@@ -261,7 +259,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
             setTimeout(() => {
                 clearTimeout(currentInterval);
                 prevVrvMap.highlight('failedNote')
-            }, 50)
+            }, 60)
         }
     })
 
