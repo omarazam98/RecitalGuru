@@ -212,13 +212,13 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
         prevVrvMap = vrvMap;
         freqRef.current(interval);
         vrvMap.highlight('highlightedNote')
-    }, 65)
+    }, 50)
 
     const startAltInterval = () => setTimeout(() => {
         prevVrvMap = vrvMap;
         freqRef.current(altInterval);
         vrvMap.highlight('highlightedNote')
-    }, 65)
+    }, 50)
 
     const playMidi = () => soundFont.play(vrvMap.pitch, ac.currentTime, {
         duration: vrvMap.time,
@@ -268,7 +268,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 if(check.current){
                     Player.play();
                 }
-            }, vrvMap.time * 3000 + 65)
+            }, vrvMap.time * 3000 + 60)
         },
         'vocal' : () => {
             vrvMap.visibility("hide")
@@ -302,7 +302,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                     clearTimeout(currentInterval);
                     vrvMap.highlight('failedNote')
                 }
-            }, 65)
+            }, 60)
         }
     })
 
