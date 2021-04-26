@@ -296,8 +296,10 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
         } else if(currentInterval){
             const vrvMap = prevVrvMap;
             setTimeout(() => {
-                clearTimeout(currentInterval);
-                vrvMap.highlight('failedNote')
+                if(currentInterval){
+                    clearTimeout(currentInterval);
+                    vrvMap.highlight('failedNote')
+                }
             }, 60)
         }
     })
