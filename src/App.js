@@ -172,7 +172,7 @@ function App() {
         }
     }
 
-    useMemo(() => {
+    useEffect(() => {
             if(toolkit && path && keyIndex){
                 render().then(() => {
                     passedNotes.current = 0;

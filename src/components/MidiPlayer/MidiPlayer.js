@@ -129,6 +129,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
     let startInterval;
     let playMidi;
     let vrvMap;
+    let prevVrvMap;
 
     const modeActions = {
         'listen' : () => {
@@ -165,6 +166,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 vrvMap.visibility("hide")
                 setTimeout(() => {
                     vrvMap.visibility("visible");
+                    prevVrvMap = vrvMap;
                     freqRef.current(interval);
                     vrvMap.highlight('highlightedNote')
                 }, vrvMap.time * 2000)
@@ -186,6 +188,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
                 noteName.onend = function() {
                     vrvMap.visibility("visible")
                     if(check.current){
+                        prevVrvMap = vrvMap;
                         Player.play()
                         playMidi()
                         freqRef.current(interval);
@@ -210,7 +213,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
             const time = event.tick / Player.division
             vrvMap = timeMap[time]
 
-             interval2 = (midiNote) => {
+            interval2 = (midiNote) => {
                 if(event.noteNumber === midiNote){
                     func2();
                 } else {
@@ -238,6 +241,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
             }
 
             startInterval = () => setTimeout(() => {
+                prevVrvMap = vrvMap;
                 freqRef.current(interval);
                 vrvMap.highlight('highlightedNote')
             }, 60)
@@ -261,7 +265,7 @@ export const MidiPlayer = async (ac, soundfont, data, freqRef, swiper, update, t
         } else if(currentInterval){
             setTimeout(() => {
                 clearTimeout(currentInterval);
-                vrvMap.highlight('failedNote')
+                prevVrvMap.highlight('failedNote')
             }, 60)
             }
     })
